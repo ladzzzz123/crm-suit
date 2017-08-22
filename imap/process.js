@@ -3,6 +3,7 @@ var Imap = require('imap'),
     inspect = require('util').inspect,
     fs = require("fs");
 
+const imap_conf = require("../config/service").imap;
 // var imap = new Imap({
 //     user: 'm15618953382@163.com',
 //     password: 'wangyi851022',
@@ -11,14 +12,7 @@ var Imap = require('imap'),
 //     tls: true
 // });
 
-var imap = new Imap({
-    user: 'plan@cootek.cn',
-    password: 'XwK-HPT-8bb-GJX',
-    host: 'partner.outlook.cn',
-    port: 993,
-    tls: true,
-    // autotls: "required"
-});
+var imap = new Imap(imap_conf);
 
 
 
