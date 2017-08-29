@@ -6,6 +6,7 @@ const Koa = require("koa");
 const app = new Koa();
 
 const imap = require("./imap/process");
+const Courier = require("node-process-bearer").Courier;
 
 console.log("http before create");
 console.log("imap before connect");
