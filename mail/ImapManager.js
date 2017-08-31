@@ -1,4 +1,3 @@
-/* jshint esversion:6 */
 const Imap = require("imap"),
     inspect = require("util").inspect,
     fs = require("fs"),
@@ -11,21 +10,24 @@ class ImapManager {
         this.connected = false;
     }
 
-    connect() {
+    connect(callback) {
         let imap = this.imap;
         imap.connect();
         logger.info("[imap] after connect called");
         imap.on("ready", (arg) => {
             logger.info("[imap] ready");
-            imap.getBoxes("*", (err, ret) => {
+            imap.getBoxes("", (err, ret) => {
                 err ?
                     logger.info("[imap] boxes ready: %s", JSON.stringify(ret)) :
                     logger.warn("[imap] boxes error: %s", JSON.stringify(err));
             });
             this.connected = true;
+            (callback) && callback(true);
         });
         imap.on("error", err => {
             logger.info("[imap] error:" + JSON.stringify(err));
+            this.connected = false;
+            (callback) && callback(false);
         });
     }
 
@@ -34,7 +36,13 @@ class ImapManager {
         this.connected = false;
     }
 
-    fetch(result, body, callback) {
+    fetch(results, body, callback) {
+        let imap = this.imap;
+        if (results.length < 1) {
+            logger.warn("[fetch] fetch result empty");
+            callback([]);
+            return;
+        }
         let f = this.imap.fetch(results, { bodies: "" });
         let msgArr = [];
         f.on("message", function(msg, seqno) {
@@ -55,7 +63,9 @@ class ImapManager {
             });
             msg.once("attributes", function(attrs) {
                 imap.setFlags(attrs.uid, ["SEEN"], err => {
-                    logger.error(`[ImapManager] Mail setFlag error seqno:${seqno}, error:${JSON.stringify(err)}`);
+                    if (err) {
+                        logger.error(`[ImapManager] Mail setFlag error seqno:${seqno}, error:${JSON.stringify(err)}`);
+                    }
                 });
             });
             msg.once("end", function() {
@@ -80,22 +90,15 @@ class ImapManager {
                     reject("open inbox error");
                 } else {
                     logger.info("[ImapManager] open Inbox box:%s", JSON.stringify(box));
-                    imap.search(["UNSEEN", "1:*"], function(err, results) {
+                    imap.search(["UNSEEN", "1:*"], (err, results) => {
                         if (err) {
-                            logger.error("[ImapManager] err:%s", JSON.stringify(e));
+                            logger.error("[ImapManager] search mail err:%s", JSON.stringify(e));
                             reject("search error");
+                        } else if (results) {
+                            _self.fetch(results, { bodies: "" }, mailArr => {
+                                resolve(mailArr);
+                            });
                         }
-                        fetch(results, { bodies: "" }, mailArr => {
-                            resolve(mailArr);
-                        });
-
-                        // f.once("error", function(err) {
-                        //     console.log("Fetch error: " + err);
-                        // });
-                        // f.once("end", function() {
-                        //     console.log("Done fetching all messages!");
-                        //     imap.end();
-                        // });
                     });
                 }
             });
@@ -109,7 +112,5 @@ class ImapManager {
     }
 
 }
-
-
 
 module.exports = ImapManager;

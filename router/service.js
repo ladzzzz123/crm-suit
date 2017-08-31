@@ -15,30 +15,19 @@ const logger = require("node-process-bearer").logger.getLogger({
     logLevel: 0, // see detail @LOG_LEVEL
     showLineNumber: false, // value @[true, false], show line number or not
 });
-const config = require("../config/service");
 
 let export_func = {
     name: "router"
 };
 let courier = new Courier(export_func);
 
-function init() {
-    logger.info("[router] imapConfig:" + JSON.stringify(config.imap));
-    courier.sendCall("imap", "connect", ret => {
-        logger.info("============================================");
-        logger.info("[router] connect imap:" + JSON.stringify(ret));
-    }, config.imap);
-}
-init();
-
-
 router
-    .get("/", (ctx, next) => {
+    .get("/", async(ctx, next) => {
         logger.info("[router] path: /");
         ctx.body = "Hello World!";
         ctx.status = 200;
     })
-    .get("/account", (ctx, next) => {
+    .get("/account", async(ctx, next) => {
         logger.info("[router] path: /account");
         courier.sendCall("account", "verify", ret => {
             logger.info("[router] call account:" + JSON.stringify(ret));
@@ -46,17 +35,29 @@ router
             next(ret);
         }, { username: "aaa", passwd: "bbb" });
     })
-    .get("/account/login", (ctx, next) => {
+    .get("/account/login", async(ctx, next) => {
         logger.info("[router] path: /account/login");
     })
-    .post("/account/register", (ctx, next) => {
+    .post("/account/register", async(ctx, next) => {
         logger.info("[router] path: /account/register");
     });
 
-router.get("/imap-call", (ctx, next) => {
-    courier.sendCall("imap", "getNewMail", ret => {
+router.get("/imap-call", async(ctx, next) => {
+    let _ret = {};
+    await courier.sendAsyncCall("mail", "asyncGetNewMail", ret => {
         logger.info("[router] get New Mail:" + JSON.stringify(ret));
+        _ret = ret;
     });
+    ctx.body = _ret;
+});
+
+router.get("/send-mail-test", async(ctx, next) => {
+    let _ret = {};
+    await courier.sendAsyncCall("mail", "asyncSendMail", ret => {
+        logger.info("[router] get New Mail:" + JSON.stringify(ret));
+        _ret = ret;
+    }, "songshan.xu@cootek.cn", "test", "content is testing");
+    ctx.body = _ret;
 });
 
 app

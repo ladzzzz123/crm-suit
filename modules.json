@@ -1,10 +1,16 @@
 [{
-        "name": "imap"
+        "name": "mail"
     },
     {
         "name": "router"
     },
     {
         "name": "account"
+    },
+    {
+        "name": "dbopter"
+    },
+    {
+        "name": "plan-order"
     }
 ]

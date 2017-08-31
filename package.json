@@ -13,6 +13,8 @@
         "imap": "^0.8.19",
         "koa": "^2.3.0",
         "koa-router": "^7.2.1",
-        "node-process-bearer": "0.0.5"
+        "mysql": "^2.14.1",
+        "node-process-bearer": "file:node-process-bearer-0.0.8.tgz",
+        "nodemailer": "^4.1.0"
     }
 }
