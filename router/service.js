@@ -42,6 +42,32 @@ router
         logger.info("[router] path: /account/register");
     });
 
+
+router
+    .get("/plan-order", async(ctx, next) => {
+
+    })
+    .get("/plan-order/list", async(ctx, next) => {
+        let _ret = "";
+        await courier.sendAsyncCall("plan-order", "asyncFetchPlan", ret => {
+            logger.info("[router] plan-order job list:" + JSON.stringify(ret));
+            _ret = ret;
+        });
+        ctx.body = _ret;
+    })
+    .post("/plan-order/accept", async(ctx, next) => {
+        let postData = await parsePostData(ctx);
+        postData = JSON.parse(postData[0]);
+        let _ret = "";
+        logger.info("[router] postData: %s", JSON.stringify(postData));
+        await courier.sendAsyncCall("plan-order", "asyncAcceptPlan", ret => {
+            logger.info("[router] get New Mail:" + JSON.stringify(ret));
+            _ret = ret;
+        }, postData.plan_id, postData.opter);
+        ctx.body = _ret;
+    });
+
+
 router.get("/imap-call", async(ctx, next) => {
     let _ret = {};
     await courier.sendAsyncCall("mail", "asyncGetNewMail", ret => {
@@ -65,3 +91,34 @@ app
     .use(router.allowedMethods());
 
 http.createServer(app.callback()).listen(DEFAULT_PORT);
+
+
+// 解析上下文里node原生请求的POST参数
+function parsePostData(ctx) {
+    return new Promise((resolve, reject) => {
+        try {
+            let postdata = "";
+            ctx.req.addListener("data", (data) => {
+                postdata += data;
+            });
+            ctx.req.addListener("end", function() {
+                let parseData = parseQueryStr(postdata);
+                resolve(parseData);
+            });
+        } catch (err) {
+            reject(err);
+        }
+    });
+}
+
+// 将POST请求参数字符串解析成JSON
+function parseQueryStr(queryStr) {
+    let queryData = {};
+    let queryStrList = queryStr.split('&');
+    console.log(queryStrList);
+    for (let [index, queryStr] of queryStrList.entries()) {
+        let itemList = queryStr.split('=');
+        queryData[itemList[0]] = decodeURIComponent(itemList[1]);
+    }
+    return queryData;
+}

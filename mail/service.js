@@ -3,6 +3,8 @@ const logger = require("node-process-bearer").logger.getLogger();
 const ImapManager = require("./ImapManager");
 const nodemailer = require("nodemailer");
 const SMTPConnection = require("nodemailer/lib/smtp-connection");
+const MAIL_MODULE = require("./mail_module");
+
 
 let imapManager = {},
     smtpManager = {};
@@ -27,7 +29,6 @@ let export_func = {
     },
 
     smtpConnect: (conf) => {
-        // smtpManager = new SMTPConnection(conf);
         smtpManager = nodemailer.createTransport(conf);
         smtpManager.name = "smtp";
         smtpManager.verify(function(error, success) {
@@ -68,7 +69,7 @@ let export_func = {
         let option = {
             from: mailConfig.smtp.auth.user,
             to: to,
-            bcc: "songshan.xu@cootek.cn", //抄送
+            bcc: "songshan.xu@cootek.cn", //bcc
             subject: subject,
             text: content
         };
@@ -115,46 +116,74 @@ let export_func = {
 
     },
 
-    sendVerify: (...args) => {
-        logger.info(`[imap] args: ${JSON.stringify(args)}`);
-        courier.sendCall("account", "verify", ret => {
-            logger.info("[testModule2] callModule1:" + JSON.stringify(ret));
-        }, { username: "aaa", passwd: "aaa" });
-    }
 };
 
 let courier = new Courier(export_func);
 courier.listening(() => {
     export_func.asyncGetNewMail()
         .then(mailArr => {
-            asyncMail(mailArr);
+            return asyncMail(mailArr);
+        })
+        .then(ret => {
+            logger.info("[mail] listening asyncGetNewMail ret: %s", JSON.stringify(ret));
         })
         .catch(err => {
-
+            logger.warn("[mail] listening asyncGetNewMail err: %s", JSON.stringify(err));
         });
 }, 30 * 1000);
 
+const REG_FETCH_SYM = /(\n|\t|\\.|\ )/gi;
+const REG_MATCH_MAIL = /<.*?>/gi;
+const REG_RM_MAIL_SYM = /(<|>)/gi;
+
+function formatMail(arr) {
+    let formated = arr;
+    if (Array.isArray(arr)) {
+        formated = (arr.toString()).replace(REG_FETCH_SYM, "");
+    } else {
+        formated = String.prototype.replace.call(arr, REG_RM_MAIL_SYM, "");
+    }
+    REG_MATCH_MAIL.test(formated) && (formated = formated.match(REG_MATCH_MAIL)) && (formated.toString());
+    try {
+        formated = String.prototype.replace.call(formated, REG_RM_MAIL_SYM, "");
+    } catch (e) {
+        logger.warn("[mail] formatMail e:%s", e);
+    }
+    return formated;
+}
+
+const REG_FETCH_MAIL_MODULE = /(\[.*?\])/gi;
 
 function asyncMail(mailArr) {
-    const INSERT_MAIL = "INSERT INTO mail_info (title, m_from, m_to, m_status) VALUES ?";
     let insertArr = Array.prototype.map.call(mailArr, mail => {
-        return {
-            title: mail.subject,
-            m_from: mail.from,
-            m_to: mail.to,
-            m_cc: mail["cc"] || "",
-            date: mail.date
+        let neoMail = {
+            title: formatMail(mail.subject),
+            m_from: formatMail(mail.from),
+            m_to: formatMail(mail.to),
+            m_cc: formatMail(mail["cc"] || "none"),
+            m_date: new Date(mail.date.toString())
         };
+        neoMail.m_module = MAIL_MODULE[neoMail.title.match(REG_FETCH_MAIL_MODULE)[0]] || "all";
+        logger.info("[mail] neo mail:%s", JSON.stringify(neoMail));
+        return neoMail;
     });
+    logger.info("[mail] asyncMail mailArr.length: %s", insertArr.length);
+
     if (insertArr.length > 0) {
         return new Promise((resolve, reject) => {
-            courier.sendCall("dbopter", "asyncInsert", ret => {
-                logger.info("[mail] db insert ret:" + JSON.stringify(ret));
-                resolve(ret);
-            }, "market_db", INSERT_MAIL, insertArr);
+            courier.sendAsyncCall("dbopter", "asyncInsert", () => {}, "market_db", "mail_info", insertArr)
+                .then(ret => {
+                    logger.info("[mail] db insert ret:" + JSON.stringify(ret));
+                    resolve(ret);
+                })
+                .catch(err => {
+                    logger.warn("[mail] db insert err:" + JSON.stringify(err));
+                    reject(err);
+                });
+            setTimeout(reject, 5000);
         });
     } else {
-        return Promise.reject();
+        return Promise.reject("nothing to insert");
     }
 }
 

@@ -59,7 +59,6 @@ class ImapManager {
                     logger.info(`[ImapManager] Mail Data seqno:${seqno} from:${mail_data.from}, subject:${mail_data.subject}`);
                     msgArr.push(mail_data);
                 });
-                // stream.pipe(fs.createWriteStream("msg-" + seqno + "-body.txt"));
             });
             msg.once("attributes", function(attrs) {
                 imap.setFlags(attrs.uid, ["SEEN"], err => {
@@ -86,18 +85,19 @@ class ImapManager {
             }
             imap.openBox("INBOX", false, (err, box) => {
                 if (err) {
-                    logger.error("[ImapManager] open Inbox err:%s", JSON.stringify(err));
+                    logger.warn("[ImapManager] open Inbox err:%s", JSON.stringify(err));
                     reject("open inbox error");
                 } else {
-                    logger.info("[ImapManager] open Inbox box:%s", JSON.stringify(box));
                     imap.search(["UNSEEN", "1:*"], (err, results) => {
                         if (err) {
-                            logger.error("[ImapManager] search mail err:%s", JSON.stringify(e));
+                            logger.warn("[ImapManager] search mail err:%s", JSON.stringify(err));
                             reject("search error");
                         } else if (results) {
                             _self.fetch(results, { bodies: "" }, mailArr => {
                                 resolve(mailArr);
                             });
+                        } else {
+                            reject("unknon error");
                         }
                     });
                 }

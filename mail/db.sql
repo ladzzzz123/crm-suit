@@ -5,6 +5,8 @@ CREATE TABLE mail_info (
     m_to      VARCHAR(128) NOT NULL COMMENT "收件人", 
     m_cc      VARCHAR(255) COMMENT "抄送", 
     m_date    DATETIME,
+    m_module  VARCHAR(32) COMMENT "处理模块名称",
+    m_opter   VARCHAR(128) COMMENT "当前处理人", 
     m_status  VARCHAR(32) NOT NULL DEFAULT "NEW" COMMENT "邮件处理状态[NEW, ACCEPT, RESOLVE, REJECT, UNKNOW]",
     last_edit TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     KEY(title, m_from, m_to, m_status)
