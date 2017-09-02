@@ -15,4 +15,4 @@ node_module
 node_module/
 .node_module
 *config.js
-!env_config.js.sample
+!*.sample

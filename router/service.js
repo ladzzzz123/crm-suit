@@ -9,12 +9,18 @@ const app = new Koa();
 const Router = require("koa-router");
 const router = Router();
 
+const koaBody = require("koa-body");
+
 const DEFAULT_PORT = 3002;
 const Courier = require("node-process-bearer").Courier;
 const logger = require("node-process-bearer").logger.getLogger({
     logLevel: 0, // see detail @LOG_LEVEL
     showLineNumber: false, // value @[true, false], show line number or not
 });
+
+app
+    .use(router.routes())
+    .use(router.allowedMethods());
 
 let export_func = {
     name: "router"
@@ -55,13 +61,12 @@ router
         });
         ctx.body = _ret;
     })
-    .post("/plan-order/accept", async(ctx, next) => {
-        let postData = await parsePostData(ctx);
-        postData = JSON.parse(postData[0]);
+    .post("/plan-order/accept", koaBody, async(ctx, next) => {
         let _ret = "";
-        logger.info("[router] postData: %s", JSON.stringify(postData));
+        logger.info("[router] ctx.request: %s", JSON.stringify(ctx.request.body));
+        let postData = ctx.request.body;
         await courier.sendAsyncCall("plan-order", "asyncAcceptPlan", ret => {
-            logger.info("[router] get New Mail:" + JSON.stringify(ret));
+            logger.info("[router] accept:" + JSON.stringify(ret));
             _ret = ret;
         }, postData.plan_id, postData.opter);
         ctx.body = _ret;
@@ -86,39 +91,6 @@ router.get("/send-mail-test", async(ctx, next) => {
     ctx.body = _ret;
 });
 
-app
-    .use(router.routes())
-    .use(router.allowedMethods());
+
 
 http.createServer(app.callback()).listen(DEFAULT_PORT);
-
-
-// 解析上下文里node原生请求的POST参数
-function parsePostData(ctx) {
-    return new Promise((resolve, reject) => {
-        try {
-            let postdata = "";
-            ctx.req.addListener("data", (data) => {
-                postdata += data;
-            });
-            ctx.req.addListener("end", function() {
-                let parseData = parseQueryStr(postdata);
-                resolve(parseData);
-            });
-        } catch (err) {
-            reject(err);
-        }
-    });
-}
-
-// 将POST请求参数字符串解析成JSON
-function parseQueryStr(queryStr) {
-    let queryData = {};
-    let queryStrList = queryStr.split('&');
-    console.log(queryStrList);
-    for (let [index, queryStr] of queryStrList.entries()) {
-        let itemList = queryStr.split('=');
-        queryData[itemList[0]] = decodeURIComponent(itemList[1]);
-    }
-    return queryData;
-}
