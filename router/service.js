@@ -9,7 +9,7 @@ const app = new Koa();
 const Router = require("koa-router");
 const router = Router();
 
-const koaBody = require("koa-body");
+const bodyParser = require("koa-bodyparser");
 
 const DEFAULT_PORT = 3002;
 const Courier = require("node-process-bearer").Courier;
@@ -19,6 +19,7 @@ const logger = require("node-process-bearer").logger.getLogger({
 });
 
 app
+    .use(bodyParser())
     .use(router.routes())
     .use(router.allowedMethods());
 
@@ -61,7 +62,7 @@ router
         });
         ctx.body = _ret;
     })
-    .post("/plan-order/accept", koaBody, async(ctx, next) => {
+    .post("/plan-order/accept", async(ctx, next) => {
         let _ret = "";
         logger.info("[router] ctx.request: %s", JSON.stringify(ctx.request.body));
         let postData = ctx.request.body;
