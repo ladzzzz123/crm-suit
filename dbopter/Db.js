@@ -11,9 +11,12 @@ class Db {
 
     connect() {
         this.dbConnect.connect(err => {
-            if (err) logger.error("[Db] connect error: %s", JSON.stringify(err));
-            logger.info("[Db] connected: %s", this.conf.name);
-            this.isConnected = true;
+            if (err) {
+                logger.error("[Db] connect error: %s", JSON.stringify(err));
+            } else {
+                logger.info("[Db] connected: %s", this.conf.name);
+                this.isConnected = true;
+            }
         });
     }
 
