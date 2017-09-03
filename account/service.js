@@ -1,6 +1,8 @@
 const Courier = require("node-process-bearer").Courier;
 const logger = require("node-process-bearer").logger.getLogger();
 
+const dbOpter = require("./dataOpt");
+
 let export_func = {
     name: "account",
     init: () => {
@@ -16,7 +18,15 @@ let export_func = {
 
     },
     asyncVerify: (token, module) => {
-
+        return new Promise((resolve, reject) => {
+            dbOpter.queryUserInfo("u_name", user_name, "passwd", passwd)
+                .then(ret => {
+                    resolve({});
+                })
+                .catch(err => {
+                    reject();
+                });
+        });
     },
 
     asyncAddUser: (user_info) => {

@@ -17,8 +17,8 @@ module.exports = {
             if (err) {
                 logger.error("[Db] connect error: %s", JSON.stringify(err));
             } else {
-                logger.info("[Db] connected: %s", this.conf.name);
-                this.isConnected = true;
+                logger.info("[Db] connected: %s", JSON.stringify(dbConfig));
+                db_self.isConnected = true;
             }
         });
     },
