@@ -5,6 +5,8 @@ const nodemailer = require("nodemailer");
 const SMTPConnection = require("nodemailer/lib/smtp-connection");
 const MAIL_MODULE = require("./mail_module");
 
+const mysql = require("mysql");
+
 
 let imapManager = {},
     smtpManager = {};
@@ -156,12 +158,14 @@ const REG_FETCH_MAIL_MODULE = /(\[.*?\])/gi;
 
 function asyncMail(mailArr) {
     let insertArr = Array.prototype.map.call(mailArr, mail => {
+        let m_date = new Date(mail.date);
+        logger.info("[mail] neo mail typeof date:%s", typeof(m_date));
         let neoMail = {
             title: formatMail(mail.subject),
             m_from: formatMail(mail.from),
             m_to: formatMail(mail.to),
             m_cc: formatMail(mail["cc"] || "none"),
-            m_date: new Date(mail.date.toString())
+            // m_date: m_date
         };
         neoMail.m_module = MAIL_MODULE[neoMail.title.match(REG_FETCH_MAIL_MODULE)[0]] || "all";
         logger.info("[mail] neo mail:%s", JSON.stringify(neoMail));

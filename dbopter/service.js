@@ -22,43 +22,12 @@ function execOpt(target, sql_opt, params) {
                 }
             });
         } else {
-            logger.error("[dbopt] execOpt error: %s", err);
+            logger.error("[dbopt] execOpt not exist: %s", target);
             reject(`opt ${target} not exist`);
         }
     });
 }
 
-// function queryOpt(target, sql_opt) {
-//     logger.info("[dbopt] execOpt target: %s", target);
-//     let opt = dbMap.get(target);
-//     if (opt) {
-//         logger.info("[dbopt] execOpt opt exist: %s query type: %s", opt.dbName, typeof(opt.query));
-//         opt.query(sql_opt)
-//             .on("error", err => {
-//                 logger.error("[dbopt] execOpt error: %s", err);
-
-//             })
-//             .on("fields", fields => {
-//                 // 查询行字段包信息
-//                 logger.error("[dbopt] execOpt error: %s", err);
-
-//             })
-//             .on("result", row => {
-//                 // 暂停你正在使用进程的I/O操作
-//                 connection.pause();
-
-//                 processRow(row, function() {
-//                     connection.resume();
-//                 });
-//             })
-//             .on("end", function() {
-//                 // 所有行查询完成或发生错误后触发
-//             });
-//     } else {
-//         logger.error("[dbopt] execOpt error: %s", err);
-//         reject(`opt ${target} not exist`);
-//     }
-// }
 
 let export_func = {
     name: "dbopter",
@@ -85,7 +54,7 @@ let export_func = {
     asyncUpdate: (target, table, params, conditions) => {
         let SQL_UPDATE = `UPDATE ${table} SET ? WHERE ${conditions}`;
         logger.info(`[dbopter] asyncUpdate called: ${target}, ${table}, ${params}, ${conditions}`);
-        return execOpt(target, SQL_UPDATE, params);
+        return execOpt(target, SQL_UPDATE, mysql.escape(params));
     },
 
     reConnect: () => {

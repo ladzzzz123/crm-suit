@@ -26,8 +26,8 @@ let export_func = {
                 m_status: "ACCEPT",
                 m_opter: opter
             };
-            let conditions = `_id = ${plan_id}`;
-            courier.sendAsyncCall("dbopter", "asyncUpdate", () => {}, "market_db", "mail", params, conditions)
+            let conditions = `_id = ${mysql.escape(plan_id)} AND (m_opter = NULL OR m_opter = ${mysql.escape(opter)} `;
+            courier.sendAsyncCall("dbopter", "asyncUpdate", () => {}, "market_db", "mail_info", params, conditions)
                 .then(ret => {
                     if (ret.affectedRows && ret.affectedRows > 0) {
                         resolve({ status: "success", msg: "接单成功" });

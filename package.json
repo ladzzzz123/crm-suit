@@ -16,6 +16,7 @@
         "koa-router": "^7.2.1",
         "mysql": "^2.14.1",
         "node-process-bearer": "file:node-process-bearer-0.0.8.tgz",
-        "nodemailer": "^4.1.0"
+        "nodemailer": "^4.1.0",
+        "redis": "^2.8.0"
     }
 }
