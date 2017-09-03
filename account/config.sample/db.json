@@ -1,9 +1,9 @@
-[{
-    "name": "market_db",
+{
+    "name": "account",
     "host": "121.52.35.231",
     "user": "cootek",
     "password": "cootek",
     "database": "market_db",
     "port": 3306,
     "useConnectionPooling": true
-}]
+}
