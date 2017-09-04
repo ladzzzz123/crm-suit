@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width initial-scale=1 user-scalable=no">
+    <title>Dialer Inner Login</title>
+    <link href="http://dialer.cdn.cootekservice.com/web/sdk/reset/reset.css" rel="stylesheet" />
+    <link href="/css/style.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="container">
+        欢迎 {{ user_name }}, 您可以使用以下功能：
+        <div class="queryPlan" onclick="query()">查询当前任务</div>
+        <ul class="list"></ul>
+    </div>
+
+    <script>
+        let _token = "{{ token }}";
+    </script>
+    <!-- script -->
+    <script src="http://dialer.cdn.cootekservice.com/web/sdk/reset/reset.min.js "></script>
+    <script src="/js/request.js"></script>
+    <script src="/js/main.js"></script>
+    <!-- script end -->
+</body>
+
+</html>

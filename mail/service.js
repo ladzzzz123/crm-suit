@@ -67,7 +67,7 @@ let export_func = {
         }
     },
 
-    asyncSendMail: (to, subject, content, attachments) => {
+    asyncSendMail: (to, subject, content, cc, attachments) => {
         let option = {
             from: mailConfig.smtp.auth.user,
             to: to,
@@ -75,6 +75,7 @@ let export_func = {
             subject: subject,
             text: content
         };
+        option.cc = cc || "";
         option.attachments = attachments || "";
         if (smtpManager.connected) {
             return new Promise((resolve, reject) => {
@@ -154,18 +155,19 @@ function formatMail(arr) {
     return formated;
 }
 
-const REG_FETCH_MAIL_MODULE = /(\[.*?\])/gi;
+const REG_FETCH_MAIL_MODULE = /((\[|\【).*?(\]|\】))/gi;
 
 function asyncMail(mailArr) {
     let insertArr = Array.prototype.map.call(mailArr, mail => {
         let m_date = new Date(mail.date);
-        logger.info("[mail] neo mail typeof date:%s", typeof(m_date));
+        logger.info("[mail] neo mail prop:%s", JSON.stringify(Object.keys(mail)));
+        logger.info("[mail] neo mail:%s", JSON.stringify(mail));
         let neoMail = {
             title: formatMail(mail.subject),
             m_from: formatMail(mail.from),
             m_to: formatMail(mail.to),
             m_cc: formatMail(mail["cc"] || "none"),
-            // m_date: m_date
+            m_date: m_date
         };
         neoMail.m_module = MAIL_MODULE[neoMail.title.match(REG_FETCH_MAIL_MODULE)[0]] || "all";
         logger.info("[mail] neo mail:%s", JSON.stringify(neoMail));

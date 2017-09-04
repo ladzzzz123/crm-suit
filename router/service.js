@@ -2,14 +2,13 @@
 
 const http = require("http");
 const https = require("https");
-
 const Koa = require("koa");
 const app = new Koa();
-
 const Router = require("koa-router");
+const views = require("koa-views");
 const router = Router();
-
 const bodyParser = require("koa-bodyparser");
+const staticServer = require("koa-static");
 
 const DEFAULT_PORT = 3002;
 const Courier = require("node-process-bearer").Courier;
@@ -18,63 +17,133 @@ const logger = require("node-process-bearer").logger.getLogger({
     showLineNumber: false, // value @[true, false], show line number or not
 });
 
+
 app
+    .use(views(__dirname + "/views", {
+        map: { njk: "nunjucks" },
+        extension: "njk"
+    }))
     .use(bodyParser())
     .use(router.routes())
-    .use(router.allowedMethods());
+    .use(router.allowedMethods())
+    .use(staticServer(__dirname + "/views"));
 
 let export_func = {
     name: "router"
 };
 let courier = new Courier(export_func);
 
+
 router
-    .get("/", async(ctx, next) => {
+    .get("/crm-inner", async(ctx, next) => {
         logger.info("[router] path: /");
-        ctx.body = "Hello World!";
+        await ctx.render("login.njk", {});
         ctx.status = 200;
     })
-    .get("/account", async(ctx, next) => {
-        logger.info("[router] path: /account");
-        courier.sendCall("account", "verify", ret => {
-            logger.info("[router] call account:" + JSON.stringify(ret));
-            ctx.body = ret;
-            next(ret);
-        }, { username: "aaa", passwd: "bbb" });
-    })
-    .get("/account/login", async(ctx, next) => {
+    .post("/crm-inner/account/login", async(ctx, next) => {
         logger.info("[router] path: /account/login");
+        let _ret = "";
+        let postData = ctx.request.body;
+        await courier.sendAsyncCall("account", "asyncLogin", ret => {
+            logger.info("[router] call account asyncLogin:" + JSON.stringify(ret));
+            _ret = ret;
+        }, postData.user_name, postData.passwd);
+
+        if (_ret.status === 2000) {
+            let info = _ret.info;
+            await ctx.render("main.njk", { user_name: info.name, token: info.token });
+        } else {
+            await ctx.render("login.njk", {});
+        }
     })
-    .post("/account/register", async(ctx, next) => {
+    .get("/crm-inner/account/active", async(ctx, next) => {
+        logger.info("[router] path: /account/active");
+
+    })
+    .post("/crm-inner/account/register", async(ctx, next) => {
         logger.info("[router] path: /account/register");
     });
 
-
 router
-    .get("/plan-order", async(ctx, next) => {
-
-    })
-    .get("/plan-order/list", async(ctx, next) => {
-        let _ret = "";
-        await courier.sendAsyncCall("plan-order", "asyncFetchPlan", ret => {
-            logger.info("[router] plan-order job list:" + JSON.stringify(ret));
-            _ret = ret;
-        });
+    .post("/crm-inner/plan-order/list", async(ctx, next) => {
+        let _ret = "",
+            verify = {};
+        let postData = ctx.request.body;
+        logger.info("[router] ctx.request: %s", JSON.stringify(ctx.request.body));
+        if (!verifyParams(postData, "token")) {
+            ctx.body = { status: 4001, msg: "missing params" };
+            return;
+        }
+        verify = await courier.sendAsyncCall("account", "asyncVerify", () => {}, postData.token, "plan-order", "opter");
+        logger.debug("verify:" + JSON.stringify(verify));
+        if (verify.pass) {
+            await courier.sendAsyncCall("plan-order", "asyncFetchPlan", ret => {
+                logger.info("[router] plan-order job list:" + JSON.stringify(ret));
+                _ret = { status: 2000, content: ret, msg: "fetch list end" };
+            });
+        } else {
+            _ret = { status: 4000, msg: "verify failed" };
+        }
         ctx.body = _ret;
     })
-    .post("/plan-order/accept", async(ctx, next) => {
-        let _ret = "";
+    .post("/crm-inner/plan-order/accept", async(ctx, next) => {
+        let _ret = "",
+            verify = {};
         logger.info("[router] ctx.request: %s", JSON.stringify(ctx.request.body));
         let postData = ctx.request.body;
-        await courier.sendAsyncCall("plan-order", "asyncAcceptPlan", ret => {
-            logger.info("[router] accept:" + JSON.stringify(ret));
-            _ret = ret;
-        }, postData.plan_id, postData.opter);
+        if (!verifyParams(postData, ["token", "plan_id"])) {
+            ctx.body = { status: 4001, msg: "missing params" };
+            return;
+        }
+        verify = await courier.sendAsyncCall("account", "asyncVerify", () => {}, postData.token, "plan-order", "opter");
+        logger.debug("verify:" + JSON.stringify(verify));
+        if (verify.pass) {
+            let opter = verify.info.name;
+            await courier.sendAsyncCall("plan-order", "asyncAcceptPlan", ret => {
+                logger.info("[router] accept:" + JSON.stringify(ret));
+                _ret = { status: 2000, content: ret };
+            }, postData.plan_id, opter);
+        } else {
+            _ret = { status: 4000, msg: "verify failed" };
+        }
         ctx.body = _ret;
     });
 
+router
+    .post("/crm-inner/manager/add-user", async(ctx, next) => {
+        let _ret = "",
+            verify = {};
+        logger.info("[router] ctx.request: %s", JSON.stringify(ctx.request.body));
+        let postData = ctx.request.body;
+        if (!verifyParams(postData, ["token", "userInfo"])) {
+            ctx.body = { status: 4001, msg: "missing params" };
+            return;
+        }
+        verify = await courier.sendAsyncCall("account", "asyncVerify", () => {}, postData.token, "account", "admin");
+        if (verify.pass) {
+            _ret = { status: 4002, msg: "add failed" };
 
-router.get("/imap-call", async(ctx, next) => {
+            let insert_ret = await courier.sendAsyncCall("account", "asyncAddUser", ret => {
+                logger.info("[router] accept:" + JSON.stringify(ret));
+                _ret = { status: 2000, content: ret };
+            }, postData.userInfo);
+
+            if (insert_ret.status === "success") {
+                let info = insert_ret.ret;
+                await courier.sendAsyncCall("mail", "asyncSendMail", ret => {
+                    logger.info("[router] get New Mail:" + JSON.stringify(ret));
+                }, info.mail, "您的账号已经创建成功", `点击此处登录：http://10.0.9.169:3002/crm-inner \n 用户名：${info.u_name} \n 密码：${info.passwd}`);
+                _ret = { status: 2000, msg: "create user success" };
+            }
+        } else {
+            _ret = { status: 4000, msg: "verify failed" };
+        }
+        ctx.body = _ret;
+
+    });
+
+
+router.get("/crm-inner/imap-call", async(ctx, next) => {
     let _ret = {};
     await courier.sendAsyncCall("mail", "asyncGetNewMail", ret => {
         logger.info("[router] get New Mail:" + JSON.stringify(ret));
@@ -83,7 +152,7 @@ router.get("/imap-call", async(ctx, next) => {
     ctx.body = _ret;
 });
 
-router.get("/send-mail-test", async(ctx, next) => {
+router.get("/crm-inner/send-mail-test", async(ctx, next) => {
     let _ret = {};
     await courier.sendAsyncCall("mail", "asyncSendMail", ret => {
         logger.info("[router] get New Mail:" + JSON.stringify(ret));
@@ -93,5 +162,19 @@ router.get("/send-mail-test", async(ctx, next) => {
 });
 
 
+
+function verifyParams(params, types) {
+    if (Array.isArray(types)) {
+        return types.every(item => params.hasOwnProperty(item));
+    } else {
+        switch (types) {
+            case "token":
+                return params.hasOwnProperty("token");
+            default:
+                break;
+        }
+    }
+    return false;
+}
 
 http.createServer(app.callback()).listen(DEFAULT_PORT);

@@ -15,15 +15,15 @@ function execOpt(target, sql_opt, params) {
             opt.query(sql_opt, params, (err, result) => {
                 if (err) {
                     logger.error("[dbopt] execOpt error: %s", err);
-                    reject(err);
+                    reject({ status: "error", ret: err });
                 } else {
-                    logger.info("[dbopt] execOpt result: %s", result);
-                    resolve(result);
+                    logger.info("[dbopt] execOpt result: %s", JSON.stringify(result));
+                    resolve({ status: "success", ret: result });
                 }
             });
         } else {
             logger.error("[dbopt] execOpt not exist: %s", target);
-            reject(`opt ${target} not exist`);
+            reject({ status: "error", ret: `opt ${target} not exist` });
         }
     });
 }
@@ -53,8 +53,16 @@ let export_func = {
 
     asyncUpdate: (target, table, params, conditions) => {
         let SQL_UPDATE = `UPDATE ${table} SET ? WHERE ${conditions}`;
+        let SQL_SELECT = `SELECT * FROM ${table} WHERE ${conditions}`;
         logger.info(`[dbopter] asyncUpdate called: ${target}, ${table}, ${params}, ${conditions}`);
-        return execOpt(target, SQL_UPDATE, mysql.escape(params));
+        return execOpt(target, SQL_UPDATE, params)
+            .then(ret => {
+                if (ret.status === "success" && ret.ret.affectedRows && ret.ret.affectedRows > 0) {
+                    return execOpt(target, SQL_SELECT, []);
+                } else {
+                    return Promise.resolve({ status: "failed", ret: ret });
+                }
+            });
     },
 
     reConnect: () => {

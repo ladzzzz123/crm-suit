@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width initial-scale=1 user-scalable=no">
+    <title>Dialer Inner Login</title>
+    <link href="http://dialer.cdn.cootekservice.com/web/sdk/reset/reset.css" rel="stylesheet" />
+    <link href="/css/style.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="container">
+        <form action="/crm-inner/account/login" method="POST" enctype="application/json">
+            用户名(邮箱) <input type="text" name="user_name" />
+            <br/> 密码 <input type="password" name="passwd" />
+            <button type="submit">登录</button>
+        </form>
+    </div>
+
+    <!-- script -->
+    <script src="http://dialer.cdn.cootekservice.com/web/sdk/reset/reset.min.js "></script>
+    <!-- script end -->
+</body>
+
+</html>

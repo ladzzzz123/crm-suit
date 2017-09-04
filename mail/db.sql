@@ -4,6 +4,7 @@ CREATE TABLE mail_info (
     m_from    VARCHAR(128) NOT NULL COMMENT "发件人", 
     m_to      VARCHAR(128) NOT NULL COMMENT "收件人", 
     m_cc      VARCHAR(255) COMMENT "抄送", 
+    m_content VARCHAR(255) COMMENT "邮件正文",
     m_date    DATETIME,
     m_module  VARCHAR(32) COMMENT "处理模块名称",
     m_opter   VARCHAR(128) COMMENT "当前处理人", 

@@ -26,10 +26,18 @@ let export_func = {
                 m_status: "ACCEPT",
                 m_opter: opter
             };
-            let conditions = `_id = ${mysql.escape(plan_id)} AND (m_opter = NULL OR m_opter = ${mysql.escape(opter)} `;
+            let conditions = `_id = ${plan_id} AND (m_opter IS NULL OR m_opter = "${opter}") `;
             courier.sendAsyncCall("dbopter", "asyncUpdate", () => {}, "market_db", "mail_info", params, conditions)
                 .then(ret => {
-                    if (ret.affectedRows && ret.affectedRows > 0) {
+                    if (ret.status === "success") {
+                        let info = {};
+                        if (Array.isArray(ret.ret) && ret.ret.length > 0) {
+                            info = ret.ret[0];
+                        }
+                        courier.sendAsyncCall("mail", "asyncSendMail", ret => {
+                            logger.info("[router] get New Mail:" + JSON.stringify(ret));
+                            _ret = ret;
+                        }, info.m_from, `${opter} accept the plan ${info.title}`, `${opter} accept the plan!`, "simon.song@cootek.cn");
                         resolve({ status: "success", msg: "接单成功" });
                     } else {
                         resolve({ status: "failed", msg: "接单失败" });
