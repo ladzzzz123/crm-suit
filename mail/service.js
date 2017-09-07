@@ -71,7 +71,7 @@ let export_func = {
         let option = {
             from: mailConfig.smtp.auth.user,
             to: to,
-            bcc: "songshan.xu@cootek.cn", //bcc
+            // bcc: "songshan.xu@cootek.cn", //bcc
             subject: subject,
             text: content
         };

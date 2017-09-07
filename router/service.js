@@ -139,7 +139,6 @@ router
             _ret = { status: 4000, msg: "verify failed" };
         }
         ctx.body = _ret;
-
     });
 
 

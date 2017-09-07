@@ -9,7 +9,7 @@ function query() {
             list.addEventListener("click", e => {
                 let item = e.target;
                 switch (true) {
-                    case [...item.classList].includes("accept"):
+                    case Array.prototype.indexOf.call(item.classList, "accept") > -1:
                         if (JSON.parse(item.parentNode.dataset.acceptable)) {
                             acceptPlan(item.parentNode.dataset.planId);
                         } else {

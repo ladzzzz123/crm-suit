@@ -37,7 +37,7 @@ let export_func = {
                         courier.sendAsyncCall("mail", "asyncSendMail", ret => {
                             logger.info("[router] get New Mail:" + JSON.stringify(ret));
                             _ret = ret;
-                        }, info.m_from, `${opter} accept the plan ${info.title}`, `${opter} accept the plan!`, "simon.song@cootek.cn");
+                        }, info.m_from, `${opter} accept the plan ${info.title}`, `${opter} accept the plan!`);
                         resolve({ status: "success", msg: "接单成功" });
                     } else {
                         resolve({ status: "failed", msg: "接单失败" });
