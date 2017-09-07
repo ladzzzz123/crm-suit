@@ -16,6 +16,7 @@
         "koa-router": "^7.2.1",
         "koa-static": "^4.0.1",
         "koa-views": "^6.0.2",
+        "mailparser": "^2.0.5",
         "mysql": "^2.14.1",
         "node-process-bearer": "^0.0.10",
         "nodemailer": "^4.1.0",

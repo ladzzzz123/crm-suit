@@ -1,4 +1,6 @@
 const Imap = require("imap"),
+    MailParser = require("mailparser").MailParser,
+    simpleParser = require("mailparser").simpleParser,
     inspect = require("util").inspect,
     fs = require("fs"),
     logger = require("node-process-bearer").logger.getLogger();
@@ -8,6 +10,7 @@ class ImapManager {
         logger.info("[ImapMangaer] imap_conf:" + JSON.stringify(imap_conf));
         this.imap = new Imap(imap_conf);
         this.connected = false;
+        this.fileSavePath = imap_conf.savePath || "";
     }
 
     connect(callback) {
@@ -40,7 +43,7 @@ class ImapManager {
         let imap = this.imap;
         if (results.length < 1) {
             logger.debug("[fetch] fetch result empty");
-            callback([]);
+            callback(null);
             return;
         }
         let f = this.imap.fetch(results, { bodies: "" });
@@ -49,27 +52,60 @@ class ImapManager {
             logger.info("[ImapManager] fetch Message #%d  message:%s", seqno, JSON.stringify(msg));
             let mail_data = {};
             msg.on("body", function(stream, info) {
-                logger.info(`[ImapManager] fetch Body seqno:${seqno} info:${JSON.stringify(info)}`);
-                let buffer = "";
-                stream.on("data", function(chunk) {
-                    buffer += chunk.toString("utf8");
-                });
-                stream.on("end", function() {
-                    mail_data = Imap.parseHeader(buffer);
-                    logger.info(`[ImapManager] Mail Data seqno:${seqno} from:${mail_data.from}, subject:${mail_data.subject}`);
-                    msgArr.push(mail_data);
-                });
+                simpleParser(stream)
+                    .then(mail => {
+                        logger.warn(`[ImapManager] mail keys:${JSON.stringify(Object.keys(mail))}`);
+                        logger.info("simpleParse mail.date:%s", JSON.stringify(mail.date));
+                        logger.info("simpleParse mail.html:%s", JSON.stringify(mail.html));
+                        // logger.info("simpleParse mail.text:%s", JSON.stringify(mail.text));
+                        // logger.info("simpleParse mail.textAsHtml:%s", JSON.stringify(mail.textAsHtml));
+                        // logger.info("simpleParse mail.attachments:%s", JSON.stringify(mail.attachments));
+                        let m_from = mail.from.value[0].address;
+                        let m_cc = mail.cc.value.map(cc => {
+                            return cc.address;
+                        });
+                        let m_to = mail.to.value[0].address;
+                        let m_date = new Date(mail.date);
+
+                        let neoMail = {
+                            title: mail.subject,
+                            m_from: m_from,
+                            m_to: m_to,
+                            m_cc: JSON.stringify(m_cc),
+                            m_date: m_date,
+                            m_content: mail.html,
+                            // m_attachments: mail.attachments
+                        };
+
+                        // let mail_data = {
+                        //     subject: mail.subject,
+                        //     from: m_from,
+                        //     cc: m_cc,
+                        //     date: mail.date,
+                        //     content: mail.html,
+                        //     attachments: mail.attachments
+                        // };
+
+                        // msgArr.push(mail_data);
+                        callback(neoMail);
+                    })
+                    .catch(err => {
+                        logger.error("simpleParse Error:%s", JSON.stringify(err));
+                    });
             });
-            msg.once("attributes", function(attrs) {
-                imap.setFlags(attrs.uid, ["SEEN"], err => {
-                    if (err) {
-                        logger.error(`[ImapManager] Mail setFlag error seqno:${seqno}, error:${JSON.stringify(err)}`);
-                    }
-                });
+            msg.on("attributes", (attrs) => {
+                mail_data.uid = attrs.uid;
+                // imap.setFlags(attrs.uid, ["SEEN"], err => {
+                //     if (err) {
+                //         logger.error(`[ImapManager] Mail setFlag error seqno:${seqno}, error:${JSON.stringify(err)}`);
+                //     } else {
+                //         logger.warn(`[ImapManager] Mail attributes keys: ${JSON.stringify(Object.keys(attrs))}`);
+                //         logger.warn(`[ImapManager] Mail attributes values: ${JSON.stringify(Object.values(attrs))}`);
+                //     }
+                // });
             });
-            msg.once("end", function() {
+            msg.on("end", () => {
                 logger.info(`[ImapManager] Mail fetch End seqno:${seqno}`);
-                callback(msgArr);
             });
         });
     }

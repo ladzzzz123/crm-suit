@@ -122,18 +122,22 @@ let export_func = {
 };
 
 let courier = new Courier(export_func);
-courier.listening(() => {
-    export_func.asyncGetNewMail()
-        .then(mailArr => {
-            return asyncMail(mailArr);
-        })
-        .then(ret => {
+let insertMail = async function() {
+    try {
+        let mail = await export_func.asyncGetNewMail();
+        let ret = await asyncMail(mail);
+        if (ret) {
             logger.info("[mail] listening asyncGetNewMail ret: %s", JSON.stringify(ret));
-        })
-        .catch(err => {
-            logger.warn("[mail] listening asyncGetNewMail err: %s", JSON.stringify(err));
-        });
-}, 30 * 1000);
+        }
+    } catch (e) {
+        logger.warn("[mail] listening asyncGetNewMail err: %s", JSON.stringify(err));
+    }
+};
+
+
+courier.listening(() => {
+    insertMail();
+}, 10 * 1000);
 
 const REG_FETCH_SYM = /(\n|\t|\\.|\ )/gi;
 const REG_MATCH_MAIL = /<.*?>/gi;
@@ -157,25 +161,31 @@ function formatMail(arr) {
 
 const REG_FETCH_MAIL_MODULE = /((\[|\【).*?(\]|\】))/gi;
 
-function asyncMail(mailArr) {
-    let insertArr = Array.prototype.map.call(mailArr, mail => {
-        let m_date = new Date(mail.date);
+function asyncMail(mail) {
+    // logger.info("[mail] mailArr.length:%s", mailArr.length);
+    // let insertArr = Array.prototype.map.call(mailArr, mail => {
+    // logger.info("[mail] neo mail m_from:%s", JSON.stringify(mail.from));
+    // logger.info("[mail] neo mail cc:%s", JSON.stringify(mail.cc));
+    // let neoMail = {
+    //     title: mail.subject,
+    //     m_from: formatMail(mail.from),
+    //     m_to: formatMail(mail.to),
+    //     m_cc: formatMail(mail["cc"] || "none"),
+    //     m_date: m_date,
+    //     m_content: mail.content
+    // };
+
+    // return neoMail;
+    // });
+    // if (insertArr.length > 0) {
+    if (mail) {
         logger.info("[mail] neo mail prop:%s", JSON.stringify(Object.keys(mail)));
-        logger.info("[mail] neo mail:%s", JSON.stringify(mail));
-        let neoMail = {
-            title: formatMail(mail.subject),
-            m_from: formatMail(mail.from),
-            m_to: formatMail(mail.to),
-            m_cc: formatMail(mail["cc"] || "none"),
-            m_date: m_date
-        };
+        let neoMail = Object.assign(mail);
+        delete neoMail.uid;
         neoMail.m_module = MAIL_MODULE[neoMail.title.match(REG_FETCH_MAIL_MODULE)[0]] || "all";
         logger.info("[mail] neo mail:%s", JSON.stringify(neoMail));
-        return neoMail;
-    });
-    if (insertArr.length > 0) {
         return new Promise((resolve, reject) => {
-            courier.sendAsyncCall("dbopter", "asyncInsert", () => {}, "market_db", "mail_info", insertArr)
+            courier.sendAsyncCall("dbopter", "asyncInsert", () => {}, "market_db", "mail_info", [neoMail])
                 .then(ret => {
                     logger.info("[mail] db insert ret:" + JSON.stringify(ret));
                     resolve(ret);

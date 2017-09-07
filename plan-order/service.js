@@ -35,9 +35,13 @@ let export_func = {
                             info = ret.ret[0];
                         }
                         courier.sendAsyncCall("mail", "asyncSendMail", ret => {
-                            logger.info("[router] get New Mail:" + JSON.stringify(ret));
-                            _ret = ret;
-                        }, info.m_from, `${opter} accept the plan ${info.title}`, `${opter} accept the plan!`);
+                                logger.info("[router] get New Mail:" + JSON.stringify(ret));
+                                _ret = ret;
+                            }, info.m_from,
+                            `${opter} accept the plan ${info.title}`,
+                            `${opter} accept the plan!`,
+                            info.m_cc
+                        );
                         resolve({ status: "success", msg: "接单成功" });
                     } else {
                         resolve({ status: "failed", msg: "接单失败" });
