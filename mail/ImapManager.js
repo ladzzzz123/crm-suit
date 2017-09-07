@@ -16,10 +16,10 @@ class ImapManager {
         logger.info("[imap] after connect called");
         imap.on("ready", (arg) => {
             logger.info("[imap] ready");
-            imap.getBoxes("", (err, ret) => {
+            imap.getBoxes("INBOX", (err, ret) => {
                 err ?
-                    logger.info("[imap] boxes ready: %s", JSON.stringify(ret)) :
-                    logger.warn("[imap] boxes error: %s", JSON.stringify(err));
+                    logger.warn("[imap] boxes error: %s", JSON.stringify(err)) :
+                    logger.info("[imap] boxes ready: %s", JSON.stringify(ret));
             });
             this.connected = true;
             (callback) && callback(true);
@@ -39,7 +39,7 @@ class ImapManager {
     fetch(results, body, callback) {
         let imap = this.imap;
         if (results.length < 1) {
-            logger.warn("[fetch] fetch result empty");
+            logger.debug("[fetch] fetch result empty");
             callback([]);
             return;
         }

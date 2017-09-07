@@ -173,8 +173,6 @@ function asyncMail(mailArr) {
         logger.info("[mail] neo mail:%s", JSON.stringify(neoMail));
         return neoMail;
     });
-    logger.info("[mail] asyncMail mailArr.length: %s", insertArr.length);
-
     if (insertArr.length > 0) {
         return new Promise((resolve, reject) => {
             courier.sendAsyncCall("dbopter", "asyncInsert", () => {}, "market_db", "mail_info", insertArr)
@@ -189,7 +187,7 @@ function asyncMail(mailArr) {
             setTimeout(reject, 5000);
         });
     } else {
-        return Promise.reject("nothing to insert");
+        return Promise.resolve("nothing to insert");
     }
 }
 
