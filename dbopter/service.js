@@ -87,6 +87,9 @@ function connect() {
     dbMap.forEach(db => {
         if (!db.isConnected) {
             db.connect();
+            db.error(err => {
+                db.connect();
+            });
         }
     });
 }

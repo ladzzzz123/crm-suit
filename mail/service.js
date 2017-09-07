@@ -52,7 +52,7 @@ let export_func = {
 
     asyncGetNewMail: () => {
         if (!imapManager.connected) {
-            return promiseImapConnect(imapManager)
+            return promiseConnect(imapManager)
                 .then(ret => {
                     logger.info(`[imap] promiseImapConnect then: ${ret}`);
                     return imapManager.getUnseenMail();

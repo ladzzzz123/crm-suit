@@ -27,6 +27,10 @@ class Db {
         });
     }
 
+    error(callback) {
+        this.dbConnect.on("error", callback);
+    }
+
 }
 
 module.exports = Db;

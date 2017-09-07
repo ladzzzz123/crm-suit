@@ -14,6 +14,7 @@ let redisClient = {};
 
 module.exports = {
     connect: () => {
+        let _self = this;
         db_self = mysql.createConnection(dbConfig);
         db_self.connect(err => {
             if (err) {
@@ -22,6 +23,10 @@ module.exports = {
                 logger.info("[Db] connected: %s", JSON.stringify(dbConfig));
                 db_self.isConnected = true;
             }
+        });
+        db_self.on("error", err => {
+            db.self.isConnected = false;
+            _self.connect();
         });
         redisClient = redis.createClient(redConfig);
         redisClient.on("error", function(err) {
