@@ -1,0 +1,12 @@
+@import "./common.css";
+.container {
+    height: 100%;
+    width: 100%;
+}
+
+.page {
+    display: none;
+    min-height: 100%;
+    position: absolute;
+    width: 100%;
+}

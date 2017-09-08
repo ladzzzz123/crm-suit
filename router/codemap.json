@@ -1,0 +1,7 @@
+{
+    "SUCCESS": 2000,
+    "VERIFY_FAILED": 4000,
+    "PARAMS_MISSING": 4001,
+    "FAILED": 4002
+
+}

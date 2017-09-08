@@ -10,6 +10,8 @@ const router = Router();
 const bodyParser = require("koa-bodyparser");
 const staticServer = require("koa-static");
 
+const RESULT = require("./codemap");
+
 const DEFAULT_PORT = 3002;
 const Courier = require("node-process-bearer").Courier;
 const logger = require("node-process-bearer").logger.getLogger({
@@ -26,7 +28,7 @@ app
     .use(bodyParser())
     .use(router.routes())
     .use(router.allowedMethods())
-    .use(staticServer(__dirname + "/views"));
+    .use(staticServer(__dirname + "/inner-page"));
 
 let export_func = {
     name: "router"
@@ -49,7 +51,7 @@ router
             _ret = ret;
         }, postData.user_name, postData.passwd);
 
-        if (_ret.status === 2000) {
+        if (_ret.status === RESULT.SUCCESS) {
             let info = _ret.info;
             await ctx.render("main.njk", { user_name: info.name, token: info.token });
         } else {
@@ -71,7 +73,7 @@ router
         let postData = ctx.request.body;
         logger.info("[router] ctx.request: %s", JSON.stringify(ctx.request.body));
         if (!verifyParams(postData, "token")) {
-            ctx.body = { status: 4001, msg: "missing params" };
+            ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
             return;
         }
         verify = await courier.sendAsyncCall("account", "asyncVerify", () => {}, postData.token, "plan-order", "opter");
@@ -79,10 +81,10 @@ router
         if (verify.pass) {
             await courier.sendAsyncCall("plan-order", "asyncFetchPlan", ret => {
                 logger.info("[router] plan-order job list:" + JSON.stringify(ret));
-                _ret = { status: 2000, content: ret, msg: "fetch list end" };
+                _ret = { status: RESULT.SUCCESS, content: ret, msg: "fetch list end" };
             });
         } else {
-            _ret = { status: 4000, msg: "verify failed" };
+            _ret = { status: RESULT.VERIFY_FAILED, msg: "verify failed" };
         }
         ctx.body = _ret;
     })
@@ -92,7 +94,7 @@ router
         logger.info("[router] ctx.request: %s", JSON.stringify(ctx.request.body));
         let postData = ctx.request.body;
         if (!verifyParams(postData, ["token", "plan_id"])) {
-            ctx.body = { status: 4001, msg: "missing params" };
+            ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
             return;
         }
         verify = await courier.sendAsyncCall("account", "asyncVerify", () => {}, postData.token, "plan-order", "opter");
@@ -101,10 +103,10 @@ router
             let opter = verify.info.name;
             await courier.sendAsyncCall("plan-order", "asyncAcceptPlan", ret => {
                 logger.info("[router] accept:" + JSON.stringify(ret));
-                _ret = { status: 2000, content: ret };
+                _ret = { status: RESULT.SUCCESS, content: ret };
             }, postData.plan_id, opter);
         } else {
-            _ret = { status: 4000, msg: "verify failed" };
+            _ret = { status: RESULT.VERIFY_FAILED, msg: "verify failed" };
         }
         ctx.body = _ret;
     });
@@ -116,16 +118,16 @@ router
         logger.info("[router] ctx.request: %s", JSON.stringify(ctx.request.body));
         let postData = ctx.request.body;
         if (!verifyParams(postData, ["token", "userInfo"])) {
-            ctx.body = { status: 4001, msg: "missing params" };
+            ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
             return;
         }
         verify = await courier.sendAsyncCall("account", "asyncVerify", () => {}, postData.token, "account", "admin");
         if (verify.pass) {
-            _ret = { status: 4002, msg: "add failed" };
+            _ret = { status: RESULT.FAILED, msg: "add failed" };
 
             let insert_ret = await courier.sendAsyncCall("account", "asyncAddUser", ret => {
                 logger.info("[router] accept:" + JSON.stringify(ret));
-                _ret = { status: 2000, content: ret };
+                _ret = { status: RESULT.SUCCESS, content: ret };
             }, postData.userInfo);
 
             if (insert_ret.status === "success") {
@@ -133,16 +135,16 @@ router
                 await courier.sendAsyncCall("mail", "asyncSendMail", ret => {
                     logger.info("[router] get New Mail:" + JSON.stringify(ret));
                 }, info.mail, "您的账号已经创建成功", `点击此处登录：http://10.0.9.169:3002/crm-inner \n 用户名：${info.u_name} \n 密码：${info.passwd}`);
-                _ret = { status: 2000, msg: "create user success" };
+                _ret = { status: RESULT.SUCCESS, msg: "create user success" };
             }
         } else {
-            _ret = { status: 4000, msg: "verify failed" };
+            _ret = { status: RESULT.VERIFY_FAILED, msg: "verify failed" };
         }
         ctx.body = _ret;
     });
 
 
-router.get("/crm-inner/imap-call", async(ctx, next) => {
+router.get("/crm-inner/fetch-mail", async(ctx, next) => {
     let _ret = {};
     await courier.sendAsyncCall("mail", "asyncGetNewMail", ret => {
         logger.info("[router] get New Mail:" + JSON.stringify(ret));
@@ -150,17 +152,6 @@ router.get("/crm-inner/imap-call", async(ctx, next) => {
     });
     ctx.body = _ret;
 });
-
-router.get("/crm-inner/send-mail-test", async(ctx, next) => {
-    let _ret = {};
-    await courier.sendAsyncCall("mail", "asyncSendMail", ret => {
-        logger.info("[router] get New Mail:" + JSON.stringify(ret));
-        _ret = ret;
-    }, "songshan.xu@cootek.cn", "test", "content is testing");
-    ctx.body = _ret;
-});
-
-
 
 function verifyParams(params, types) {
     if (Array.isArray(types)) {
