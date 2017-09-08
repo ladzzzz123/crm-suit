@@ -5,6 +5,8 @@ module.exports = {
         host: "partner.outlook.cn",
         port: 993,
         tls: true,
+        savePath: "static/mail/",
+        visitPath: "static/mail/",
         // autotls: "required"
     },
     smtp: {

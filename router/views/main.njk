@@ -11,13 +11,13 @@
 
 <body>
     <div class="container">
-        欢迎 {{ user_name }}, 您可以使用以下功能：
+        欢迎 {% user_name %}, 您可以使用以下功能：
         <div class="queryPlan" onclick="query()">查询当前任务</div>
         <ul class="list"></ul>
     </div>
 
     <script>
-        let _token = "{{ token }}";
+        let _token = "{% token %}";
     </script>
     <!-- script -->
     <script src="http://dialer.cdn.cootekservice.com/web/sdk/reset/reset.min.js "></script>

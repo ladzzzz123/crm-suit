@@ -55,15 +55,15 @@ let export_func = {
             return promiseConnect(imapManager)
                 .then(ret => {
                     logger.info(`[imap] promiseImapConnect then: ${ret}`);
-                    return imapManager.getUnseenMail();
+                    return imapManager.fetchNewMail();
                 })
                 .catch(err => {
                     logger.warn("[imap] asyncGetNewMail connect err %s", err);
                     return Promise.resolve(err);
                 });
         } else {
-            logger.info(`[imap] promiseImapConnect connected before getUnseenMail`);
-            return imapManager.getUnseenMail();
+            logger.info(`[imap] promiseImapConnect connected before fetchNewMail`);
+            return imapManager.fetchNewMail();
         }
     },
 
@@ -161,7 +161,51 @@ function formatMail(arr) {
 
 const REG_FETCH_MAIL_MODULE = /((\[|\【).*?(\]|\】))/gi;
 
-function asyncMail(mail) {
+function insertIntoDB(neoMail) {
+    return new Promise((resolve, reject) => {
+        courier.sendAsyncCall("dbopter", "asyncInsert", () => {}, "market_db", "mail_info", [neoMail])
+            .then(ret => {
+                logger.info("[mail] db insert ret:" + JSON.stringify(ret));
+                resolve(ret);
+            })
+            .catch(err => {
+                logger.warn("[mail] db insert err:" + JSON.stringify(err));
+                reject(err);
+            });
+    });
+}
+
+async function insertOpt(mailArr, callback) {
+    try {
+        if (mailArr && Array.isArray(mailArr)) {
+            let ret = {};
+            for (let index = 0; index < mailArr.length; index++) {
+                logger.info("[mail] neo mail prop:%s", JSON.stringify(Object.keys(mailArr[index])));
+                let neoMail = Object.assign(mailArr[index]);
+                delete neoMail.uid;
+                neoMail.m_module = MAIL_MODULE[neoMail.title.match(REG_FETCH_MAIL_MODULE)[0]] || "all";
+                logger.info("[mail] neo mail:%s", JSON.stringify(neoMail));
+                ret = await insertIntoDB(neoMail);
+            }
+            callback(ret);
+        } else {
+            callback(false);
+        }
+    } catch (e) {
+        callback(false);
+    }
+
+}
+
+function asyncMail(mailArr) {
+    insertOpt(mailArr, ret => {
+        if (ret) {
+            return Promise.resolve(ret);
+        } else {
+            return Promise.resolve("nothing to insert");
+        }
+    });
+
     // logger.info("[mail] mailArr.length:%s", mailArr.length);
     // let insertArr = Array.prototype.map.call(mailArr, mail => {
     // logger.info("[mail] neo mail m_from:%s", JSON.stringify(mail.from));
@@ -178,27 +222,6 @@ function asyncMail(mail) {
     // return neoMail;
     // });
     // if (insertArr.length > 0) {
-    if (mail) {
-        logger.info("[mail] neo mail prop:%s", JSON.stringify(Object.keys(mail)));
-        let neoMail = Object.assign(mail);
-        delete neoMail.uid;
-        neoMail.m_module = MAIL_MODULE[neoMail.title.match(REG_FETCH_MAIL_MODULE)[0]] || "all";
-        logger.info("[mail] neo mail:%s", JSON.stringify(neoMail));
-        return new Promise((resolve, reject) => {
-            courier.sendAsyncCall("dbopter", "asyncInsert", () => {}, "market_db", "mail_info", [neoMail])
-                .then(ret => {
-                    logger.info("[mail] db insert ret:" + JSON.stringify(ret));
-                    resolve(ret);
-                })
-                .catch(err => {
-                    logger.warn("[mail] db insert err:" + JSON.stringify(err));
-                    reject(err);
-                });
-            setTimeout(reject, 5000);
-        });
-    } else {
-        return Promise.resolve("nothing to insert");
-    }
 }
 
 
