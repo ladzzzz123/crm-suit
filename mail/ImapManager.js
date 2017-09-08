@@ -11,6 +11,7 @@ class ImapManager {
         this.imap = new Imap(imap_conf);
         this.connected = false;
         this.fileSavePath = imap_conf.savePath || "";
+        this.visitPath = imap_conf.visitPath || "";
     }
 
     connect(callback) {
@@ -42,13 +43,13 @@ class ImapManager {
     async saveAttach(attachments, callback) {
         try {
             if (Array.isArray(attachments)) {
-                let files_addr = [];
+                let files_urls = [];
                 for (let index = 0; index < attachments.length; index++) {
                     let attach = attachments[0];
                     await fs.writeFileSync(`${this.fileSavePath}${attach.filename}`, attach.content);
-                    files_addr.push(`${this.fileSavePath}${attach.filename}`);
+                    files_urls.push(`${this.visitPath}${attach.filename}`);
                 }
-                callback(files_addr);
+                callback(files_urls);
             } else {
                 callback([]);
             }
