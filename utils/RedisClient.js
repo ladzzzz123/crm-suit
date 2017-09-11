@@ -60,7 +60,7 @@ class RedisClient {
 
     hmset(key, info) {
         return new Promise((resolve, reject) => {
-            this.client.hmset(key, info, (err, res) => {
+            this.client.hmset(key, info, (err, ret) => {
                 logger.info("[RedisClient] hmset key:%s, err: %s,  ret: %s", key, err || "", ret || "");
                 if (err) {
                     reject(err);
