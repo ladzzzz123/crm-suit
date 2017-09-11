@@ -5,13 +5,12 @@ const https = require("https");
 const Koa = require("koa");
 const app = new Koa();
 const Router = require("koa-router");
-const views = require("koa-views");
 const router = Router();
 const bodyParser = require("koa-bodyparser");
 const staticServer = require("koa-static");
 
 const RESULT = require("./codemap");
-
+const MSG = require("../config/msg");
 const DEFAULT_PORT = 3002;
 const Courier = require("node-process-bearer").Courier;
 const logger = require("node-process-bearer").logger.getLogger({
@@ -19,12 +18,7 @@ const logger = require("node-process-bearer").logger.getLogger({
     showLineNumber: false, // value @[true, false], show line number or not
 });
 
-
 app
-    .use(views(__dirname + "/views", {
-        map: { njk: "nunjucks" },
-        extension: "njk"
-    }))
     .use(bodyParser())
     .use(router.routes())
     .use(router.allowedMethods())
@@ -46,16 +40,20 @@ router
         logger.info("[router] path: /account/login");
         let _ret = "";
         let postData = ctx.request.body;
-        await courier.sendAsyncCall("account", "asyncLogin", ret => {
-            logger.info("[router] call account asyncLogin:" + JSON.stringify(ret));
-            _ret = ret;
-        }, postData.user_name, postData.passwd);
+        try {
+            await courier.sendAsyncCall("account", "asyncLogin", ret => {
+                logger.info("[router] call account asyncLogin:%s", JSON.stringify(ret));
+                _ret = ret;
+            }, postData.user_name, postData.passwd);
+        } catch (e) {
+            logger.warn("[router] call account asyncLogin err:%s", JSON.stringify(ret));
+        }
 
         if (_ret.status === RESULT.SUCCESS) {
             let info = _ret.info;
-            await ctx.render("main.njk", { user_name: info.name, token: info.token });
+            ctx.body = { status: RESULT.SUCCESS, user_name: info.name, token: info.token };
         } else {
-            await ctx.render("login.njk", {});
+            ctx.body = { status: RESULT.FAILED, msg: "login failed" };
         }
     })
     .get("/crm-inner/account/active", async(ctx, next) => {
@@ -134,7 +132,7 @@ router
                 let info = insert_ret.ret;
                 await courier.sendAsyncCall("mail", "asyncSendMail", ret => {
                     logger.info("[router] get New Mail:" + JSON.stringify(ret));
-                }, info.mail, "您的账号已经创建成功", `点击此处登录：http://10.0.9.169:3002/crm-inner \n 用户名：${info.u_name} \n 密码：${info.passwd}`);
+                }, info.mail, "您的账号已经创建成功", `点击此处登录：${MSG["add-user-mail"]} \n 用户名：${info.u_name} \n 密码：${info.passwd}`);
                 _ret = { status: RESULT.SUCCESS, msg: "create user success" };
             }
         } else {
