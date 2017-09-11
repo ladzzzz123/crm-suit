@@ -51,13 +51,14 @@ module.exports = {
                         ret_info.token = token;
                         logger.info("[Db] updateToken success ret_info: %s", JSON.stringify(ret_info));
                         redisClient.expire(token);
-                        return redisClient.hset(USER_TOKEN_MAP, u_name, token);
+                        redisClient.hset(USER_TOKEN_MAP, u_name, token);
+                        return Promise.resolve(ret_info);
                     } else {
                         reject();
                     }
                 })
-                .then(() => {
-                    resolve(info);
+                .then((new_info) => {
+                    resolve(new_info);
                 })
                 .catch(err => {
                     reject("err");
