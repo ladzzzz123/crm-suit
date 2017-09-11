@@ -42,19 +42,25 @@ module.exports = {
             redisClient.hget(USER_TOKEN_MAP, name)
                 .then(old_token => {
                     if (old_token) {
-                        redisClient.del(old_token);
+                        return redisClient.del(old_token);
+                    } else {
+                        return Promise.resolve("");
                     }
+                })
+                .then(del_ret => {
                     return redisClient.hmset(token, info);
                 })
                 .then(ret_info => {
                     if (ret_info) {
                         ret_info.token = token;
                         logger.info("[Db] updateToken success ret_info: %s", JSON.stringify(ret_info));
-                        redisClient.expire(token);
-                        return redisClient.hset(USER_TOKEN_MAP, u_name, token);
+                        return redisClient.expire(token);
                     } else {
                         return Promise.resolve(null);
                     }
+                })
+                .then(() => {
+                    return redisClient.hset(USER_TOKEN_MAP, u_name, token);
                 })
                 .catch(err => {
                     return Promise.reject("err");

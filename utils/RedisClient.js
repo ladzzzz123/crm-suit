@@ -46,7 +46,6 @@ class RedisClient {
         return new Promise((resolve, reject) => {
             this.client.hset(key, field, (err, ret) => {
                 logger.info("[RedisClient] hset key:%s, field: %s,  err: %s,  ret: %s", key, field, err || "", ret || "");
-
                 if (err) {
                     reject(err);
                 } else if (ret) {
@@ -94,7 +93,7 @@ class RedisClient {
             }
             this.client.expire(key, _duration, (err, ret) => {
                 logger.info("[RedisClient] expire key:%s, _duration: %s, err: %s,  ret: %s", key, _duration || 0, err || "", ret || "");
-                if (err) { reject(err); } else { resolve(ret || "") };
+                if (err) { resolve(""); } else { resolve(ret || "") };
             });
         });
     }
