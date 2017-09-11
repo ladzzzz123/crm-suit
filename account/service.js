@@ -30,9 +30,11 @@ let export_func = {
                         status: info.u_status
                     })
                     .then(info => {
+                        logger.info("[login] updateToken ret:" + JSON.stringify(info));
                         return Promise.resolve({ status: 2000, info: info, msg: "login success" });
                     })
                     .catch(err => {
+                        logger.info("[login] updateToken err:" + JSON.stringify(err));
                         return Promise.resolve({ status: 4003, msg: "login err" });
                     });
             })

@@ -58,6 +58,7 @@ module.exports = {
                     }
                 })
                 .then((new_info) => {
+                    logger.info("[Db] resolve new info: %s", JSON.stringify(new_info));
                     resolve(new_info);
                 })
                 .catch(err => {
