@@ -62,6 +62,9 @@ module.exports = {
                 .then(() => {
                     return redisClient.hset(USER_TOKEN_MAP, u_name, token);
                 })
+                .then(() => {
+                    return Promise.resolve(info);
+                })
                 .catch(err => {
                     return Promise.reject("err");
                 });
