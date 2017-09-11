@@ -38,8 +38,8 @@ module.exports = {
     updateToken: (token, info) => {
         return new Promise((resolve, reject) => {
             logger.info("[Db] updateToken before info: %s", JSON.stringify(info));
-            let u_name = info.u_name;
-            redisClient.hget(USER_TOKEN_MAP, u_name)
+            let name = info.name;
+            redisClient.hget(USER_TOKEN_MAP, name)
                 .then(old_token => {
                     if (old_token) {
                         redisClient.del(old_token);
