@@ -62,7 +62,10 @@ module.exports = {
                     resolve(new_info);
                 })
                 .catch(err => {
-                    reject("err");
+                    if (err && err.msg) {
+                        logger.warn("[Db] updateToken err: %s", err.msg);
+                    }
+                    reject(err);
                 });
         });
     },

@@ -16,7 +16,7 @@ class RedisClient {
             this.client.hget(key, field, (err, value) => {
                 logger.info("[RedisClient] hget key:%s, field: %s,  err: %s,  value: %s", key, field, err || "", value || "");
                 if (err) {
-                    reject(err);
+                    reject({ msg: "hget error" });
                 } else if (value) {
                     resolve(value);
                 } else {
@@ -30,9 +30,8 @@ class RedisClient {
         return new Promise((resolve, reject) => {
             this.client.hgetall(key, (err, value) => {
                 logger.info("[RedisClient] hgetall key:%s, err: %s,  value: %s", key, field, err || "", value || "");
-
                 if (err) {
-                    reject(err);
+                    reject({ msg: "hgetall error" });
                 } else if (value) {
                     resolve(value);
                 } else {
@@ -47,7 +46,7 @@ class RedisClient {
             this.client.hset(key, field, (err, ret) => {
                 logger.info("[RedisClient] hset key:%s, field: %s,  err: %s,  ret: %s", key, field, err || "", ret || "");
                 if (err) {
-                    reject(err);
+                    reject({ msg: "hset error" });
                 } else if (ret) {
                     resolve(ret);
                 } else {
@@ -61,10 +60,10 @@ class RedisClient {
         return new Promise((resolve, reject) => {
             this.client.hmset(key, info, (err, ret) => {
                 logger.info("[RedisClient] hmset key:%s, err: %s,  ret: %s", key, err || "", ret || "");
-                if (err) {
-                    reject(err);
-                } else {
+                if (ret) {
                     resolve(info);
+                } else {
+                    reject({ msg: "hmset error" });
                 }
             });
         })
@@ -75,7 +74,7 @@ class RedisClient {
             this.client.del(key, (err, ret) => {
                 logger.info("[RedisClient] del key:%s, err: %s,  ret: %s", key, err || "", ret || "");
                 if (err) {
-                    reject(err);
+                    reject({ msg: "del error" });
                 } else {
                     resolve(ret || "");
                 }
