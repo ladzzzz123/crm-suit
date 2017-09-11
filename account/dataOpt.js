@@ -11,6 +11,8 @@ let db_self = {};
 db_self.isConnected = false;
 
 let redisClient = {};
+const USER_TOKEN_MAP = "USER_TOKEN_MAP";
+
 
 module.exports = {
     connect: () => {
@@ -48,25 +50,44 @@ module.exports = {
                     }
                 }
             });
-
         });
-
     },
     updateToken: (token, info) => {
         return new Promise((resolve, reject) => {
             logger.info("[Db] updateToken before info: %s", JSON.stringify(info));
-            redisClient.hmset(token, info, (err, res) => {
-                if (err) {
-                    logger.error("[Db] updateToken error: %s", JSON.stringify(err));
-                    reject(err);
-                } else {
+            let u_name = info.u_name;
+            redisClient.hgetAsync(USER_TOKEN_MAP, u_name)
+                .then(val => {
+                    return redisClient.hmsetAsync(token, info)
+                })
+                .then(res => {
                     logger.info("[Db] updateToken success info: %s", JSON.stringify(info));
                     info.token = token;
                     redisClient.expire(token, redConfig.expire);
+                    return redisClient.hset(USER_TOKEN_MAP, u_name, token);
+                })
+                .then(res => {
                     resolve(info);
-                }
-            });
+                })
+                .catch(err => {
+                    logger.error("[Db] updateToken error: %s", JSON.stringify(err));
+                    reject(err);
+                });
+            // redisClient.hmset(token, info, (err, res) => {
+            //     if (err) {
+            //         logger.error("[Db] updateToken error: %s", JSON.stringify(err));
+            //         reject(err);
+            //     } else {
+            //         logger.info("[Db] updateToken success info: %s", JSON.stringify(info));
+            //         info.token = token;
+            //         redisClient.expire(token, redConfig.expire);
+            //         resolve(info);
+            //     }
+            // });
         });
+    },
+    renewToken: (token) => {
+        redisClient.expire(token, redConfig.expire);
     },
 
     queryUserInfo: (...params) => {

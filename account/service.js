@@ -31,6 +31,9 @@ let export_func = {
                     })
                     .then(info => {
                         return Promise.resolve({ status: 2000, info: info, msg: "login success" });
+                    })
+                    .catch(err => {
+                        return Promise.resolve({ status: 4003, msg: "login err" });
                     });
             })
             .catch(err => {
@@ -57,8 +60,10 @@ let export_func = {
                     if (role_val) {
                         let c = parseInt(info.role_pos, 2),
                             e = parseInt(role_val, 2);
-                        logger.info("[login] asyncVerify role_pos:%s, role_val:%s,ret:%s", c, e, (c & e) === e);
-                        resolve({ pass: (c & e) === e, info: info });
+                        let pass = ((c & e) === e);
+                        logger.info("[login] asyncVerify role_pos:%s, role_val:%s,ret:%s", c, e, pass);
+                        if (pass) dbOpter.renewToken(token);
+                        resolve({ pass: pass, info: info });
                     } else {
                         resolve({ pass: false, info: null });
                     }
