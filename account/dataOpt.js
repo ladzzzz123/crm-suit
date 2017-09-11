@@ -1,6 +1,6 @@
 const mysql = require("mysql");
-const redis = require("redis");
 const selfConfig = require("./config/db");
+const RedisClient = require("../utils/RedisClient");
 
 const dbConfig = selfConfig.account;
 const redConfig = selfConfig.token;
@@ -30,64 +30,39 @@ module.exports = {
             db.self.isConnected = false;
             _self.connect();
         });
-        redisClient = redis.createClient(redConfig);
-        redisClient.on("error", function(err) {
-            logger.error("[Db] Error " + err);
-        });
+        redisClient = new RedisClient(redConfig);
     },
     verifyToken: (token) => {
-        return new Promise((resolve, reject) => {
-            redisClient.hgetall(token, (err, info) => {
-                if (err) {
-                    logger.error("[Db] verifyToken error: %s", JSON.stringify(err));
-                    reject(err);
-                } else {
-                    logger.debug("[Db] verifyToken info: %s", JSON.stringify(info));
-                    if (info) {
-                        resolve(info);
-                    } else {
-                        reject(null);
-                    }
-                }
-            });
-        });
+        return redisClient.hgetall(token);
     },
     updateToken: (token, info) => {
         return new Promise((resolve, reject) => {
             logger.info("[Db] updateToken before info: %s", JSON.stringify(info));
             let u_name = info.u_name;
-            redisClient.hgetAsync(USER_TOKEN_MAP, u_name)
-                .then(val => {
-                    return redisClient.hmsetAsync(token, info)
+            redisClient.hget(USER_TOKEN_MAP, u_name)
+                .then(old_token => {
+                    if (old_token) {
+                        redisClient.del(old_token);
+                    }
+                    return redisClient.hmset(token, info);
                 })
-                .then(res => {
-                    logger.info("[Db] updateToken success info: %s", JSON.stringify(info));
-                    info.token = token;
-                    redisClient.expire(token, redConfig.expire);
-                    return redisClient.hset(USER_TOKEN_MAP, u_name, token);
-                })
-                .then(res => {
-                    resolve(info);
+                .then(ret_info => {
+                    if (ret_info) {
+                        ret_info.token = token;
+                        logger.info("[Db] updateToken success ret_info: %s", JSON.stringify(ret_info));
+                        redisClient.expire(token);
+                        return redisClient.hset(USER_TOKEN_MAP, u_name, token);
+                    } else {
+                        return Promise.resolve(null);
+                    }
                 })
                 .catch(err => {
-                    logger.error("[Db] updateToken error: %s", JSON.stringify(err));
-                    reject(err);
+                    return Promise.reject("err");
                 });
-            // redisClient.hmset(token, info, (err, res) => {
-            //     if (err) {
-            //         logger.error("[Db] updateToken error: %s", JSON.stringify(err));
-            //         reject(err);
-            //     } else {
-            //         logger.info("[Db] updateToken success info: %s", JSON.stringify(info));
-            //         info.token = token;
-            //         redisClient.expire(token, redConfig.expire);
-            //         resolve(info);
-            //     }
-            // });
         });
     },
     renewToken: (token) => {
-        redisClient.expire(token, redConfig.expire);
+        redisClient.expire(token);
     },
 
     queryUserInfo: (...params) => {
@@ -111,7 +86,6 @@ module.exports = {
                 logger.warn("[Db] connect failed");
                 reject("connected failed");
             }
-
         });
     },
 
