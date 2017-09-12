@@ -26,10 +26,11 @@ export default Vue.component("login", {
                 user_name: this.formData.user_name,
                 passwd: this.formData.passwd
             };
-            requester.send("/crm-inner/account/login/", params, (ret) => {
+            requester.send("http://121.52.235.231:40718/crm-inner/account/login/", params, (ret) => {
                 let userInfo = ret;
+                console.log("ret:" + JSON.stringify(ret));
                 this.$store.dispatch({
-                    type: "updateUserInfo",
+                    type: "asyncUpdateUserInfo",
                     userInfo: userInfo
                 });
             });

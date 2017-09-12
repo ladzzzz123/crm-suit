@@ -1,5 +1,6 @@
 export default {
-    asyncUpdateUserInfo: function({ commit }) {
-        commit("updateUserInfo");
+    asyncUpdateUserInfo: function({ commit, state }, payload) {
+        console.log("userInfo:" + JSON.stringify(payload.userInfo));
+        commit({ type: "updateUserInfo", userInfo: payload.userInfo });
     }
 };

@@ -13,7 +13,7 @@ const requester = {
         } catch (e) {
             console.warn("req warn:" + JSON.stringify(e));
         }
-        req.send(params);
+        req.send(JSON.stringify(params));
         req.responseType = "json";
         req.onload = ret => {
             requesting = false;
@@ -25,7 +25,7 @@ const requester = {
             }
             switch (result.status) {
                 case 2000:
-                    callback(result.content);
+                    callback(result);
                     break;
                 case 4000:
                     alert(result.msg);
