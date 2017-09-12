@@ -10,3 +10,23 @@
     position: absolute;
     width: 100%;
 }
+
+.panel-left {
+    height: 100%;
+    left: 0;
+    position: absolute;
+    width: 30%;
+}
+
+.left-pad-item {
+    display: block;
+    width: 100%;
+}
+
+.panel-right {
+    height: 100%;
+    right: 0;
+    position: absolute;
+    text-align: center;
+    width: 70%;
+}

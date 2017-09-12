@@ -21,7 +21,8 @@
     "style-loader": "latest",
     "url-loader": "latest",
     "vue": "latest",
-    "vuex": "^2.3.1",
+    "vue-router": "^2.7.0",
+    "vuex": "^2.4.0",
     "webpack": "^2.2.0"
   },
   "devDependencies": {

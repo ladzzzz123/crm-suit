@@ -40,6 +40,7 @@ router
         logger.info("[router] path: /account/login");
         let _ret = "";
         let postData = ctx.request.body;
+        logger.info("[router] postData:%s", JSON.stringify(postData))
         try {
             await courier.sendAsyncCall("account", "asyncLogin", ret => {
                 logger.info("[router] call account asyncLogin:%s", JSON.stringify(ret));
