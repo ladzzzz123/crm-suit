@@ -11,6 +11,11 @@ const app = new Vue({
         routerInfos: routerInfos,
     },
     store,
+    computed: {
+        logged() {
+            return this.$store.state.logged;
+        }
+    },
     router: new VueRoter({ routes: routerInfos }),
     template: `
     <div class="index">
@@ -23,24 +28,20 @@ const app = new Vue({
                 </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav navbar-right">
-                        <li class="dropdown">
-                            <div class="dropdown-toggle" data-toggle="dropdown">咩都冇<span class="caret"></span></div>
-                            <ul class="dropdown-menu" role="menu">
-                                <li class="divider"></li>
-                                <li><div @click="quit()">退出登陆</div></li>
-                            </ul>
-                        </li>
+                        <li v-if="logged" @click="quit()">退出登陆</li>
                     </ul>
                 </div>
             </div>
         </nav>
         <div class="container">
-            <div class="panel-left list-group">
-                <router-link v-for="info in routerInfos" 
-                    v-bind:to="info.path" :key="info.path" v-show="!info.hide"
-                    class="left-pad-item list-group-item">
-                        {{ info.content }}
-                </router-link>
+            <div class="panel-left">
+                <ul class="nav nav-pills nav-stacked">
+                    <li role="presentation" v-for="info in routerInfos" :key="info.path" v-show="!info.hide">
+                        <router-link v-bind:to="info.path" class="left-pad-item">
+                                {{ info.content }}
+                        </router-link>
+                    </li>
+                </ul>
             </div>
             <div class="panel-right">
                 <router-view></router-view>
@@ -52,6 +53,7 @@ const app = new Vue({
     methods: {
         quit: function() {
             this.$store.dispatch("asyncQuit");
+            window.location.reload();
         }
     }
 

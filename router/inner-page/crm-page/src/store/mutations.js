@@ -8,5 +8,6 @@ export default {
     },
     quit: (state) => {
         state.userInfo = DEFAULT_STORE;
+        window.localStorage.setItem(localStorageKey, "");
     }
 };

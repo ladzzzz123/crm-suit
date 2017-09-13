@@ -12,9 +12,17 @@ export default Vue.component("login", {
     },
     template: `
         <form class="login-from" onsubmit="return false">
-            用户名(邮箱) <input type="text" name="user_name" v-model="formData.user_name" required/>
-            <br/> 密码 <input type="password" name="passwd" v-model="formData.passwd" required/>
-            <button type="submit" @click="login">登录</button>
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="用户名(邮箱)" 
+                    name="user_name" v-model="formData.user_name" required>
+            </div>
+            <br/>
+            <div class="input-group">
+                <input type="password" class="form-control" placeholder="密码" 
+                    name="passwd" v-model="formData.passwd" required>
+            </div>
+            <br/>
+            <button class="btn btn-success" type="submit" @click="login">登录</button>
         </form>
     `,
     mounted: function() {

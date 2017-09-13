@@ -54,7 +54,7 @@ export default Vue.component("plan", {
                             <iframe class="embed-responsive-item">
                             </iframe>
                         </p>
-                        <a v-for="attach in item.m_attachments.split(',')" class="list-group-item-text" :href="attach">附件</a>
+                        <a v-for="(attach, index) in item.m_attachments.split(',')" class="list-group-item-text" :href="attach">附件{{ index + 1}}</a>
                     </div>
                 </div>
             </li>
@@ -84,7 +84,6 @@ export default Vue.component("plan", {
             el_li.querySelector("iframe").contentDocument.open();
             el_li.querySelector("iframe").contentDocument.write(mailMsg.m_content);
             el_li.querySelector("iframe").contentDocument.close();
-
         },
 
         acceptPlan: function(plan_id) {
