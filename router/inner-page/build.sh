@@ -52,7 +52,7 @@ else
         elif [ $2 = "release" ]
         then
             webpack --config webpack.config.js -p
-            cp -rf ./$1-dist ../release/
+            cp -rf ./$1-dist ../../
             rm -rf ./$1-dist
         else
             webpack

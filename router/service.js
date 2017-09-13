@@ -122,7 +122,7 @@ router
         logger.debug("verify:" + JSON.stringify(verify));
         if (verify.pass) {
             let opter = verify.info.name;
-            await courier.sendAsyncCall("plan-order", "asyncAcceptPlan", ret => {
+            await courier.sendAsyncCall("plan-order", "asyncFinishPlan", ret => {
                 logger.info("[router] accept:" + JSON.stringify(ret));
                 _ret = { status: RESULT.SUCCESS, content: ret };
             }, postData.plan_id, opter);

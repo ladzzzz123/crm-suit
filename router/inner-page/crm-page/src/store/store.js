@@ -9,12 +9,14 @@ const VERIFY_KEY = [
     "userInfo", "logged"
 ];
 
-const DEFAULT_STORE = {
+export const localStorageKey = "saved_data";
+export const DEFAULT_STORE = {
     userInfo: {
         name: "unknow"
     },
     logged: false
 };
+
 const store = new Vuex.Store({
     state: DEFAULT_STORE,
     mutations: mutations,
@@ -29,4 +31,3 @@ if (VERIFY_KEY.every(key => {
     store.replaceState(state_value);
 }
 export default store;
-export const localStorageKey = "saved_data";

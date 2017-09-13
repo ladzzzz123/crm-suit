@@ -45,6 +45,8 @@ export default Vue.component("plan", {
                             
                             <button type="button" v-if="item.m_opter === userInfo.user_name && item.m_status === 'ACCEPT'" class="btn btn-primary" @click="finishPlan(item._id)">我完成啦</button>
                             <button type="button" v-else-if="item.m_opter === userInfo.user_name && item.m_status === 'RESOLVE'" class="btn btn-disable">该任务已经完成</button>
+                            <br/>
+                            <br/>
                         </div>
 
                     </div>
