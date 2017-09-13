@@ -205,23 +205,6 @@ function asyncMail(mailArr) {
             return Promise.resolve("nothing to insert");
         }
     });
-
-    // logger.info("[mail] mailArr.length:%s", mailArr.length);
-    // let insertArr = Array.prototype.map.call(mailArr, mail => {
-    // logger.info("[mail] neo mail m_from:%s", JSON.stringify(mail.from));
-    // logger.info("[mail] neo mail cc:%s", JSON.stringify(mail.cc));
-    // let neoMail = {
-    //     title: mail.subject,
-    //     m_from: formatMail(mail.from),
-    //     m_to: formatMail(mail.to),
-    //     m_cc: formatMail(mail["cc"] || "none"),
-    //     m_date: m_date,
-    //     m_content: mail.content
-    // };
-
-    // return neoMail;
-    // });
-    // if (insertArr.length > 0) {
 }
 
 

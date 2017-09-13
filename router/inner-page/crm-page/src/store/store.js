@@ -28,6 +28,6 @@ console.log("state_value:" + JSON.stringify(state_value));
 if (VERIFY_KEY.every(key => {
         return Object.keys(state_value).includes(key);
     })) {
-    store.replaceState(state_value);
+    store.replaceState(JSON.parse(state_value));
 }
 export default store;

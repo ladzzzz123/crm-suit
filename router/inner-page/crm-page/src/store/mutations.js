@@ -4,11 +4,9 @@ export default {
         state.userInfo = payload.userInfo;
         state.logged = true;
         console.log("localStorageKey:%s,  state.userInfo:%s", localStorageKey, JSON.stringify(state.userInfo));
-        window.localStorage.setItem(localStorageKey, state);
+        window.localStorage.setItem(localStorageKey, JSON.stringify(state));
     },
-
     quit: (state) => {
         state.userInfo = DEFAULT_STORE;
     }
-
 };

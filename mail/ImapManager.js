@@ -10,8 +10,8 @@ class ImapManager {
         logger.info("[ImapMangaer] imap_conf:" + JSON.stringify(imap_conf));
         this.imap = new Imap(imap_conf);
         this.connected = false;
-        this.fileSavePath = imap_conf.savePath || "";
-        this.visitPath = imap_conf.visitPath || "";
+        this.fileSavePath = imap_conf.savePath || "./";
+        this.visitPath = imap_conf.visitPath || "./";
     }
 
     connect(callback) {
