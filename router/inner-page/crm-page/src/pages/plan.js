@@ -14,7 +14,6 @@ export default Vue.component("plan", {
             return this.$store.state.userInfo.token;
         },
         logged() {
-            console.log("this.$store.state.logged:" + this.$store.state.logged);
             return this.$store.state.logged;
         },
     },
@@ -39,16 +38,14 @@ export default Vue.component("plan", {
                         <p class="list-group-item-text">最后编辑日期: {{ new Date(item.last_edit).toLocaleString() }}</p>
                         <br/>
                         <br/>
-                        <div class="btn-group">
-                            <button type="button" v-if="item.m_status === 'NEW'" class="btn btn-success" @click="acceptPlan(item._id)">接受</button>
-                            <button type="button" class="btn btn-disable" v-else>已接受</button>
-                            
-                            <button type="button" v-if="item.m_opter === userInfo.user_name && item.m_status === 'ACCEPT'" class="btn btn-primary" @click="finishPlan(item._id)">我完成啦</button>
-                            <button type="button" v-else-if="item.m_opter === userInfo.user_name && item.m_status === 'RESOLVE'" class="btn btn-disable">该任务已经完成</button>
-                            <br/>
-                            <br/>
-                        </div>
-
+                        
+                        <button type="button" v-if="item.m_status === 'NEW'" class="btn btn-success" @click="acceptPlan(item._id)">接受</button>
+                        <button type="button" class="btn btn-disable" v-else>已接受</button>
+                        
+                        <button type="button" v-if="item.m_opter === userInfo.user_name && item.m_status === 'ACCEPT'" class="btn btn-primary" @click="finishPlan(item._id)">我完成啦</button>
+                        <button type="button" v-else-if="item.m_opter === userInfo.user_name && item.m_status === 'RESOLVE'" class="btn btn-disable">该任务已经完成</button>
+                        <br/>
+                        <br/>
                     </div>
                     <div class="col-md-5 btn-group-vertical">
                         <p class="list-group-item-text">邮件正文:
@@ -57,7 +54,7 @@ export default Vue.component("plan", {
                             <iframe class="embed-responsive-item">
                             </iframe>
                         </p>
-                        <a class="list-group-item-text" :href="item.m_attachments">附件</a>
+                        <a v-for="attach in item.m_attachments.split(',')" class="list-group-item-text" :href="attach">附件</a>
                     </div>
                 </div>
             </li>

@@ -23,8 +23,7 @@ const store = new Vuex.Store({
     actions: actions,
 });
 
-let state_value = window.localStorage.getItem(localStorageKey) || DEFAULT_STORE;
-console.log("state_value:" + JSON.stringify(state_value));
+let state_value = window.localStorage.getItem(localStorageKey) || JSON.stringify(DEFAULT_STORE);
 let stateVal = JSON.parse(state_value);
 if (VERIFY_KEY.every(key => {
         return Object.keys(stateVal).includes(key);

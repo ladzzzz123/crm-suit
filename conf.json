@@ -1,3 +1,8 @@
 {
-    "manage_port": 8202
+    "manage_port": 8202,
+    "log_conf": {
+        "logLevel": 2,
+        "showLineNumber": false,
+        "path": "/var/log/bearer"
+    }
 }

@@ -23,7 +23,6 @@ export default Vue.component("login", {
 
     methods: {
         login: function() {
-            console.log("this.formData:" + JSON.stringify(this.formData));
             if (!this.el_form.checkValidity()) {
                 return false;
             }
@@ -33,7 +32,6 @@ export default Vue.component("login", {
             };
             requester.send("/crm-inner/account/login/", params, (ret) => {
                 let userInfo = ret;
-                console.log("ret:" + JSON.stringify(ret));
                 this.$store.dispatch({
                     type: "asyncUpdateUserInfo",
                     userInfo: userInfo

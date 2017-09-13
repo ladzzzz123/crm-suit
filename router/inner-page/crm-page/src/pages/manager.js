@@ -9,7 +9,6 @@ export default Vue.component("manager", {
             return this.$store.state.userInfo;
         },
         logged() {
-            console.log("this.$store.state.logged:" + this.$store.state.logged);
             return this.$store.state.logged;
         },
     },

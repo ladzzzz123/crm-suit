@@ -46,7 +46,6 @@ class ImapManager {
                 let files_urls = [];
                 for (let index = 0; index < attachments.length; index++) {
                     let attach = attachments[0];
-                    logger.warn(`attachments filename: ${attach.filename}`);
                     await fs.writeFileSync(`${this.fileSavePath}${attach.filename}`, attach.content);
                     files_urls.push(`${this.visitPath}${attach.filename}`);
                 }
@@ -112,14 +111,14 @@ class ImapManager {
 
             msg.on("attributes", (attrs) => {
                 // mail_data.uid = attrs.uid;
-                // imap.setFlags(attrs.uid, ["SEEN"], err => {
-                //     if (err) {
-                //         logger.error(`[ImapManager] Mail setFlag error seqno:${seqno}, error:${JSON.stringify(err)}`);
-                //     } else {
-                //         logger.warn(`[ImapManager] Mail attributes keys: ${JSON.stringify(Object.keys(attrs))}`);
-                //         logger.warn(`[ImapManager] Mail attributes values: ${JSON.stringify(Object.values(attrs))}`);
-                //     }
-                // });
+                imap.setFlags(attrs.uid, ["SEEN"], err => {
+                    if (err) {
+                        logger.error(`[ImapManager] Mail setFlag error seqno:${seqno}, error:${JSON.stringify(err)}`);
+                    } else {
+                        logger.warn(`[ImapManager] Mail attributes keys: ${JSON.stringify(Object.keys(attrs))}`);
+                        logger.warn(`[ImapManager] Mail attributes values: ${JSON.stringify(Object.values(attrs))}`);
+                    }
+                });
             });
             msg.on("end", () => {
                 logger.info(`[ImapManager] Mail fetch End seqno:${seqno}`);
