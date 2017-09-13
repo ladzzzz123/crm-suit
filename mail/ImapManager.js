@@ -55,6 +55,7 @@ class ImapManager {
                 callback([]);
             }
         } catch (e) {
+            logger.error(`saveAttach Error:${JSON.stringify(e)}`);
             callback([]);
         }
     };
@@ -78,17 +79,13 @@ class ImapManager {
                 try {
                     let mail = await simpleParser(stream);
                     logger.warn(`[ImapManager] mail keys:${JSON.stringify(Object.keys(mail))}`);
-                    logger.info("simpleParse mail.date:%s", JSON.stringify(mail.date));
-                    logger.info("simpleParse mail.html:%s", JSON.stringify(mail.html));
                     let m_from = mail.from.value[0].address;
                     let m_cc = mail.cc.value.map(cc => {
                         return cc.address;
                     });
-                    logger.info("simpleParse process m_cc:%s", JSON.stringify(m_cc));
 
                     let m_to = mail.to.value[0].address;
                     let m_date = new Date(mail.date);
-                    logger.info("simpleParse process m_date:%s", JSON.stringify(m_date));
 
                     let neoMail = {
                         title: mail.subject,
