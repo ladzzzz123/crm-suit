@@ -180,11 +180,10 @@ async function insertOpt(mailArr, callback) {
         if (mailArr && Array.isArray(mailArr)) {
             let ret = {};
             for (let index = 0; index < mailArr.length; index++) {
-                logger.info("[mail] neo mail prop:%s", JSON.stringify(Object.keys(mailArr[index])));
                 let neoMail = Object.assign(mailArr[index]);
                 delete neoMail.uid;
                 neoMail.m_module = MAIL_MODULE[neoMail.title.match(REG_FETCH_MAIL_MODULE)[0]] || "all";
-                logger.info("[mail] neo mail:%s", JSON.stringify(neoMail));
+                logger.debug("[mail] neo mail:%s", JSON.stringify(neoMail));
                 ret = await insertIntoDB(neoMail);
             }
             callback(ret);
