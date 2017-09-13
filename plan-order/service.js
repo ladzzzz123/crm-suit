@@ -53,6 +53,41 @@ let export_func = {
                     reject(err);
                 });
         });
+    },
+
+    asyncFinishPlan: (plan_id, opter) => {
+        return new Promise((resolve, reject) => {
+            let params = {
+                m_status: "RESOLVE",
+                m_opter: opter
+            };
+            let conditions = `_id = ${plan_id} AND m_opter = "${opter}" `;
+            courier.sendAsyncCall("dbopter", "asyncUpdate", () => {}, "market_db", "mail_info", params, conditions)
+                .then(ret => {
+                    if (ret.status === "success") {
+                        let info = {};
+                        if (Array.isArray(ret.ret) && ret.ret.length > 0) {
+                            info = ret.ret[0];
+                        }
+                        courier.sendAsyncCall("mail", "asyncSendMail", ret => {
+                                logger.info("[router] send New Mail:" + JSON.stringify(ret));
+                                _ret = ret;
+                            }, info.m_from,
+                            `${opter} finish the plan ${info.title}`,
+                            `${opter} finish the plan!`,
+                            info.m_cc
+                        );
+                        resolve({ status: "success", msg: "完成任务成功" });
+                    } else {
+                        resolve({ status: "failed", msg: "完成任务失败" });
+                    }
+
+                })
+                .catch(err => {
+                    logger.warn("[plan-order] db select err:" + JSON.stringify(err));
+                    reject(err);
+                });
+        });
     }
 
 };

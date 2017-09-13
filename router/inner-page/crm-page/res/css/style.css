@@ -15,7 +15,7 @@
     height: 100%;
     left: 0;
     position: absolute;
-    width: 30%;
+    width: 20%;
 }
 
 .left-pad-item {
@@ -28,5 +28,9 @@
     right: 0;
     position: absolute;
     text-align: center;
-    width: 70%;
+    width: 80%;
+}
+
+.list-group-item {
+    text-align: left;
 }

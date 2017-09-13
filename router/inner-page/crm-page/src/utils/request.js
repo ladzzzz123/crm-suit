@@ -1,4 +1,6 @@
+import RESULT_CODE from "../../../../codemap.json";
 let requesting = false;
+let DEBUG_URL = "http://121.52.235.231:40718";
 const requester = {
     send: function(path, params, callback) {
         if (requesting) {
@@ -8,7 +10,7 @@ const requester = {
         requesting = true;
         let req = new XMLHttpRequest();
         try {
-            req.open("POST", path, true);
+            req.open("POST", DEBUG_URL + path, true);
             req.setRequestHeader("Content-type", "application/json");
         } catch (e) {
             console.warn("req warn:" + JSON.stringify(e));
@@ -18,20 +20,22 @@ const requester = {
         req.onload = ret => {
             requesting = false;
             let result = {};
+
             if (typeof req.response === "string") {
                 result = JSON.parse(req.response);
             } else {
                 result = req.response;
             }
             switch (result.status) {
-                case 2000:
+                case RESULT_CODE.SUCCESS:
                     callback(result);
                     break;
-                case 4000:
-                    alert(result.msg);
+                case RESULT_CODE.VERIFY_FAILED:
+                    alert("你没有该操作权限，请确认已经登录并拥有该操作权限！");
+                    // callback({ msg: req.msg });
                     break;
                 default:
-                    alert("请求失败，错误码:" + result.code + ", 请稍后尝试");
+                    alert(`请求失败，错误码:${result.code}, 请稍后尝试`);
                     break;
             }
         };

@@ -108,6 +108,28 @@ router
             _ret = { status: RESULT.VERIFY_FAILED, msg: "verify failed" };
         }
         ctx.body = _ret;
+    })
+    .post("/crm-inner/plan-order/finish", async(ctx, next) => {
+        let _ret = "",
+            verify = {};
+        logger.info("[router] ctx.request: %s", JSON.stringify(ctx.request.body));
+        let postData = ctx.request.body;
+        if (!verifyParams(postData, ["token", "plan_id"])) {
+            ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
+            return;
+        }
+        verify = await courier.sendAsyncCall("account", "asyncVerify", () => {}, postData.token, "plan-order", "opter");
+        logger.debug("verify:" + JSON.stringify(verify));
+        if (verify.pass) {
+            let opter = verify.info.name;
+            await courier.sendAsyncCall("plan-order", "asyncAcceptPlan", ret => {
+                logger.info("[router] accept:" + JSON.stringify(ret));
+                _ret = { status: RESULT.SUCCESS, content: ret };
+            }, postData.plan_id, opter);
+        } else {
+            _ret = { status: RESULT.VERIFY_FAILED, msg: "verify failed" };
+        }
+        ctx.body = _ret;
     });
 
 router

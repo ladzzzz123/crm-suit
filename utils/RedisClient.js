@@ -29,7 +29,7 @@ class RedisClient {
     hgetall(key) {
         return new Promise((resolve, reject) => {
             this.client.hgetall(key, (err, value) => {
-                logger.info("[RedisClient] hgetall key:%s, err: %s,  value: %s", key, field, err || "", value || "");
+                logger.info("[RedisClient] hgetall key:%s, err: %s,  value: %s", key, err || "", value || "");
                 if (err) {
                     reject({ msg: "hgetall error" });
                 } else if (value) {

@@ -16,7 +16,7 @@ const app = new Vue({
     <div class="index">
         <div class="panel-left list-group">
             <router-link v-for="info in routerInfos" 
-                v-bind:to="info.path" :key="info.path"
+                v-bind:to="info.path" :key="info.path" v-show="!info.hide"
                 class="left-pad-item list-group-item">
                     {{ info.content }}
             </router-link>
