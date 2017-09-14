@@ -43,7 +43,7 @@ class RedisClient {
 
     hset(key, field, value) {
         return new Promise((resolve, reject) => {
-            this.client.set(key, field, (err, ret) => {
+            this.client.hset(key, field, value, (err, ret) => {
                 logger.info("[RedisClient] hset key:%s, field: %s,  err: %s,  ret: %s", key, field, err || "", ret || "");
                 if (err) {
                     reject({ msg: "hset error" });
