@@ -62,6 +62,7 @@ const requester = {
             req.onload = ret => {
                 uploading = false;
                 let result = {};
+                let msg = "";
                 if (typeof req.response === "string") {
                     result = JSON.parse(req.response);
                 } else {
@@ -86,16 +87,7 @@ const requester = {
                         break;
                 }
                 if (msg) alert(msg);
-                if (req.status === 200) {
-                    let result = JSON.parse(this.responseText);
-                    callback(result.result);
-                } else {
-                    alert("上传失败，请稍后尝试，错误码：" + this.status);
-                }
             };
-            req.onerror(err => {
-                uploading = false;
-            });
             req.send(formData);
         } catch (e) {
             alert("上传失败，请稍后尝试，错误码：" + JSON.stringify(e));
