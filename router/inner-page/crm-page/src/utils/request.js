@@ -53,7 +53,7 @@ const requester = {
         };
     },
 
-    upload: function(el_form, path, callback) {
+    upload: function(path, el_form, callback) {
         uploading = true;
         try {
             let formData = new FormData(el_form);
