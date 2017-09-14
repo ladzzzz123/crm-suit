@@ -32,20 +32,26 @@ let export_func = {
                     })
                     .then(info => {
                         logger.info("[login] updateToken ret:" + JSON.stringify(info));
-                        return Promise.resolve({ status: 2000, info: info, msg: "login success" });
+                        return Promise.resolve({ status: RESULT.SUCCESS, info: info, msg: "login success" });
                     })
                     .catch(err => {
                         logger.info("[login] updateToken err:" + JSON.stringify(err));
-                        return Promise.resolve({ status: 4003, msg: "login err" });
+                        return Promise.resolve({ status: RESULT.LOGIN_FAILED, msg: "login err" });
                     });
             })
             .catch(err => {
                 logger.info("[login] err:" + JSON.stringify(err));
-                return Promise.resolve({ status: 4003, msg: "login failed" });
+                return Promise.resolve({ status: RESULT.LOGIN_FAILED, msg: "login failed" });
             });
     },
-    asyncUpdateInfo: (token) => {
-
+    asyncUpdateInfo: (u_name, info) => {
+        return dbOpter.updateUserInfo(u_name, info)
+            .then(ret => {
+                return Promise.resolve({ status: RESULT.SUCCESS, msg: "update success" });
+            })
+            .catch(err => {
+                return Promise.reject({ status: RESULT.FAILED, msg: "update failed" });
+            });;
     },
     asyncVerify: (token, m_name, excpet_role) => {
         return new Promise((resolve, reject) => {

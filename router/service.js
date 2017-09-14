@@ -54,15 +54,41 @@ router
             let info = _ret.info;
             ctx.body = { status: RESULT.SUCCESS, user_name: info.name, token: info.token };
         } else {
-            ctx.body = { status: RESULT.FAILED, msg: "login failed" };
+            ctx.body = { status: RESULT.LOGIN_FAILED, msg: "login failed" };
         }
     })
     .get("/crm-inner/account/active", async(ctx, next) => {
         logger.info("[router] path: /account/active");
-
     })
     .post("/crm-inner/account/register", async(ctx, next) => {
         logger.info("[router] path: /account/register");
+    })
+    .post("/crm-inner/account/edit", async(ctx, next) => {
+        logger.info("[router] path: /account/edit");
+        let _ret = "",
+            verify = {};
+        let postData = ctx.request.body;
+        if (!_util.verifyParams(postData, ["token", "info"])) {
+            ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
+            return;
+        }
+        if (!_util.verifyParams(postData.info, ["nick_name", "sex", "phone"])) {
+            ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
+            return;
+        }
+
+        verify = await courier.sendAsyncCall("account", "asyncVerify", () => {},
+            postData.token, "all", "opter");
+        if (verify.pass) {
+            let opter = verify.info.name;
+            await courier.sendAsyncCall("account", "asyncUpdateInfo", ret => {
+                _ret = { status: RESULT.SUCCESS, msg: "update info success" };
+            }, opter, postData.info);
+        } else {
+            _ret = _util.verifyTokenResult(verify);
+        }
+        ctx.body = _ret;
+
     });
 
 router

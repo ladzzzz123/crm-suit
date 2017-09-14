@@ -28,7 +28,9 @@ const app = new Vue({
                 </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav navbar-right">
-                        <li v-if="logged" @click="quit()">退出登陆</li>
+                        <li v-if="logged" @click="quit()">
+                            <a href="#">退出登陆</a>
+                        </li>
                     </ul>
                 </div>
             </div>

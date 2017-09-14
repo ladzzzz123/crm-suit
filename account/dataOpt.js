@@ -93,6 +93,21 @@ module.exports = {
         });
     },
 
+    updateUserInfo: (u_name, info) => {
+        let SQL_UPDATE_USER_INFO = " UPDATE account SET ? WHERE u_name = ? ";
+        return new Promise((resolve, reject) => {
+            db_self.query(SQL_UPDATE_USER_INFO, [info, u_name], (err, ret) => {
+                if (err) {
+                    reject(err);
+                } else if (ret.affectedRows) {
+                    resolve(ret);
+                } else {
+                    reject(null);
+                }
+            });
+        });
+    },
+
     addUserInfo: (values) => {
         let SQL_INSERT_USER_INFO = " INSERT INTO account SET ? ";
         return new Promise((resolve, reject) => {

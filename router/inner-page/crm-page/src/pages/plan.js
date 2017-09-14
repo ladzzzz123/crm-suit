@@ -35,7 +35,7 @@ export default Vue.component("plan", {
                         <p class="list-group-item-text">发起人: {{ item.m_from }}</p>
                         <p class="list-group-item-text">抄送: {{ item.m_cc }}</p>
                         <p class="list-group-item-text">发送日期: {{ new Date(item.m_date).toLocaleString() }}</p>
-                        <p class="list-group-item-text">当前操作者: {{ item.m_opter }}</p>
+                        <p class="list-group-item-text">谁在处理: <span class="label label-success">{{ item.m_opter }}</span> </p>
                         <p class="list-group-item-text">最后编辑日期: {{ new Date(item.last_edit).toLocaleString() }}</p>
                         
                         <br/>
@@ -51,7 +51,7 @@ export default Vue.component("plan", {
                                     <input class="hidden" type="text" name="plan_id" :value="item._id" />
                                     <input class="hidden" type="text" name="token" :value="token" />
                                     <input class="btn btn-error" type="file" name="file" multiple required />
-                                    <input class="btn btn-warning" type="submit" value="Upload" @click="uploadReply(item._id)"/>
+                                    <input class="btn btn-warning" type="submit" value="上传" @click="uploadReply(item._id)"/>
                                 </form>
                             </template>
                             <button type="button" v-else-if="item.m_status === 'RESOLVE'" class="btn btn-disable">该任务已经完成</button>
@@ -69,10 +69,45 @@ export default Vue.component("plan", {
                         </p>
                         <a v-for="(attach, index) in item.m_attachments.split(',')" class="list-group-item-text" :href="attach">附件{{ index + 1}}</a>
                     </div>
+                    
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-warning" role="progressbar" 
+                            v-if="item.m_status === 'NEW'"
+                            aria-valuenow="20" aria-valuemin="0" 
+                            aria-valuemax="100"
+                            style="width: 20%;">
+                            等待处理
+                        </div>
+
+                        <div class="progress-bar progress-bar-info" role="progressbar" 
+                            v-else-if="item.m_status === 'ACCEPT'"
+                            aria-valuenow="50" aria-valuemin="0" 
+                            aria-valuemax="100"
+                            style="width: 50%;">
+                            正在处理
+                        </div>                        
+
+                        <div class="progress-bar progress-bar-success" role="progressbar" 
+                            v-else-if="item.m_status === 'RESOLVE'"
+                            aria-valuenow="100" aria-valuemin="0" 
+                            aria-valuemax="100"
+                            style="width: 100%;">
+                            完成！
+                        </div>
+
+                        <div class="progress-bar" role="progressbar" 
+                            v-else
+                            aria-valuenow="0" aria-valuemin="0" 
+                            aria-valuemax="100"
+                            style="width: 0%;">
+                            未知
+                        </div>
+                    </div>
+
                 </div>
             </li>
         </ul>
-        <div class="queryPlan" @click="query">查询当前任务</div>
+        <button class="btn btn-info queryPlan" @click="query">查询当前任务</button>
     </div>
     <div class="container" v-else>
         您尚未登录，请点击<a @click="gotoLogin">此处</a>登录
