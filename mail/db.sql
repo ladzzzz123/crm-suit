@@ -8,6 +8,7 @@ CREATE TABLE mail_info (
     m_date    DATETIME,
     m_module  VARCHAR(32) COMMENT "处理模块名称",
     m_opter   VARCHAR(128) COMMENT "当前处理人", 
+    m_reply   VARCHAR(255) COMMENT "回复信息，包括附件等",
     m_attachments VARCHAR(255) COMMENT "附件",
     m_status  VARCHAR(32) NOT NULL DEFAULT "NEW" COMMENT "邮件处理状态[NEW, ACCEPT, RESOLVE, REJECT, UNKNOW]",
     last_edit TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -17,3 +18,4 @@ CREATE TABLE mail_info (
 
 ALTER TABLE mail_info ADD m_attachments VARCHAR(255) COMMENT "附件";
 ALTER TABLE mail_info ADD m_content TEXT COMMENT "邮件正文";
+ALTER TABLE mail_info ADD m_reply VARCHAR(255) COMMENT "回复信息，包括附件等";

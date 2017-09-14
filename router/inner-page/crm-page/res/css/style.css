@@ -38,3 +38,7 @@
 .input-group {
     margin: 0 auto;
 }
+
+.hidden {
+    display: none;
+}

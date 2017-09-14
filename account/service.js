@@ -2,6 +2,7 @@ const Courier = require("node-process-bearer").Courier;
 const logger = require("node-process-bearer").logger.getLogger();
 
 const dbOpter = require("./dataOpt");
+const RESULT = require("../router/codemap");
 
 let export_func = {
     name: "account",
@@ -55,7 +56,7 @@ let export_func = {
                         info = ret;
                         return dbOpter.fetchModuleRoleMap(m_name, excpet_role);
                     } else {
-                        resolve({ pass: false, info: null });
+                        resolve({ pass: false, info: { status: RESULT.LOGIN_EXPIRE } });
                     }
                 })
                 .then(role_val => {
@@ -67,11 +68,11 @@ let export_func = {
                         if (pass) dbOpter.renewToken(token);
                         resolve({ pass: pass, info: info });
                     } else {
-                        resolve({ pass: false, info: null });
+                        resolve({ pass: false, info: { status: RESULT.VERIFY_FAILED } });
                     }
                 })
                 .catch(err => {
-                    resolve({ pass: false, info: null });
+                    resolve({ pass: false, info: { status: RESULT.VERIFY_ERROR } });
                 });
         });
     },

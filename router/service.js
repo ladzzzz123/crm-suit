@@ -13,10 +13,9 @@ const RESULT = require("./codemap");
 const MSG = require("../config/msg");
 const DEFAULT_PORT = 3002;
 const Courier = require("node-process-bearer").Courier;
-const logger = require("node-process-bearer").logger.getLogger({
-    logLevel: 0, // see detail @LOG_LEVEL
-    showLineNumber: false, // value @[true, false], show line number or not
-});
+const logger = require("node-process-bearer").logger.getLogger();
+
+const _util = require("./util");
 
 app
     .use(bodyParser())
@@ -71,19 +70,19 @@ router
             verify = {};
         let postData = ctx.request.body;
         logger.info("[router] ctx.request: %s", JSON.stringify(ctx.request.body));
-        if (!verifyParams(postData, "token")) {
+        if (!_util.verifyParams(postData, "token")) {
             ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
             return;
         }
-        verify = await courier.sendAsyncCall("account", "asyncVerify", () => {}, postData.token, "plan-order", "opter");
-        logger.debug("verify:" + JSON.stringify(verify));
+        verify = await courier.sendAsyncCall("account", "asyncVerify", () => {},
+            postData.token, "plan-order", "opter");
         if (verify.pass) {
             await courier.sendAsyncCall("plan-order", "asyncFetchPlan", ret => {
                 logger.info("[router] plan-order job list:" + JSON.stringify(ret));
                 _ret = { status: RESULT.SUCCESS, content: ret, msg: "fetch list end" };
             });
         } else {
-            _ret = { status: RESULT.VERIFY_FAILED, msg: "verify failed" };
+            _ret = _util.verifyTokenResult(verify);
         }
         ctx.body = _ret;
     })
@@ -92,7 +91,7 @@ router
             verify = {};
         logger.info("[router] ctx.request: %s", JSON.stringify(ctx.request.body));
         let postData = ctx.request.body;
-        if (!verifyParams(postData, ["token", "plan_id"])) {
+        if (!_util.verifyParams(postData, ["token", "plan_id"])) {
             ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
             return;
         }
@@ -105,7 +104,7 @@ router
                 _ret = { status: RESULT.SUCCESS, content: ret };
             }, postData.plan_id, opter);
         } else {
-            _ret = { status: RESULT.VERIFY_FAILED, msg: "verify failed" };
+            _ret = _util.verifyTokenResult(verify);
         }
         ctx.body = _ret;
     })
@@ -114,7 +113,7 @@ router
             verify = {};
         logger.info("[router] ctx.request: %s", JSON.stringify(ctx.request.body));
         let postData = ctx.request.body;
-        if (!verifyParams(postData, ["token", "plan_id"])) {
+        if (!_util.verifyParams(postData, ["token", "plan_id"])) {
             ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
             return;
         }
@@ -127,7 +126,32 @@ router
                 _ret = { status: RESULT.SUCCESS, content: ret };
             }, postData.plan_id, opter);
         } else {
-            _ret = { status: RESULT.VERIFY_FAILED, msg: "verify failed" };
+            _ret = _util.verifyTokenResult(verify);
+        }
+        ctx.body = _ret;
+    })
+    .post("/crm-inner/plan-order/upload", async(ctx, next) => {
+        let _ret = "",
+            verify = {};
+
+        logger.info("[router] ctx.request: %s", JSON.stringify(ctx.request.body));
+        let postData = ctx.request.body;
+        if (!_util.verifyParams(postData, ["token", "plan_id", "files"])) {
+            ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
+            return;
+        }
+        verify = await courier.sendAsyncCall("account", "asyncVerify", () => {},
+            postData.token, "plan-order", "opter");
+        if (verify.pass) {
+            let opter = verify.info.name;
+            let plan_id = postData.plan_id;
+            let file = postData.files.file;
+            await courier.sendAsyncCall("plan-order", "asyncUploadFile", ret => {
+                logger.info("[router] accept:" + JSON.stringify(ret));
+                _ret = { status: RESULT.SUCCESS, content: ret };
+            }, file, plan_id, opter);
+        } else {
+            _ret = _util.verifyTokenResult(verify);
         }
         ctx.body = _ret;
     });
@@ -138,7 +162,7 @@ router
             verify = {};
         logger.info("[router] ctx.request: %s", JSON.stringify(ctx.request.body));
         let postData = ctx.request.body;
-        if (!verifyParams(postData, ["token", "userInfo"])) {
+        if (!_util.verifyParams(postData, ["token", "userInfo"])) {
             ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
             return;
         }
@@ -159,33 +183,17 @@ router
                 _ret = { status: RESULT.SUCCESS, msg: "create user success" };
             }
         } else {
-            _ret = { status: RESULT.VERIFY_FAILED, msg: "verify failed" };
+            _ret = _util.verifyTokenResult(verify);
         }
         ctx.body = _ret;
+    })
+    .get("/crm-inner/fetch-mail", async(ctx, next) => {
+        let _ret = {};
+        await courier.sendAsyncCall("mail", "asyncGetNewMail", ret => {
+            logger.info("[router] get New Mail:" + JSON.stringify(ret));
+            _ret = ret;
+        });
+        ctx.body = _ret;
     });
-
-
-router.get("/crm-inner/fetch-mail", async(ctx, next) => {
-    let _ret = {};
-    await courier.sendAsyncCall("mail", "asyncGetNewMail", ret => {
-        logger.info("[router] get New Mail:" + JSON.stringify(ret));
-        _ret = ret;
-    });
-    ctx.body = _ret;
-});
-
-function verifyParams(params, types) {
-    if (Array.isArray(types)) {
-        return types.every(item => params.hasOwnProperty(item));
-    } else {
-        switch (types) {
-            case "token":
-                return params.hasOwnProperty("token");
-            default:
-                break;
-        }
-    }
-    return false;
-}
 
 http.createServer(app.callback()).listen(DEFAULT_PORT);

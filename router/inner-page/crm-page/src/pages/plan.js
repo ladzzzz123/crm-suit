@@ -1,5 +1,6 @@
 import Vue from "vue";
 import requester from "../utils/request";
+import RESULT_CODE from "../../../../codemap.json";
 
 export default Vue.component("plan", {
     // props: ["userInfo"],
@@ -42,14 +43,25 @@ export default Vue.component("plan", {
                         <button type="button" v-if="item.m_status === 'NEW'" class="btn btn-success" @click="acceptPlan(item._id)">接受</button>
                         <button type="button" class="btn btn-disable" v-else>已接受</button>
                         
-                        <button type="button" v-if="item.m_opter === userInfo.user_name && item.m_status === 'ACCEPT'" class="btn btn-primary" @click="finishPlan(item._id)">我完成啦</button>
-                        <button type="button" v-else-if="item.m_opter === userInfo.user_name && item.m_status === 'RESOLVE'" class="btn btn-disable">该任务已经完成</button>
+                        <template v-if="item.m_opter === userInfo.user_name">
+                            <template v-if="item.m_status === 'ACCEPT'">
+                                <button type="button" class="btn btn-primary" @click="finishPlan(item._id)">我完成啦</button>
+                                <form action="/crm-inner/plan-order/upload" method="post" enctype="multipart/form-data">
+                                    <input class="hidden" type="text" name="plan-order" :value="item._id" />
+                                    <input class="hidden" type="text" name="token" :value="token" />
+                                    <input class="btn btn-error" type="file" name="file" multiple />
+                                    <input class="btn btn-warning" type="submit" value="Upload" />
+                                </form>
+                            </template>
+                            <button type="button" v-else-if="item.m_status === 'RESOLVE'" class="btn btn-disable">该任务已经完成</button>
+                        </template>
+
                         <br/>
                         <br/>
                     </div>
                     <div class="col-md-5 btn-group-vertical">
                         <p class="list-group-item-text">邮件正文:
-                            <button type="button" class="btn btn-info" @click="showHtml(item._id)">获取</button>
+                            <button type="button" class="btn btn-info btn-xs" @click="showHtml(item._id)">获取</button>
                             <br/>
                             <iframe class="embed-responsive-item">
                             </iframe>
@@ -70,12 +82,17 @@ export default Vue.component("plan", {
             this.$router.push("/login");
         },
         query: function() {
-            requester.send("/crm-inner/plan-order/list", { token: this.token }, result => {
-                let arr = result.content.ret;
-                if (Array.isArray(arr)) {
-                    this.list = arr;
-                }
-            });
+            requester.send("/crm-inner/plan-order/list", { token: this.token },
+                result => {
+                    let arr = result.content.ret;
+                    if (Array.isArray(arr)) {
+                        this.list = arr;
+                    }
+                }, (status, msg) => {
+                    if (status === RESULT_CODE.LOGIN_EXPIRE) {
+                        this.$store.dispatch("asyncQuit");
+                    }
+                });
         },
 
         showHtml: function(id) {
@@ -99,7 +116,7 @@ export default Vue.component("plan", {
             });
         },
         finishPlan: function(plan_id) {
-            let mailMsg = this.list.find(item => item._id === plan_id);
+            let mailMsg = _self.list.find(item => item._id === plan_id);
             mailMsg.m_status = "RESOLVE";
 
             requester.send("/crm-inner/plan-order/finish", {
