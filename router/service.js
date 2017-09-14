@@ -137,15 +137,15 @@ router
 
         logger.info("[router] ctx.request: %s", JSON.stringify(ctx.request.body));
         let postData = ctx.request.body;
-        if (!_util.verifyParams(postData, ["token", "plan_id", "files"])) {
+        if (!_util.verifyParams(postData.fields, ["token", "plan_id"])) {
             ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
             return;
         }
         verify = await courier.sendAsyncCall("account", "asyncVerify", () => {},
-            postData.token, "plan-order", "opter");
+            postData.fields.token, "plan-order", "opter");
         if (verify.pass) {
             let opter = verify.info.name;
-            let plan_id = postData.plan_id;
+            let plan_id = postData.fields.plan_id;
             let file = postData.files.file;
             await courier.sendAsyncCall("plan-order", "asyncUploadFile", ret => {
                 logger.info("[router] accept:" + JSON.stringify(ret));
