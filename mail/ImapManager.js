@@ -71,6 +71,7 @@ class ImapManager {
         logger.warn(`[mail] results length: ${results.length}`);
         let msgArr = [];
         let fetchSet = new Set();
+        let canSetReaded = false;
         f.on("message", function(msg, seqno) {
             logger.info("[ImapManager] fetch Message #%d  message:%s", seqno, JSON.stringify(msg));
             fetchSet.add(seqno);
@@ -78,16 +79,21 @@ class ImapManager {
                 try {
                     let mail = await simpleParser(stream);
                     logger.warn(`[ImapManager] mail keys:${JSON.stringify(Object.keys(mail))}`);
-                    let m_from = mail.from.value[0].address;
-                    let m_cc = mail.cc.value.map(cc => {
-                        return cc.address;
-                    });
 
-                    let m_to = mail.to.value[0].address;
-                    let m_date = new Date(mail.date);
+                    let title = mail.subject || "";
+                    let m_from = mail.from.value[0].address;
+                    let m_cc = "";
+                    if (mail.cc && mail.cc.value && Array.isArray(mail.cc.value)) {
+                        m_cc = mail.cc.value.map(cc => {
+                            return cc.address;
+                        });
+                    }
+                    let m_to = mail.to.value[0].address || "";
+                    let m_date = new Date(mail.date) || new Date();
+                    let m_content = mail.html || "";
 
                     let neoMail = {
-                        title: mail.subject,
+                        title: title,
                         m_from: m_from,
                         m_to: m_to,
                         m_cc: m_cc.toString(),
@@ -95,14 +101,22 @@ class ImapManager {
                         m_content: mail.html,
                     };
                     logger.info("simpleParse before process m_attachments");
-                    _self.saveAttach(mail.attachments, m_attachments => {
-                        neoMail.m_attachments = m_attachments.toString();
-                        fetchSet.delete(seqno);
+                    neoMail.m_attachments = "";
+                    if (mail.attachments) {
+                        _self.saveAttach(mail.attachments, m_attachments => {
+                            neoMail.m_attachments = m_attachments.toString();
+                            fetchSet.delete(seqno);
+                            msgArr.push(neoMail);
+                            if (fetchSet.size < 1) {
+                                callback(msgArr);
+                            }
+                        });
+                    } else {
                         msgArr.push(neoMail);
                         if (fetchSet.size < 1) {
                             callback(msgArr);
                         }
-                    });
+                    }
                 } catch (err) {
                     logger.error("simpleParse Error:%s", JSON.stringify(err));
                     callback([]);
@@ -110,7 +124,6 @@ class ImapManager {
             });
 
             msg.on("attributes", (attrs) => {
-                // mail_data.uid = attrs.uid;
                 imap.setFlags(attrs.uid, ["SEEN"], err => {
                     if (err) {
                         logger.error(`[ImapManager] Mail setFlag error seqno:${seqno}, error:${JSON.stringify(err)}`);

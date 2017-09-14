@@ -100,7 +100,6 @@ let export_func = {
             reader.pipe(stream);
 
             let params = {
-                // m_status: "RESOLVE",
                 m_reply: CONFIG.visitPath + file.name,
                 m_opter: opter
             };
@@ -112,13 +111,6 @@ let export_func = {
                         if (Array.isArray(ret.ret) && ret.ret.length > 0) {
                             info = ret.ret[0];
                         }
-                        // courier.sendAsyncCall("mail", "asyncSendMail", ret => {
-                        //         _ret = ret;
-                        //     }, info.m_from,
-                        //     `${opter} finish the plan ${info.title}`,
-                        //     `${opter} finish the plan!`,
-                        //     info.m_cc
-                        // );
                         resolve({ status: "success", msg: "上传附件成功" });
                     } else {
                         resolve({ status: "failed", msg: "上传附件失败" });
@@ -135,18 +127,4 @@ let export_func = {
 };
 
 let courier = new Courier(export_func);
-courier.listening(() => {
-    // const params = ["mail_info", "m_module", export_func.name, "m_status", "NEW"];
-    // const params = ["mail_info", "m_module", export_func.name];
-    // let sql_opt = "SELECT * FROM ?? WHERE ?? = ?";
-    // sql_opt = mysql.format(sql_opt, params);
-    // courier.sendAsyncCall("dbopter", "asyncQuery", () => {}, "market_db", sql_opt)
-    //     .then(ret => {
-    //         Array.prototype.forEach.call(ret, mail => {
-    //             logger.info("[plan-order] db select mail:" + JSON.stringify(mail));
-    //         });
-    //     })
-    //     .catch(err => {
-    //         logger.warn("[plan-order] db select err:" + JSON.stringify(err));
-    //     });
-}, 20000);
+courier.listening(() => {}, 20 * 1000);
