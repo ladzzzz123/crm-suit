@@ -37,6 +37,7 @@ export default Vue.component("plan", {
                         <p class="list-group-item-text">发送日期: {{ new Date(item.m_date).toLocaleString() }}</p>
                         <p class="list-group-item-text">当前操作者: {{ item.m_opter }}</p>
                         <p class="list-group-item-text">最后编辑日期: {{ new Date(item.last_edit).toLocaleString() }}</p>
+                        
                         <br/>
                         <br/>
                         

@@ -7,6 +7,7 @@ const app = new Koa();
 const Router = require("koa-router");
 const router = Router();
 const bodyParser = require("koa-bodyparser");
+const koaBody = require("koa-body");
 const staticServer = require("koa-static");
 
 const RESULT = require("./codemap");
@@ -18,7 +19,8 @@ const logger = require("node-process-bearer").logger.getLogger();
 const _util = require("./util");
 
 app
-    .use(bodyParser())
+    .use(koaBody({ multipart: true }))
+    // .use(bodyParser())
     .use(router.routes())
     .use(router.allowedMethods())
     .use(staticServer(__dirname + "/inner-page"));
@@ -78,7 +80,6 @@ router
             postData.token, "plan-order", "opter");
         if (verify.pass) {
             await courier.sendAsyncCall("plan-order", "asyncFetchPlan", ret => {
-                logger.info("[router] plan-order job list:" + JSON.stringify(ret));
                 _ret = { status: RESULT.SUCCESS, content: ret, msg: "fetch list end" };
             });
         } else {
