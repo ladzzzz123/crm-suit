@@ -45,7 +45,7 @@ class ImapManager {
             if (Array.isArray(attachments)) {
                 let files_urls = [];
                 for (let index = 0; index < attachments.length; index++) {
-                    let attach = attachments[0];
+                    let attach = attachments[index];
                     await fs.writeFileSync(`${this.fileSavePath}${attach.filename}`, attach.content);
                     files_urls.push(`${this.visitPath}${attach.filename}`);
                 }

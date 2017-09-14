@@ -76,8 +76,8 @@ let export_func = {
                                 logger.info("[router] send New Mail:" + JSON.stringify(ret));
                                 _ret = ret;
                             }, info.m_from,
-                            `${opter} finish the plan ${info.title}\n ${info.m_reply ? info.m_reply : ""}`,
-                            `${opter} finish the plan!`,
+                            `${opter} finish the plan ${info.title}`,
+                            `${opter} finish the plan! \n ${info.m_reply ? "附件如下:" + info.m_reply : ""}`,
                             info.m_cc
                         );
                         resolve({ status: "success", msg: "完成任务成功" });

@@ -47,11 +47,11 @@ export default Vue.component("plan", {
                         <template v-if="item.m_opter === userInfo.user_name">
                             <template v-if="item.m_status === 'ACCEPT'">
                                 <button type="button" class="btn btn-primary" @click="finishPlan(item._id)">我完成啦</button>
-                                <form :id="'upload_' + item._id" enctype="multipart/form-data" onsubmit="return uploadReply(item._id)">
+                                <form :id="'upload_' + item._id" enctype="multipart/form-data" onsubmit="return false">
                                     <input class="hidden" type="text" name="plan_id" :value="item._id" />
                                     <input class="hidden" type="text" name="token" :value="token" />
-                                    <input class="btn btn-error" type="file" name="file" multiple />
-                                    <input class="btn btn-warning" type="submit" value="Upload" />
+                                    <input class="btn btn-error" type="file" name="file" multiple required />
+                                    <input class="btn btn-warning" type="submit" value="Upload" @click="uploadReply(item._id)"/>
                                 </form>
                             </template>
                             <button type="button" v-else-if="item.m_status === 'RESOLVE'" class="btn btn-disable">该任务已经完成</button>
@@ -130,6 +130,10 @@ export default Vue.component("plan", {
         },
         uploadReply: function(plan_id) {
             let el_upload = document.querySelector(`#upload_${plan_id}`);
+            if (!el_upload.checkValidity()) {
+                alert("上传文件不能为空！");
+                return;
+            }
             requester.upload("/crm-inner/plan-order/upload", el_upload, content => {
                 alert("上传成功");
             });
