@@ -92,6 +92,7 @@ export default Vue.component("plan", {
                 }, (status, msg) => {
                     if (status === RESULT_CODE.LOGIN_EXPIRE) {
                         this.$store.dispatch("asyncQuit");
+                        this.gotoLogin();
                     }
                 });
         },
