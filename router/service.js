@@ -41,7 +41,6 @@ router
         logger.info("[router] path: /account/login");
         let _ret = "";
         let postData = ctx.request.body;
-        logger.info("[router] postData:%s", JSON.stringify(postData))
         try {
             await courier.sendAsyncCall("account", "asyncLogin", ret => {
                 logger.info("[router] call account asyncLogin:%s", JSON.stringify(ret));
@@ -71,7 +70,6 @@ router
         let _ret = "",
             verify = {};
         let postData = ctx.request.body;
-        logger.info("[router] ctx.request: %s", JSON.stringify(ctx.request.body));
         if (!_util.verifyParams(postData, "token")) {
             ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
             return;
@@ -90,14 +88,12 @@ router
     .post("/crm-inner/plan-order/accept", async(ctx, next) => {
         let _ret = "",
             verify = {};
-        logger.info("[router] ctx.request: %s", JSON.stringify(ctx.request.body));
         let postData = ctx.request.body;
         if (!_util.verifyParams(postData, ["token", "plan_id"])) {
             ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
             return;
         }
         verify = await courier.sendAsyncCall("account", "asyncVerify", () => {}, postData.token, "plan-order", "opter");
-        logger.debug("verify:" + JSON.stringify(verify));
         if (verify.pass) {
             let opter = verify.info.name;
             await courier.sendAsyncCall("plan-order", "asyncAcceptPlan", ret => {
@@ -112,18 +108,15 @@ router
     .post("/crm-inner/plan-order/finish", async(ctx, next) => {
         let _ret = "",
             verify = {};
-        logger.info("[router] ctx.request: %s", JSON.stringify(ctx.request.body));
         let postData = ctx.request.body;
         if (!_util.verifyParams(postData, ["token", "plan_id"])) {
             ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
             return;
         }
         verify = await courier.sendAsyncCall("account", "asyncVerify", () => {}, postData.token, "plan-order", "opter");
-        logger.debug("verify:" + JSON.stringify(verify));
         if (verify.pass) {
             let opter = verify.info.name;
             await courier.sendAsyncCall("plan-order", "asyncFinishPlan", ret => {
-                logger.info("[router] accept:" + JSON.stringify(ret));
                 _ret = { status: RESULT.SUCCESS, content: ret };
             }, postData.plan_id, opter);
         } else {
@@ -135,7 +128,6 @@ router
         let _ret = "",
             verify = {};
 
-        logger.info("[router] ctx.request: %s", JSON.stringify(ctx.request.body));
         let postData = ctx.request.body;
         if (!_util.verifyParams(postData.fields, ["token", "plan_id"])) {
             ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
@@ -148,7 +140,7 @@ router
             let plan_id = postData.fields.plan_id;
             let file = postData.files.file;
             await courier.sendAsyncCall("plan-order", "asyncUploadFile", ret => {
-                logger.info("[router] accept:" + JSON.stringify(ret));
+                logger.info("[router] upload ret:" + JSON.stringify(ret));
                 _ret = { status: RESULT.SUCCESS, content: ret };
             }, file, plan_id, opter);
         } else {
@@ -172,7 +164,6 @@ router
             _ret = { status: RESULT.FAILED, msg: "add failed" };
 
             let insert_ret = await courier.sendAsyncCall("account", "asyncAddUser", ret => {
-                logger.info("[router] accept:" + JSON.stringify(ret));
                 _ret = { status: RESULT.SUCCESS, content: ret };
             }, postData.userInfo);
 

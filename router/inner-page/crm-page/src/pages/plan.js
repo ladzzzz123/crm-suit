@@ -48,7 +48,7 @@ export default Vue.component("plan", {
                             <template v-if="item.m_status === 'ACCEPT'">
                                 <button type="button" class="btn btn-primary" @click="finishPlan(item._id)">我完成啦</button>
                                 <form action="/crm-inner/plan-order/upload" method="post" enctype="multipart/form-data">
-                                    <input class="hidden" type="text" name="plan-order" :value="item._id" />
+                                    <input class="hidden" type="text" name="plan_id" :value="item._id" />
                                     <input class="hidden" type="text" name="token" :value="token" />
                                     <input class="btn btn-error" type="file" name="file" multiple />
                                     <input class="btn btn-warning" type="submit" value="Upload" />
