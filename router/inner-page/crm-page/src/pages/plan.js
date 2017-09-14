@@ -47,7 +47,7 @@ export default Vue.component("plan", {
                         <template v-if="item.m_opter === userInfo.user_name">
                             <template v-if="item.m_status === 'ACCEPT'">
                                 <button type="button" class="btn btn-primary" @click="finishPlan(item._id)">我完成啦</button>
-                                <form action="/crm-inner/plan-order/upload" method="post" enctype="multipart/form-data">
+                                <form :id="'upload_' + item._id" enctype="multipart/form-data" onsubmit="return uploadReply(item._id)">
                                     <input class="hidden" type="text" name="plan_id" :value="item._id" />
                                     <input class="hidden" type="text" name="token" :value="token" />
                                     <input class="btn btn-error" type="file" name="file" multiple />
@@ -117,7 +117,7 @@ export default Vue.component("plan", {
             });
         },
         finishPlan: function(plan_id) {
-            let mailMsg = _self.list.find(item => item._id === plan_id);
+            let mailMsg = this.list.find(item => item._id === plan_id);
             mailMsg.m_status = "RESOLVE";
 
             requester.send("/crm-inner/plan-order/finish", {
@@ -127,6 +127,13 @@ export default Vue.component("plan", {
                 alert("已完成任务！");
                 this.query();
             });
+        },
+        uploadReply: function(plan_id) {
+            let el_upload = document.querySelector(`#upload_${plan_id}`);
+            requester.upload("/crm-inner/plan-order/upload", el_upload, content => {
+                alert("上传成功");
+            });
+            // action="/crm-inner/plan-order/upload" method="post" 
         }
     }
 

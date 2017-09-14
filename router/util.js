@@ -1,3 +1,4 @@
+const RESULT = require("./codemap.json");
 module.exports = {
     verifyParams: function(params, types) {
         if (Array.isArray(types)) {
