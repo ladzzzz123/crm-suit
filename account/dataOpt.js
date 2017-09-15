@@ -27,7 +27,8 @@ module.exports = {
             }
         });
         db_self.on("error", err => {
-            db.self.isConnected = false;
+            logger.error("[Db] on error: %s", JSON.stringify(err));
+            db_self.isConnected = false;
             _self.connect();
         });
         redisClient = new RedisClient(redConfig);

@@ -1,4 +1,5 @@
 import RESULT_CODE from "../../../../codemap.json";
+import func from "../main";
 let requesting = false;
 let uploading = false;
 let DEBUG_URL = "http://121.52.235.231:40718";
@@ -93,6 +94,7 @@ function processResult(status) {
         case RESULT_CODE.LOGIN_EXPIRE:
             msg = "您的登录已经过期，请重新登录！";
             ret = { status: RESULT_CODE.LOGIN_EXPIRE, msg: msg };
+            func.goToLogin();
             break;
         default:
             msg = `请求失败，错误码:${result.code}, 请稍后尝试`;

@@ -52,7 +52,16 @@ router
 
         if (_ret.status === RESULT.SUCCESS) {
             let info = _ret.info;
-            ctx.body = { status: RESULT.SUCCESS, user_name: info.name, token: info.token };
+            ctx.body = {
+                status: RESULT.SUCCESS,
+                user_name: info.name,
+                nick_name: info.nick_name || "",
+                sex: info.sex || "",
+                phone: info.phone || "",
+                mail: info.mail || "",
+                u_status: info.u_status || "",
+                token: info.token
+            };
         } else {
             ctx.body = { status: RESULT.LOGIN_FAILED, msg: "login failed" };
         }
