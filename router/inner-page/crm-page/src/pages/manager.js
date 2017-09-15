@@ -30,7 +30,7 @@ export default Vue.component("manager", {
             <div class="col-lg-6">
                 <div class="page-header">
                     <h1>
-                        {{ userInfo.user_name }} 
+                        {{ userInfo.u_name }} 
                         <small>,您好</small>
                         <br/>
                         <small>您的个人信息如下：</small>
@@ -85,7 +85,7 @@ export default Vue.component("manager", {
                     <div class="input-group">
                         <span class="input-group-addon" id="basic-addon1">邮件地址</span>
                         <input type="text" class="form-control" 
-                        :value="userInfo.mail || userInfo.user_name || '404没找到' "
+                        :value="userInfo.mail || userInfo.u_name || '404没找到' "
                         aria-describedby="basic-addon1"
                         disabled>
                         </input>
@@ -99,6 +99,7 @@ export default Vue.component("manager", {
                         disabled>
                         </input>                     
                     </div>
+                    <br/>
                     <button v-if="infoChanged" class="btn btn-info" type="submit" @click="submit">提交</button>
                     <button v-else class="btn btn-disable" type="submit">提交</button>
                 </form>

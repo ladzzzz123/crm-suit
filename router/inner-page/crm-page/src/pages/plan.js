@@ -44,7 +44,7 @@ export default Vue.component("plan", {
                         <button type="button" v-if="item.m_status === 'NEW'" class="btn btn-success" @click="acceptPlan(item._id)">接受</button>
                         <button type="button" class="btn btn-disable" v-else>已接受</button>
                         
-                        <template v-if="item.m_opter === userInfo.user_name">
+                        <template v-if="item.m_opter === userInfo.u_name">
                             <template v-if="item.m_status === 'ACCEPT'">
                                 <button type="button" class="btn btn-primary" @click="finishPlan(item._id)">我完成啦</button>
                                 <form :id="'upload_' + item._id" enctype="multipart/form-data" onsubmit="return false">

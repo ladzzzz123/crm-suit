@@ -4,7 +4,7 @@ export default Vue.component("login", {
     data: () => {
         return {
             formData: {
-                user_name: "",
+                u_name: "",
                 passwd: ""
             },
             el_form: {}
@@ -14,7 +14,7 @@ export default Vue.component("login", {
         <form class="login-from" onsubmit="return false">
             <div class="input-group">
                 <input type="text" class="form-control" placeholder="用户名(邮箱)" 
-                    name="user_name" v-model="formData.user_name" required>
+                    name="u_name" v-model="formData.u_name" required>
             </div>
             <br/>
             <div class="input-group">
@@ -35,7 +35,7 @@ export default Vue.component("login", {
                 return false;
             }
             let params = {
-                user_name: this.formData.user_name,
+                u_name: this.formData.u_name,
                 passwd: this.formData.passwd
             };
             requester.send("/crm-inner/account/login/", params, (ret) => {

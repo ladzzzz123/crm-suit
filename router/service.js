@@ -45,7 +45,7 @@ router
             await courier.sendAsyncCall("account", "asyncLogin", ret => {
                 logger.info("[router] call account asyncLogin:%s", JSON.stringify(ret));
                 _ret = ret;
-            }, postData.user_name, postData.passwd);
+            }, postData.u_name, postData.passwd);
         } catch (e) {
             logger.warn("[router] call account asyncLogin err:%s", JSON.stringify(ret));
         }
@@ -54,7 +54,7 @@ router
             let info = _ret.info;
             ctx.body = {
                 status: RESULT.SUCCESS,
-                user_name: info.name,
+                u_name: info.name,
                 nick_name: info.nick_name || "",
                 sex: info.sex || "",
                 phone: info.phone || "",
