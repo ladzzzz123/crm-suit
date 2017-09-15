@@ -9,11 +9,11 @@ let export_func = {
     init: () => {
         dbOpter.connect();
     },
-    asyncRegister: (user_name, code) => {
+    asyncRegister: (u_name, code) => {
 
     },
-    asyncLogin: (user_name, passwd) => {
-        return dbOpter.queryUserInfo("u_name", user_name, "passwd", passwd)
+    asyncLogin: (u_name, passwd) => {
+        return dbOpter.queryUserInfo("u_name", u_name, "passwd", passwd)
             .then(ret => {
                 let info = {};
                 if (ret.length > 0) {

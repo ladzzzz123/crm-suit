@@ -54,7 +54,7 @@ router
             let info = _ret.info;
             ctx.body = {
                 status: RESULT.SUCCESS,
-                u_name: info.name,
+                u_name: info.u_name,
                 nick_name: info.nick_name || "",
                 sex: info.sex || "",
                 phone: info.phone || "",
