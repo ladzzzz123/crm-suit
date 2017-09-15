@@ -24,12 +24,10 @@ let export_func = {
                 }
                 let token = Math.random().toString(36).slice(2);
                 logger.info("[login] token:" + token);
-                return dbOpter.updateToken(token, {
-                        name: info.u_name,
-                        id: info._id,
-                        role_pos: info.role_pos,
-                        status: info.u_status
-                    })
+                let retInfo = {};
+                Object.assign(retInfo, info);
+                delete retInfo.passwd;
+                return dbOpter.updateToken(token, retInfo)
                     .then(info => {
                         logger.info("[login] updateToken ret:" + JSON.stringify(info));
                         return Promise.resolve({ status: RESULT.SUCCESS, info: info, msg: "login success" });

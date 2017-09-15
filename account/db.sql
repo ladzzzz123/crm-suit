@@ -12,6 +12,7 @@ CREATE TABLE account (
     KEY(u_name, role_pos, u_status)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT "用户信息表";
 
+
 CREATE TABLE role_map (
     _id         INT(10) PRIMARY KEY AUTO_INCREMENT,
     role_pos    VARCHAR(128) NOT NULL COMMENT "用户角色值，以二进制表示，每一位对应一种角色", 
@@ -19,3 +20,12 @@ CREATE TABLE role_map (
     module      VARCHAR(64) NOT NULL DEFAULT "ALL" COMMENT "用户角色值对应的模块，用于是否可使用模块功能的验证", 
     KEY(module, role_name, role_pos)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT "角色信息表";
+
+
+
+
+
+
+ALTER TABLE account ADD nick_name VARCHAR(128) COMMENT "昵称";
+ALTER TABLE account ADD sex VARCHAR(2) COMMENT "性别";
+ALTER TABLE account ADD phone        VARCHAR(16) COMMENT "联系电话";

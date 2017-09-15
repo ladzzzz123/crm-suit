@@ -1,4 +1,6 @@
 import Vue from "vue";
+import requester from "../utils/request";
+
 export default Vue.component("manager", {
     // props: ["userInfo"],
     data: () => {
@@ -19,7 +21,7 @@ export default Vue.component("manager", {
     },
 
     mounted: function() {
-        this.el_form = document.querySelector(".info-from");
+        this.el_form = document.querySelector(".info-form");
     },
 
     template: `
@@ -97,7 +99,7 @@ export default Vue.component("manager", {
                         disabled>
                         </input>                     
                     </div>
-                    <button v-if="infoChanged" class="btn btn-info" type="submit">提交</button>
+                    <button v-if="infoChanged" class="btn btn-info" type="submit" @click="submit">提交</button>
                     <button v-else class="btn btn-disable" type="submit">提交</button>
                 </form>
             </div>
@@ -136,6 +138,7 @@ export default Vue.component("manager", {
                     type: "asyncUpdateUserInfo",
                     userInfo: this.userInfo
                 });
+                alert("更新成功！！");
                 this.$router.push("/manager");
             });
             return false;
