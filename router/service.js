@@ -89,7 +89,7 @@ router
         verify = await courier.sendAsyncCall("account", "asyncVerify", () => {},
             postData.token, "all", "opter");
         if (verify.pass) {
-            let opter = verify.info.name;
+            let opter = verify.info.u_name;
             await courier.sendAsyncCall("account", "asyncUpdateInfo", ret => {
                 _ret = { status: RESULT.SUCCESS, msg: "update info success" };
             }, opter, postData.info);
@@ -130,7 +130,7 @@ router
         }
         verify = await courier.sendAsyncCall("account", "asyncVerify", () => {}, postData.token, "plan-order", "opter");
         if (verify.pass) {
-            let opter = verify.info.name;
+            let opter = verify.info.u_name;
             await courier.sendAsyncCall("plan-order", "asyncAcceptPlan", ret => {
                 logger.info("[router] accept:" + JSON.stringify(ret));
                 _ret = { status: RESULT.SUCCESS, content: ret };
@@ -150,7 +150,7 @@ router
         }
         verify = await courier.sendAsyncCall("account", "asyncVerify", () => {}, postData.token, "plan-order", "opter");
         if (verify.pass) {
-            let opter = verify.info.name;
+            let opter = verify.info.u_name;
             await courier.sendAsyncCall("plan-order", "asyncFinishPlan", ret => {
                 _ret = { status: RESULT.SUCCESS, content: ret };
             }, postData.plan_id, opter);
@@ -171,7 +171,7 @@ router
         verify = await courier.sendAsyncCall("account", "asyncVerify", () => {},
             postData.fields.token, "plan-order", "opter");
         if (verify.pass) {
-            let opter = verify.info.name;
+            let opter = verify.info.u_name;
             let plan_id = postData.fields.plan_id;
             let file = postData.files.file;
             await courier.sendAsyncCall("plan-order", "asyncUploadFile", ret => {
