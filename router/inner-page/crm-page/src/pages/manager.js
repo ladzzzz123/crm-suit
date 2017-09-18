@@ -7,7 +7,8 @@ export default Vue.component("manager", {
     data: () => {
         return {
             infoChanged: false,
-            passwdInfo: {}
+            passwdInfo: {},
+            passwdChanged: false
         };
     },
     computed: {
@@ -114,7 +115,7 @@ export default Vue.component("manager", {
                 <form class="passwd-form" onsubmit="return false">
                     <div class="input-group">
                         <span class="input-group-addon" id="basic-addon1">原密码</span>
-                        <input type="passwd" class="form-control" 
+                        <input type="password" class="form-control" 
                         v-model="passwdInfo.old_passwd" aria-describedby="basic-addon1"
                         required
                         readonly>
@@ -127,14 +128,14 @@ export default Vue.component("manager", {
                     <br/>
                     <div class="input-group">
                         <span class="input-group-addon" id="basic-addon1">新密码</span>
-                        <input type="passwd" class="form-control" 
+                        <input type="password" class="form-control" 
                         v-model="passwdInfo.passwd" aria-describedby="basic-addon1"
                         required
                         readonly />
                     </div>
                     <br/>
-                    <button v-if="infoChanged" class="btn btn-info" type="submit" @click="submit">提交</button>
-                    <button v-else class="btn btn-disable" type="submit">提交</button>
+                    <button v-if="passwdChanged" class="btn btn-info" type="submit" @click="submitPasswd">提交</button>
+                    <button v-else class="btn btn-disable" type="">提交</button>
                 </form>
             </div>
         </div>
@@ -158,6 +159,7 @@ export default Vue.component("manager", {
                 input => {
                     input.readOnly = false;
                 });
+            this.passwdChanged = true;
         },
         submit: function() {
             if (!this.el_form.checkValidity()) {

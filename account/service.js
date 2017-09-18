@@ -43,6 +43,8 @@ let export_func = {
             });
     },
     asyncUpdateInfo: (u_name, info) => {
+        logger.info("[account] asyncUpdateInfo:" + JSON.stringify(info));
+
         if (Object.prototype.hasOwnProperty.call(info, "passwd")) {
             return dbOpter.updatePasswd(u_name, info.old_passwd, info.passwd)
                 .then(ret => {
