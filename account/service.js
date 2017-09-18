@@ -43,13 +43,27 @@ let export_func = {
             });
     },
     asyncUpdateInfo: (u_name, info) => {
-        return dbOpter.updateUserInfo(u_name, info)
-            .then(ret => {
-                return Promise.resolve({ status: RESULT.SUCCESS, msg: "update success" });
-            })
-            .catch(err => {
-                return Promise.reject({ status: RESULT.FAILED, msg: "update failed" });
-            });;
+        if (Object.prototype.hasOwnProperty.call(info, "passwd")) {
+            return dbOpter.updatePasswd(u_name, info.old_passwd, info.passwd)
+                .then(ret => {
+                    return Promise.resolve({ status: RESULT.SUCCESS, msg: "update success" });
+                })
+                .catch(err => {
+                    return Promise.reject({ status: RESULT.FAILED, msg: "update failed" });
+                });
+
+        } else {
+            return dbOpter.updateUserInfo(u_name, info)
+                .then(ret => {
+                    return Promise.resolve({ status: RESULT.SUCCESS, msg: "update success" });
+                })
+                .catch(err => {
+                    return Promise.reject({ status: RESULT.FAILED, msg: "update failed" });
+                });
+        }
+
+
+
     },
     asyncVerify: (token, m_name, excpet_role) => {
         return new Promise((resolve, reject) => {

@@ -1,11 +1,13 @@
 import Vue from "vue";
 import requester from "../utils/request";
+import main from "../main";
 
 export default Vue.component("manager", {
     // props: ["userInfo"],
     data: () => {
         return {
-            infoChanged: false
+            infoChanged: false,
+            passwdInfo: {}
         };
     },
     computed: {
@@ -22,6 +24,7 @@ export default Vue.component("manager", {
 
     mounted: function() {
         this.el_form = document.querySelector(".info-form");
+        this.passwd_form = document.querySelector(".passwd-form");
     },
 
     template: `
@@ -104,7 +107,36 @@ export default Vue.component("manager", {
                     <button v-else class="btn btn-disable" type="submit">提交</button>
                 </form>
             </div>
-            <div class="col-lg-4"></div>
+            <div class="col-lg-4">
+                <div class="page-header">
+                    <h1>修改密码</h1>
+                </div>
+                <form class="passwd-form" onsubmit="return false">
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">原密码</span>
+                        <input type="passwd" class="form-control" 
+                        v-model="passwdInfo.old_passwd" aria-describedby="basic-addon1"
+                        required
+                        readonly>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default"
+                                    type="button" @click="unlockPasswd">修改</button>
+                            </span>
+                        </input> 
+                    </div>
+                    <br/>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">新密码</span>
+                        <input type="passwd" class="form-control" 
+                        v-model="passwdInfo.passwd" aria-describedby="basic-addon1"
+                        required
+                        readonly />
+                    </div>
+                    <br/>
+                    <button v-if="infoChanged" class="btn btn-info" type="submit" @click="submit">提交</button>
+                    <button v-else class="btn btn-disable" type="submit">提交</button>
+                </form>
+            </div>
         </div>
     </div>
     <div class="container" v-else>
@@ -120,7 +152,12 @@ export default Vue.component("manager", {
             let el = e.target.parentNode.parentNode.querySelector("input");
             el.readOnly = false;
             this.infoChanged = true;
-            // el.parentNode.readonly = "false";
+        },
+        unlockPasswd: function() {
+            Array.prototype.forEach.call(this.passwd_form.querySelectorAll("input"),
+                input => {
+                    input.readOnly = false;
+                });
         },
         submit: function() {
             if (!this.el_form.checkValidity()) {
@@ -143,7 +180,27 @@ export default Vue.component("manager", {
                 this.$router.push("/manager");
             });
             return false;
+        },
+
+        submitPasswd: function() {
+            if (!this.passwd_form.checkValidity()) {
+                return false;
+            }
+            let params = {
+                info: {
+                    old_passwd: this.passwdInfo.old_passwd,
+                    passwd: this.passwdInfo.passwd,
+                },
+                token: this.token
+            };
+            requester.send("/crm-inner/account/edit/", params, (ret) => {
+                alert("更新成功！！");
+                main.goToLogin();
+            });
+            return false;
+
         }
+
     }
 
 });

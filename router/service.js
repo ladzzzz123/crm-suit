@@ -81,7 +81,11 @@ router
             ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
             return;
         }
-        if (!_util.verifyParams(postData.info, ["nick_name", "sex", "phone"])) {
+        if (_util.verifyParams(postData.info, ["nick_name", "sex", "phone"])) {
+            // update user info
+        } else if (_util.verifyParams(postData.info, ["old_passwd", "passwd"])) {
+            // update passwd
+        } else {
             ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
             return;
         }
