@@ -39,7 +39,7 @@ module.exports = {
     updateToken: (token, info) => {
         return new Promise((resolve, reject) => {
             logger.info("[Db] updateToken before info: %s", JSON.stringify(info));
-            let name = info.name;
+            let name = info.u_name;
             redisClient.hget(USER_TOKEN_MAP, name)
                 .then(old_token => {
                     if (old_token) {
@@ -52,7 +52,7 @@ module.exports = {
                         ret_info.token = token;
                         logger.info("[Db] updateToken success ret_info: %s", JSON.stringify(ret_info));
                         redisClient.expire(ret_info.token);
-                        redisClient.hset(USER_TOKEN_MAP, ret_info.name, ret_info.token);
+                        redisClient.hset(USER_TOKEN_MAP, ret_info.u_name, ret_info.token);
                         resolve(ret_info);
                     } else {
                         reject();

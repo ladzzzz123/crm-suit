@@ -122,7 +122,28 @@ let export_func = {
                     reject(err);
                 });
         });
+    },
+
+    asyncManagerPlan: (plan_id, action, params) => {
+        return new Promise((resolve, reject) => {
+            switch (action) {
+                case "edit":
+
+                    break;
+                case "close":
+
+                    break;
+                case "reactive":
+
+                    break;
+                default:
+                    break;
+
+            }
+        });
+
     }
+
 
 };
 
