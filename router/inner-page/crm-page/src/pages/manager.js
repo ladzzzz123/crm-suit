@@ -117,8 +117,10 @@ export default Vue.component("manager", {
                         <span class="input-group-addon" id="basic-addon1">原密码</span>
                         <input type="password" class="form-control" 
                         v-model="passwdInfo.old_passwd" aria-describedby="basic-addon1"
-                        required
-                        readonly>
+                        required  v-if="passwdChanged" >
+                        <input type="password" class="form-control" 
+                        v-model="passwdInfo.old_passwd" aria-describedby="basic-addon1"
+                        required readonly v-else>
                             <span class="input-group-btn">
                                 <button class="btn btn-default"
                                     type="button" @click="unlockPasswd">修改</button>
@@ -130,8 +132,10 @@ export default Vue.component("manager", {
                         <span class="input-group-addon" id="basic-addon1">新密码</span>
                         <input type="password" class="form-control" 
                         v-model="passwdInfo.passwd" aria-describedby="basic-addon1"
-                        required
-                        readonly />
+                        required v-if="passwdChanged"/>
+                        <input type="password" class="form-control" 
+                        v-model="passwdInfo.passwd" aria-describedby="basic-addon1"
+                        required readonly v-else/>
                     </div>
                     <br/>
                     <button v-if="passwdChanged" class="btn btn-info" type="submit" @click="submitPasswd">提交</button>
@@ -155,10 +159,10 @@ export default Vue.component("manager", {
             this.infoChanged = true;
         },
         unlockPasswd: function() {
-            Array.prototype.forEach.call(this.passwd_form.querySelectorAll("input"),
-                input => {
-                    input.readOnly = false;
-                });
+            // Array.prototype.forEach.call(this.passwd_form.querySelectorAll("input"),
+            //     input => {
+            //         input.readOnly = false;
+            //     });
             this.passwdChanged = true;
         },
         submit: function() {

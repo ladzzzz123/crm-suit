@@ -71,6 +71,7 @@ module.exports = {
     },
 
     queryUserInfo: (...params) => {
+        let _self = this;
         let SQL_QUERY_USER_INFO = "SELECT * FROM account WHERE ?? = ? AND ?? = ?";
         return new Promise((resolve, reject) => {
             logger.warn("[account] dataOpt queryUserInfo called: %s", JSON.stringify([...params]));
@@ -78,6 +79,7 @@ module.exports = {
                 db_self.query(SQL_QUERY_USER_INFO, [...params], (err, ret) => {
                     if (err) {
                         logger.warn("[account] dataOpt error: %s", JSON.stringify(err));
+                        _self.connect();
                         reject(err);
                     } else if (ret && ret.length > 0) {
                         logger.debug("[account] dataOpt ret: %s", JSON.stringify(ret));
