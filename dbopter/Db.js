@@ -23,7 +23,13 @@ class Db {
     query(sql_opt, params, callback) {
         logger.info("[Db] query: %s", sql_opt);
         this.dbConnect.query(sql_opt, params, (err, result) => {
-            callback(err, result);
+            if (err) {
+                logger.error("[Db] db error: %s, try reconnect", JSON.stringify(err));
+                this.connect();
+                callback(err);
+            } else {
+                callback(result);
+            }
         });
     }
 
