@@ -189,7 +189,7 @@ export default {
                 return {
                     city: item[0],
                     value: item[1],
-                    percent: (item[1] / sumData * 100).toFixed(2) + "%"
+                    percent: (item[1] / sumData * 100).toFixed(4) + "%"
                 };
             });
             this.parsedData.sort((a,b) =>{
