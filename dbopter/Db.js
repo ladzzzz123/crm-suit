@@ -26,9 +26,9 @@ class Db {
             if (err) {
                 logger.error("[Db] db error: %s, try reconnect", JSON.stringify(err));
                 this.connect();
-                callback(err);
+                callback(err, null);
             } else {
-                callback(result);
+                callback(null, result);
             }
         });
     }
