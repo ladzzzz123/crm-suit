@@ -148,7 +148,13 @@ export default {
             this.$router.push("/login");
         },
         calc: function() {
-            let tempData = JSON.parse(this.parseData);
+            let tempData ={};
+            try{
+                tempData = JSON.parse(this.parseData);
+            } catch(e) {
+                alert("数据格式不符合规范！");
+                return;
+            }
             let sumData = Object.values(tempData).reduce((sum, val) => {
                 return sum += val;
             });
@@ -213,7 +219,7 @@ export default {
             this.distData.sort((a,b) =>{
                 return b.value - a.value;
             });
-            
+
             this.provData = Object.entries(tempProvInfo).map(item => {
                 return {
                     province: item[0],
