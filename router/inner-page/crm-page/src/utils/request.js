@@ -19,6 +19,7 @@ const requester = {
         }
         req.send(JSON.stringify(params));
         req.responseType = "json";
+        req.timeout = 5000;
         req.onload = ret => {
             requesting = false;
             let result = {};

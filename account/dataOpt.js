@@ -13,26 +13,26 @@ db_self.isConnected = false;
 let redisClient = {};
 const USER_TOKEN_MAP = "USER_TOKEN_MAP";
 
+function connect() {
+    db_self = mysql.createConnection(dbConfig);
+    db_self.connect(err => {
+        if (err) {
+            logger.error("[Db] connect error: %s", JSON.stringify(err));
+        } else {
+            logger.info("[Db] connected: %s", JSON.stringify(dbConfig));
+            db_self.isConnected = true;
+        }
+    });
+    db_self.on("error", err => {
+        logger.error("[Db] on error: %s", JSON.stringify(err));
+        db_self.isConnected = false;
+        connect();
+    });
+    redisClient = new RedisClient(redConfig);
+}
 
 module.exports = {
-    connect: () => {
-        let _self = this;
-        db_self = mysql.createConnection(dbConfig);
-        db_self.connect(err => {
-            if (err) {
-                logger.error("[Db] connect error: %s", JSON.stringify(err));
-            } else {
-                logger.info("[Db] connected: %s", JSON.stringify(dbConfig));
-                db_self.isConnected = true;
-            }
-        });
-        db_self.on("error", err => {
-            logger.error("[Db] on error: %s", JSON.stringify(err));
-            db_self.isConnected = false;
-            _self.connect();
-        });
-        redisClient = new RedisClient(redConfig);
-    },
+    connect: connect,
     verifyToken: (token) => {
         return redisClient.hgetall(token);
     },
@@ -79,7 +79,7 @@ module.exports = {
                 db_self.query(SQL_QUERY_USER_INFO, [...params], (err, ret) => {
                     if (err) {
                         logger.warn("[account] dataOpt error: %s", JSON.stringify(err));
-                        _self.connect();
+                        connect();
                         reject(err);
                     } else if (ret && ret.length > 0) {
                         logger.debug("[account] dataOpt ret: %s", JSON.stringify(ret));
