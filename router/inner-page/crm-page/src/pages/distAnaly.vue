@@ -3,7 +3,16 @@
     <div class="container" v-if="logged">
         <form onsubmit="false">
             <textarea class="input-data" 
-            rows="10" cols="50" v-model="input_data" required></textarea>
+            rows="10" cols="50" v-model="input_data" placeholder="
+            请输入城市用户数据信息,
+            例如:
+                北京 	515064
+                广州 	381292
+                杭州 	319511
+                深圳 	280290
+                上海 	254171
+                成都 	216908
+            "  required></textarea>
             <br/>
             <button type="submit" class="btn bnt-success" @click="calc">计算</button>
             <br/>
