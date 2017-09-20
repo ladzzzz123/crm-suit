@@ -204,7 +204,7 @@ export default {
                 return {
                     level: item[0],
                     value: item[1],
-                    percent: (item[1] / sumData * 100).toFixed(2) + "%",
+                    percent: (item[1] / sumData * 100).toFixed(4) + "%",
                     citys: JSON.stringify(citys)
                 };
             });
@@ -213,7 +213,7 @@ export default {
                 return {
                     dist: item[0],
                     value: item[1],
-                    percent: (item[1] / sumData * 100).toFixed(2) + "%"
+                    percent: (item[1] / sumData * 100).toFixed(4) + "%"
                 };
             });
             this.distData.sort((a,b) =>{
@@ -224,7 +224,7 @@ export default {
                 return {
                     province: item[0],
                     value: item[1],
-                    percent: (item[1] / sumData * 100).toFixed(2) + "%"
+                    percent: (item[1] / sumData * 100).toFixed(4) + "%"
                 };
             });
             this.provData.sort((a,b) =>{
