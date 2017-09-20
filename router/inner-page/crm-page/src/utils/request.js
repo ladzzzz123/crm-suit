@@ -41,6 +41,10 @@ const requester = {
             requesting = false;
             alert("request err:" + JSON.stringify(err));
         };
+        req.ontimeout = err => {
+            requesting = false;
+            alert("request timeout");
+        };
     },
 
     upload: function(path, el_form, callback, failedCb) {

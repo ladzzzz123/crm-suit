@@ -10,6 +10,7 @@ class Db {
     }
 
     connect() {
+        let _self = this;
         this.dbConnect.connect(err => {
             if (err) {
                 logger.error("[Db] connect error: %s", JSON.stringify(err));
@@ -18,6 +19,9 @@ class Db {
                 this.isConnected = true;
             }
         });
+        setInterval(() => {
+            _self.dbConnect.query("SELECT 1");
+        }, 1800 * 1000);
     }
 
     query(sql_opt, params, callback) {
