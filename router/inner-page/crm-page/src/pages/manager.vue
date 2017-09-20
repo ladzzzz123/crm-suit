@@ -1,35 +1,6 @@
-import Vue from "vue";
-import requester from "../utils/request";
-import main from "../main";
 
-export default Vue.component("manager", {
-    // props: ["userInfo"],
-    data: () => {
-        return {
-            infoChanged: false,
-            passwdInfo: {},
-            passwdChanged: false
-        };
-    },
-    computed: {
-        userInfo() {
-            return this.$store.state.userInfo;
-        },
-        logged() {
-            return this.$store.state.logged;
-        },
-        token() {
-            return this.$store.state.userInfo.token;
-        },
-    },
-
-    mounted: function() {
-        this.el_form = document.querySelector(".info-form");
-        this.passwd_form = document.querySelector(".passwd-form");
-    },
-
-    template: `
-    <div class="container" v-if="logged">
+<template>
+  <div class="container" v-if="logged">
         <div class="row">
             <div class="col-lg-6">
                 <div class="page-header">
@@ -107,8 +78,6 @@ export default Vue.component("manager", {
                     <button v-if="infoChanged" class="btn btn-info" type="submit" @click="submit">提交</button>
                     <button v-else class="btn btn-disable" type="submit">提交</button>
                 </form>
-            </div>
-            <div class="col-lg-4">
                 <div class="page-header">
                     <h1>修改密码</h1>
                 </div>
@@ -147,7 +116,38 @@ export default Vue.component("manager", {
     <div class="container" v-else>
         您尚未登录，请点击<a @click="gotoLogin">此处</a>登录
     </div>
-    `,
+</template>
+
+<script>
+import requester from "../utils/request";
+import main from "../main";
+
+export default {
+    // props: ["userInfo"],
+    data: () => {
+        return {
+            infoChanged: false,
+            passwdInfo: {},
+            passwdChanged: false
+        };
+    },
+    computed: {
+        userInfo() {
+            return this.$store.state.userInfo;
+        },
+        logged() {
+            return this.$store.state.logged;
+        },
+        token() {
+            return this.$store.state.userInfo.token;
+        },
+    },
+
+    mounted: function() {
+        this.el_form = document.querySelector(".info-form");
+        this.passwd_form = document.querySelector(".passwd-form");
+    },
+
     methods: {
         gotoLogin: function() {
             this.$router.push("/login");
@@ -159,10 +159,6 @@ export default Vue.component("manager", {
             this.infoChanged = true;
         },
         unlockPasswd: function() {
-            // Array.prototype.forEach.call(this.passwd_form.querySelectorAll("input"),
-            //     input => {
-            //         input.readOnly = false;
-            //     });
             this.passwdChanged = true;
         },
         submit: function() {
@@ -209,4 +205,11 @@ export default Vue.component("manager", {
 
     }
 
-});
+};
+</script>
+
+<style>
+
+</style>
+
+

@@ -1,6 +1,22 @@
-import Vue from "vue";
+<template>
+    <form class="login-from" onsubmit="return false">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="用户名(邮箱)" 
+                name="u_name" v-model="formData.u_name" required>
+        </div>
+        <br/>
+        <div class="input-group">
+            <input type="password" class="form-control" placeholder="密码" 
+                name="passwd" v-model="formData.passwd" required>
+        </div>
+        <br/>
+        <button class="btn btn-success" type="submit" @click="login">登录</button>
+    </form>
+</template>
+
+<script>
 import requester from "../utils/request";
-export default Vue.component("login", {
+export default {
     data: () => {
         return {
             formData: {
@@ -10,21 +26,6 @@ export default Vue.component("login", {
             el_form: {}
         };
     },
-    template: `
-        <form class="login-from" onsubmit="return false">
-            <div class="input-group">
-                <input type="text" class="form-control" placeholder="用户名(邮箱)" 
-                    name="u_name" v-model="formData.u_name" required>
-            </div>
-            <br/>
-            <div class="input-group">
-                <input type="password" class="form-control" placeholder="密码" 
-                    name="passwd" v-model="formData.passwd" required>
-            </div>
-            <br/>
-            <button class="btn btn-success" type="submit" @click="login">登录</button>
-        </form>
-    `,
     mounted: function() {
         this.el_form = document.querySelector(".login-from");
     },
@@ -50,4 +51,10 @@ export default Vue.component("login", {
         }
     }
 
-});
+};
+</script>
+
+<style>
+
+</style>
+

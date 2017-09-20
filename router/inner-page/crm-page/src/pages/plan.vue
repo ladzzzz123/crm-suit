@@ -1,34 +1,7 @@
-import Vue from "vue";
-import requester from "../utils/request";
-import RESULT_CODE from "../../../../codemap.json";
-
-export default Vue.component("plan", {
-    // props: ["userInfo"],
-    data: () => {
-        return { list: [] };
-    },
-    computed: {
-        userInfo() {
-            return this.$store.state.userInfo;
-        },
-        token() {
-            return this.$store.state.userInfo.token;
-        },
-        logged() {
-            return this.$store.state.logged;
-        },
-    },
-
-    mounted: function() {
-        if (this.token) {
-            this.query();
-        }
-    },
-
-    template: `
-    <div class="container" v-if="logged">
+<template>
+  <div class="container" v-if="logged">
         <ul class="list-group">
-            <li v-for="item in list" class="list-group-item" :id="'msg_' + item._id">
+            <li v-for="item in list" class="list-group-item" :id="'msg_' + item._id" v-bind:key="'msg_' + item._id">
                 <div class="row">
                     <div class="col-md-6">
                         <h4 class="list-group-item-heading">{{ item.title }}</h4>
@@ -67,7 +40,10 @@ export default Vue.component("plan", {
                             <iframe class="embed-responsive-item">
                             </iframe>
                         </p>
-                        <a v-for="(attach, index) in item.m_attachments.split(',')" class="list-group-item-text" :href="attach">附件{{ index + 1}}</a>
+                        <a v-for="(attach, index) in item.m_attachments.split(',')" 
+                            class="list-group-item-text" :href="attach" v-bind:key="index">
+                            附件{{ index + 1}}
+                        </a>
                     </div>
                     
                     <div class="progress">
@@ -112,7 +88,35 @@ export default Vue.component("plan", {
     <div class="container" v-else>
         您尚未登录，请点击<a @click="gotoLogin">此处</a>登录
     </div>
-    `,
+</template>
+
+<script>
+import requester from "../utils/request";
+import RESULT_CODE from "../../../../codemap.json";
+
+export default {
+    // props: ["userInfo"],
+    data: () => {
+        return { list: [] };
+    },
+    computed: {
+        userInfo() {
+            return this.$store.state.userInfo;
+        },
+        token() {
+            return this.$store.state.userInfo.token;
+        },
+        logged() {
+            return this.$store.state.logged;
+        },
+    },
+
+    mounted: function() {
+        if (this.token) {
+            this.query();
+        }
+    },
+
     methods: {
         gotoLogin: function() {
             this.$router.push("/login");
@@ -177,4 +181,10 @@ export default Vue.component("plan", {
         }
     }
 
-});
+};
+</script>
+
+<style>
+</style>
+
+

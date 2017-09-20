@@ -1,6 +1,6 @@
-import cmptLogin from "./pages/login";
-import cmptManager from "./pages/manager";
-import cmptPlan from "./pages/plan";
+import cmptLogin from "./pages/login.vue";
+import cmptManager from "./pages/manager.vue";
+import cmptPlan from "./pages/plan.vue";
 import cmptDistAnaly from "./pages/distAnaly.vue";
 export default [
     // { path: "/", component: cmptLogin, content: "根" },

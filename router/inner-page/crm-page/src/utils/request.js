@@ -39,11 +39,11 @@ const requester = {
         };
         req.onerror = err => {
             requesting = false;
-            alert("request err:" + JSON.stringify(err));
+            alert("请求出错:" + JSON.stringify(err));
         };
         req.ontimeout = err => {
             requesting = false;
-            alert("request timeout");
+            alert("请求超时，请稍后重试");
         };
     },
 
