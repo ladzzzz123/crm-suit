@@ -94,6 +94,8 @@ router
             postData.token, "all", "opter");
         if (verify.pass) {
             let opter = verify.info.u_name;
+            postData.info.old_passwd = postData.info.old_passwd;
+            postData.info.passwd = postData.info.passwd;
             await courier.sendAsyncCall("account", "asyncUpdateInfo", ret => {
                 _ret = { status: RESULT.SUCCESS, msg: "update info success" };
             }, opter, postData.info);
@@ -201,7 +203,6 @@ router
         verify = await courier.sendAsyncCall("account", "asyncVerify", () => {}, postData.token, "account", "admin");
         if (verify.pass) {
             _ret = { status: RESULT.FAILED, msg: "add failed" };
-
             let insert_ret = await courier.sendAsyncCall("account", "asyncAddUser", ret => {
                 _ret = { status: RESULT.SUCCESS, content: ret };
             }, postData.userInfo);

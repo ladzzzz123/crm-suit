@@ -1,5 +1,14 @@
 const RESULT = require("./codemap.json");
+const crypto = require("crypto");
+
+function encode(passwd) {
+    let neo = crypto.createCipher("md5");
+    neo.update(passwd);
+    return neo.digest("hex");
+}
+
 module.exports = {
+    encode: encode,
     verifyParams: function(params, types) {
         if (Array.isArray(types)) {
             return types.every(item => params.hasOwnProperty(item));

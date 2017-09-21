@@ -121,6 +121,7 @@
 <script>
 import requester from "../utils/request";
 import main from "../main";
+import encode from "../utils/encode";
 
 export default {
     // props: ["userInfo"],
@@ -190,8 +191,8 @@ export default {
             }
             let params = {
                 info: {
-                    old_passwd: this.passwdInfo.old_passwd,
-                    passwd: this.passwdInfo.passwd,
+                    old_passwd: encode.e(this.passwdInfo.old_passwd),
+                    passwd: encode.e(this.passwdInfo.passwd),
                 },
                 token: this.token
             };
@@ -200,11 +201,8 @@ export default {
                 main.goToLogin();
             });
             return false;
-
         }
-
     }
-
 };
 </script>
 

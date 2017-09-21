@@ -1,6 +1,6 @@
 const Courier = require("node-process-bearer").Courier;
 const logger = require("node-process-bearer").logger.getLogger();
-
+const r_util = require("../router/util");
 const dbOpter = require("./dataOpt");
 const RESULT = require("../router/codemap");
 
@@ -99,13 +99,14 @@ let export_func = {
 
     asyncAddUser: (user_info) => {
         return new Promise((resolve, reject) => {
-            dbOpter.addUserInfo(user_info)
+            let _info = JSON.parse(JSON.stringify(user_info));
+            _info.passwd = r_util.encode(_info.passwd);
+            dbOpter.addUserInfo(_info)
                 .then(ret => {
                     if (ret) {
                         resolve({ status: "success", ret: user_info });
                     } else {
                         resolve({ status: "failed", ret: ret });
-
                     }
                 })
                 .catch(err => {

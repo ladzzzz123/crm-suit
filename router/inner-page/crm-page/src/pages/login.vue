@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import encode from "../utils/encode";
 import requester from "../utils/request";
 export default {
     data: () => {
@@ -35,9 +36,10 @@ export default {
             if (!this.el_form.checkValidity()) {
                 return false;
             }
+            
             let params = {
                 u_name: this.formData.u_name,
-                passwd: this.formData.passwd
+                passwd: encode.e(this.formData.passwd)
             };
             requester.send("/crm-inner/account/login/", params, (ret) => {
                 let userInfo = ret;
