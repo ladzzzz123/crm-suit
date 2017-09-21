@@ -7,5 +7,5 @@ function e(passwd) {
 }
 
 export default {
-    encode: e
+    e: e
 };
