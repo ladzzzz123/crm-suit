@@ -191,8 +191,8 @@ export default {
             }
             let params = {
                 info: {
-                    old_passwd: encode.e(this.passwdInfo.old_passwd),
-                    passwd: encode.e(this.passwdInfo.passwd),
+                    old_passwd: encode.hex_md5(this.passwdInfo.old_passwd),
+                    passwd: encode.hex_md5(this.passwdInfo.passwd),
                 },
                 token: this.token
             };

@@ -39,7 +39,7 @@ export default {
             
             let params = {
                 u_name: this.formData.u_name,
-                passwd: encode.e(this.formData.passwd)
+                passwd: encode.hex_md5(this.formData.passwd)
             };
             requester.send("/crm-inner/account/login/", params, (ret) => {
                 let userInfo = ret;
