@@ -14,6 +14,11 @@ export const DEFAULT_STORE = {
     userInfo: {
         name: "unknow"
     },
+    tipsInfo: {
+        showFlag: false,
+        msg: "",
+        type: "",
+    },
     logged: false
 };
 

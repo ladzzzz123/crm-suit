@@ -114,6 +114,7 @@
 import city_level from "../data/city-level";
 import dist from "../data/dist";
 import province from "../data/province";
+import func from "../main";
 
 export default {
     data: () => {
@@ -152,7 +153,7 @@ export default {
             try{
                 tempData = JSON.parse(this.parseData);
             } catch(e) {
-                alert("数据格式不符合规范！");
+                func.showTips("alert-danger", "数据格式不符合规范！");
                 return;
             }
             let sumData = Object.values(tempData).reduce((sum, val) => {

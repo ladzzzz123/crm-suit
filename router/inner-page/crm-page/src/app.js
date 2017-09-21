@@ -4,6 +4,7 @@ Vue.use(VueRoter);
 
 import routerInfos from "./router";
 import store from "./store/store";
+import tips from "./components/tips.vue";
 const app = new Vue({
     el: "#app",
     data: {
@@ -36,6 +37,7 @@ const app = new Vue({
             </div>
         </nav>
         <div class="container">
+        <tips />
             <div class="panel-left">
                 <ul class="nav nav-pills nav-stacked">
                     <li role="presentation" v-for="info in routerInfos" :key="info.path" v-show="!info.hide">
@@ -55,9 +57,13 @@ const app = new Vue({
     methods: {
         quit: function() {
             this.$store.dispatch("asyncQuit");
-            this.$router.push("/login");
-            window.location.reload();
+            setTimeout(() => {
+                this.$router.push("/login");
+            }, 2 * 1000);
         }
+    },
+    components: {
+        tips
     }
 
 });

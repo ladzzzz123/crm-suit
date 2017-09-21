@@ -4,6 +4,10 @@ export default {
         commit({ type: "updateUserInfo", userInfo: payload.userInfo });
     },
 
+    asyncShowTips: function({ commit, state }, payload) {
+        commit({ type: "displayTips", tipsInfo: payload.tipsInfo });
+    },
+
     asyncQuit: function({ commit, state }) {
         commit("quit");
     }

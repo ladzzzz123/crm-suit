@@ -93,6 +93,7 @@
 <script>
 import requester from "../utils/request";
 import RESULT_CODE from "../../../../codemap.json";
+import func from "../main";
 
 export default {
     // props: ["userInfo"],
@@ -152,7 +153,7 @@ export default {
                 plan_id: plan_id,
                 token: this.token
             }, content => {
-                alert("接受任务成功！");
+                func.showTips("alert-success", "接受任务成功！");
                 this.query();
             });
         },
@@ -164,18 +165,18 @@ export default {
                 plan_id: plan_id,
                 token: this.token
             }, content => {
-                alert("已完成任务！");
+                func.showTips("alert-success", "已完成任务！");
                 this.query();
             });
         },
         uploadReply: function(plan_id) {
             let el_upload = document.querySelector(`#upload_${plan_id}`);
             if (!el_upload.checkValidity()) {
-                alert("上传文件不能为空！");
+                func.showTips("alert-danger", "上传文件不能为空！");
                 return;
             }
             requester.upload("/crm-inner/plan-order/upload", el_upload, content => {
-                alert("上传成功");
+                func.showTips("alert-success", "上传成功");
             });
             // action="/crm-inner/plan-order/upload" method="post" 
         }

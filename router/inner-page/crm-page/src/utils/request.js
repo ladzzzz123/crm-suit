@@ -39,11 +39,12 @@ const requester = {
         };
         req.onerror = err => {
             requesting = false;
-            alert("请求出错:" + JSON.stringify(err));
+            func.showTips("alert-danger", "请求出错:" + JSON.stringify(err));
+
         };
         req.ontimeout = err => {
             requesting = false;
-            alert("请求超时，请稍后重试");
+            func.showTips("alert-danger", "请求超时，请稍后重试");
         };
     },
 
@@ -71,7 +72,7 @@ const requester = {
             };
             req.send(formData);
         } catch (e) {
-            alert("上传失败，请稍后尝试，错误码：" + JSON.stringify(e));
+            func.showTips("alert-danger", "上传失败，请稍后尝试，错误码：" + JSON.stringify(e));
             uploading = false;
         }
     }
@@ -86,27 +87,27 @@ function processResult(status) {
             break;
         case RESULT_CODE.FAILED:
             msg = "操作失败！请检查您的参数/网络状态是否正常！";
-            ret = { status: RESULT_CODE.FAILED, msg: msg };
+            ret = { status: RESULT_CODE.FAILED, msg: msg, type: "alert-warning" };
             break;
         case RESULT_CODE.LOGIN_FAILED:
             msg = "登录失败！请检查您的用户名/密码！";
-            ret = { status: RESULT_CODE.LOGIN_FAILED, msg: msg };
+            ret = { status: RESULT_CODE.LOGIN_FAILED, msg: msg, type: "alert-danger" };
             break;
         case RESULT_CODE.VERIFY_FAILED:
             msg = "你没有该操作权限，请确认已经登录并拥有该操作权限！";
-            ret = { status: RESULT_CODE.VERIFY_FAILED, msg: msg };
+            ret = { status: RESULT_CODE.VERIFY_FAILED, msg: msg, type: "alert-warning" };
             break;
         case RESULT_CODE.LOGIN_EXPIRE:
             msg = "您的登录已经过期，请重新登录！";
-            ret = { status: RESULT_CODE.LOGIN_EXPIRE, msg: msg };
+            ret = { status: RESULT_CODE.LOGIN_EXPIRE, msg: msg, type: "alert-warning" };
             func.goToLogin();
             break;
         default:
             msg = `请求失败，错误码:${result.code}, 请稍后尝试`;
-            ret = { status: RESULT_CODE.REQ_ERROR, msg: msg };
+            ret = { status: RESULT_CODE.REQ_ERROR, msg: msg, type: "alert-danger" };
             break;
     }
-    if (msg) alert(msg);
+    if (msg) func.showTips(ret.type, ret.msg);
     return ret;
 }
 

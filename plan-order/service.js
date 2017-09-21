@@ -4,6 +4,7 @@ const mysql = require("mysql");
 const fs = require("fs");
 
 const CONFIG = require("./config.json");
+const msg = require("./msg-template");
 
 let export_func = {
     name: "plan-order",
@@ -38,11 +39,10 @@ let export_func = {
                             info = ret.ret[0];
                         }
                         courier.sendAsyncCall("mail", "asyncSendMail", ret => {
-                                logger.info("[router] get New Mail:" + JSON.stringify(ret));
                                 _ret = ret;
                             }, info.m_from,
-                            `${opter} accept the plan ${info.title}`,
-                            `${opter} accept the plan!`,
+                            `${opter} ${msg.accept_title} ${info.title}`,
+                            `${opter} ${msg.accept_content} ${info.title}!`,
                             info.m_cc
                         );
                         resolve({ status: "success", msg: "接单成功" });
@@ -73,11 +73,11 @@ let export_func = {
                             info = ret.ret[0];
                         }
                         courier.sendAsyncCall("mail", "asyncSendMail", ret => {
-                                logger.info("[router] send New Mail:" + JSON.stringify(ret));
                                 _ret = ret;
                             }, info.m_from,
-                            `${opter} finish the plan ${info.title}`,
-                            `${opter} finish the plan! \n ${info.m_reply ? "附件如下:" + info.m_reply : ""}`,
+                            `${opter} ${msg.finish_title} ${info.title}`,
+                            `${opter} ${msg.finish_content} ${info.title} \n
+                             ${info.m_reply ? "附件如下: " + info.m_reply : ""}`,
                             info.m_cc
                         );
                         resolve({ status: "success", msg: "完成任务成功" });

@@ -120,7 +120,7 @@
 
 <script>
 import requester from "../utils/request";
-import main from "../main";
+import func from "../main";
 import encode from "../utils/encode";
 
 export default {
@@ -179,7 +179,7 @@ export default {
                     type: "asyncUpdateUserInfo",
                     userInfo: this.userInfo
                 });
-                alert("更新成功！！");
+                func.showTips("alert-success", "更新成功！！");
                 this.$router.push("/manager");
             });
             return false;
@@ -197,8 +197,10 @@ export default {
                 token: this.token
             };
             requester.send("/crm-inner/account/edit/", params, (ret) => {
-                alert("更新成功！！");
-                main.goToLogin();
+                func.showTips("alert-success", "更新成功！！");
+                setTimeout(() => {
+                    func.goToLogin();
+                }, 3 * 1000);
             });
             return false;
         }
