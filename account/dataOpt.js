@@ -29,6 +29,9 @@ function connect() {
         connect();
     });
     redisClient = new RedisClient(redConfig);
+    setInterval(() => {
+        db_self.query("SELECT 1");
+    }, 1800 * 1000);
 }
 
 module.exports = {

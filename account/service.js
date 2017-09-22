@@ -63,9 +63,6 @@ let export_func = {
                     return Promise.reject({ status: RESULT.FAILED, msg: "update failed" });
                 });
         }
-
-
-
     },
     asyncVerify: (token, m_name, excpet_role) => {
         return new Promise((resolve, reject) => {
