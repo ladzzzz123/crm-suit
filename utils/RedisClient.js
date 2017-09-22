@@ -22,7 +22,7 @@ class RedisClient {
                 } else {
                     resolve(null);
                 }
-            })
+            });
         });
     }
 
@@ -37,7 +37,7 @@ class RedisClient {
                 } else {
                     resolve(null);
                 }
-            })
+            });
         });
     }
 
@@ -52,7 +52,7 @@ class RedisClient {
                 } else {
                     resolve(null);
                 }
-            })
+            });
         });
     }
 
@@ -66,7 +66,7 @@ class RedisClient {
                     reject({ msg: "hmset error" });
                 }
             });
-        })
+        });
     }
 
     del(key) {
@@ -78,7 +78,7 @@ class RedisClient {
                 } else {
                     resolve(ret || "");
                 }
-            })
+            });
         });
     }
 

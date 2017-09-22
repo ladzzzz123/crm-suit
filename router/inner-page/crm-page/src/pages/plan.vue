@@ -40,10 +40,12 @@
                             <iframe class="embed-responsive-item">
                             </iframe>
                         </p>
-                        <a v-for="(attach, index) in item.m_attachments.split(',')" 
-                            class="list-group-item-text" :href="attach" v-bind:key="index">
-                            附件{{ index + 1}}
-                        </a>
+                        <template v-if="item.m_attachments">
+                            <a v-for="(attach, index) in item.m_attachments.split(',')" 
+                                class="list-group-item-text" :href="attach" v-bind:key="index">
+                                附件{{ index + 1}}
+                            </a>
+                        </template>
                     </div>
                     
                     <div class="progress">

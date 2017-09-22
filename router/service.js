@@ -6,7 +6,6 @@ const Koa = require("koa");
 const app = new Koa();
 const Router = require("koa-router");
 const router = Router();
-const bodyParser = require("koa-bodyparser");
 const koaBody = require("koa-body");
 const staticServer = require("koa-static");
 
@@ -20,7 +19,6 @@ const _util = require("./util");
 
 app
     .use(koaBody({ multipart: true }))
-    // .use(bodyParser())
     .use(router.routes())
     .use(router.allowedMethods())
     .use(staticServer(__dirname + "/inner-page"));
