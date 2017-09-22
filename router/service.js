@@ -13,7 +13,8 @@ const RESULT = require("./codemap");
 const MSG = require("../config/msg");
 const DEFAULT_PORT = 3002;
 const Courier = require("node-process-bearer").Courier;
-const logger = require("node-process-bearer").logger.getLogger();
+const logger_conf = require("../conf.json").log_conf || "";
+const logger = require("node-process-bearer").logger.getLogger(logger_conf);
 
 const _util = require("./util");
 
