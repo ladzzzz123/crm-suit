@@ -19,7 +19,11 @@ const requester = {
         }
         req.send(JSON.stringify(params));
         req.responseType = "json";
-        req.timeout = 5000;
+        try {
+            req.timeout = 5000;
+        } catch (e) {
+            console.warn("set timeout error: %s", JSON.stringify(e));
+        }
         req.onload = ret => {
             requesting = false;
             let result = {};
