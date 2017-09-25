@@ -22,10 +22,19 @@ CREATE TABLE role_map (
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT "角色信息表";
 
 
+INSERT INTO role_map (role_pos, role_name, module) VALUES 
+("000001", "admin", "account"),
+("000010", "opter", "account"),
+("000100", "admin", "plan-order"),
+("001000", "opter", "plan-order"),
+("010000", "admin", "mail"),
+("100000", "opter", "mail"),
+("01000000", "admin", "censor"),
+("10000000", "opter", "censor");
 
 
 
 
 ALTER TABLE account ADD nick_name VARCHAR(128) COMMENT "昵称";
 ALTER TABLE account ADD sex VARCHAR(2) COMMENT "性别";
-ALTER TABLE account ADD phone        VARCHAR(16) COMMENT "联系电话";
+ALTER TABLE account ADD phone VARCHAR(16) COMMENT "联系电话";

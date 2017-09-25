@@ -29,12 +29,11 @@ let export_func = {
 };
 let courier = new Courier(export_func);
 
-
+// account module start
 router
     .get("/crm-inner", async(ctx, next) => {
         logger.info("[router] path: /");
-        await ctx.render("login.njk", {});
-        ctx.status = 200;
+        ctx.redirect("/crm-inner/static/crm-page-dist/crm-page.html");
     })
     .post("/crm-inner/account/login", async(ctx, next) => {
         logger.info("[router] path: /account/login");
@@ -90,7 +89,7 @@ router
         }
 
         verify = await courier.sendAsyncCall("account", "asyncVerify", () => {},
-            postData.token, "all", "opter");
+            postData.token, "account", "admin");
         if (verify.pass) {
             let opter = verify.info.u_name;
             postData.info.old_passwd = postData.info.old_passwd;
@@ -104,7 +103,11 @@ router
         ctx.body = _ret;
 
     });
+// account module end
 
+
+
+// plan-order module start
 router
     .post("/crm-inner/plan-order/list", async(ctx, next) => {
         let _ret = "",
@@ -188,6 +191,52 @@ router
         }
         ctx.body = _ret;
     });
+// plan-order module end
+
+// censor module start
+router
+    .post("/crm-inner/censor/query-update", async(ctx, next) => {
+        let _ret = "",
+            verify = {};
+        let postData = ctx.request.body;
+        if (!_util.verifyParams(postData, "token")) {
+            ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
+            return;
+        }
+        verify = await courier.sendAsyncCall("account", "asyncVerify", () => {},
+            postData.token, "censor", "opter");
+        if (verify.pass) {
+            await courier.sendCall("censor", "insertMaterialIntoDB", ret => {
+                _ret = { status: RESULT.SUCCESS, msg: "update query success" };
+            }, "20170911");
+        } else {
+            _ret = _util.verifyTokenResult(verify);
+        }
+        ctx.body = _ret;
+    })
+    .post("/crm-inner/censor/fetch", async(ctx, next) => {
+        let _ret = "",
+            verify = {};
+        let postData = ctx.request.body;
+        if (!_util.verifyParams(postData, "token", "m_date")) {
+            ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
+            return;
+        }
+        verify = await courier.sendAsyncCall("account", "asyncVerify", () => {},
+            postData.token, "censor", "opter");
+        if (verify.pass) {
+            await courier.sendAsyncCall("censor", "asyncFetchMaterialFromDB", ret => {
+                _ret = { status: RESULT.SUCCESS, content: ret, msg: "fetch list end" };
+            }, postData.m_date);
+        } else {
+            _ret = _util.verifyTokenResult(verify);
+        }
+        ctx.body = _ret;
+    });
+
+// censor module end
+
+
 
 router
     .post("/crm-inner/manager/add-user", async(ctx, next) => {

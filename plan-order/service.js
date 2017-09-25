@@ -84,7 +84,6 @@ let export_func = {
                     } else {
                         resolve({ status: "failed", msg: "完成任务失败" });
                     }
-
                 })
                 .catch(err => {
                     logger.warn("[plan-order] db select err:" + JSON.stringify(err));
@@ -133,7 +132,7 @@ let export_func = {
                 case "close":
 
                     break;
-                case "reactive":
+                case "re-active":
 
                     break;
                 default:

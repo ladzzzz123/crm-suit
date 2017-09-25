@@ -37,6 +37,11 @@ let export_func = {
         return execOpt(target, sql_opt, "");
     },
 
+    asyncQueryInsert: (target, sql_opt, params) => {
+        logger.info(`[dbopter] asyncQuery called: ${target}, ${sql_opt}`);
+        return execOpt(target, sql_opt, params);
+    },
+
     asyncSelect: (target, table, columns, params) => {
         logger.info(`[dbopter] asyncSelect called: ${target}, ${table}, ${columns}, ${params}`);
         let _params = [table, params];
