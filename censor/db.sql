@@ -7,7 +7,7 @@ CREATE TABLE material (
 	material  VARCHAR(255) NOT NULL COMMENT "素材地址",
 	pv        BIGINT(10) NOT NULL COMMENT "展现量", 
     opter     VARCHAR(128) COMMENT "操作者",
-    m_status  VARCHAR(32) NOT NULL DEFAULT "NEW" COMMENT "当前审核状态[NEW, PASS, REJECT, UNKNOW]",
+    m_status  VARCHAR(32) NOT NULL DEFAULT "NEW" COMMENT "当前审核状态[NEW, PASS, REJECT, TBD, UNKNOW]",
     last_edit TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     UNIQUE KEY (tu, dsp, m_date, material),
     KEY(material, tu, dsp, m_status)

@@ -1,7 +1,48 @@
 <template>
     <div class="container" v-if="logged">
         <div class="data-list" v-if="verified">
-            yeah!
+            <form onsubmit="return false">
+                <input type="date" class="censor-date" v-model="m_date" required/>
+                <br/>
+                <button class="btn btn-success" @click="fetchMate">获取素材列表</button>
+            </form>
+            <ul class="list-group">
+                <li v-for="(item, pos) in curArray" class="list-group-item" v-bind:key="'dsp_' + pos">
+                    <h4>{{ item[0] }}</h4>
+                    <ul class="list-group">
+                        <li v-for="material in item[1]" class="list-group-item" v-bind:key="'material_' + material._id">
+                            <div class="row">
+                                <div class="col-md-7">
+                                    <div>DSP名称：{{ material.dsp }}</div>
+                                    <div>广告位置：{{ material.tu }}</div>
+                                    <img :src="material.material" width="30%" :alt="material.material" />
+                                    <br/>
+                                    <a :href="material.ldp">落地页链接</a>
+                                </div>
+                                <div class="col-md-3">
+                                    <div v-if="material.m_status === 'NEW' " class="btn-group" role="group" aria-label="edit">
+                                        <button class="btn btn-success" @click="pass('material_' + material._id, material.ldp)">通过</button>
+                                        <button class="btn btn-info" @click="denied('material_' + material._id, material.ldp)">拒绝</button>
+                                        <button class="btn btn-warning" @click="delay('material_' + material._id, material.ldp)">再议</button>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    当前状态：
+                                    <p> {{  material.m_status === "NEW" ? "待审核" : 
+                                        material.m_status === "PASS" ? "已通过" :
+                                            material.m_status === "REJECT" ? "已拒绝" : 
+                                                material.m_status === "TBD" ? "再议" : "未知状态" }}
+                                    </p>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <button class="btn btn-primary" @click="passAll('dsp_' + pos)">通过</button>
+                    <button class="btn btn-info" @click="deniedAll('dsp_' + pos)">拒绝</button>
+                    <button class="btn btn-warning" @click="delayAll('dsp_' + pos)">再议</button>
+                </li>
+                <pageNav :indexInfo="indexInfo" v-on:setCurPage="setCurPage"/>
+            </ul>
         </div>
         <div class="data-list" v-else>
             <p>您没有该功能的使用权限，请点击<a @click="gotoLogin">此处</a>重新登录，</p>
@@ -16,12 +57,21 @@
 <script>
 import requester from "../utils/request";
 import RESULT_CODE from "../../../../codemap.json";
-
+import pageNav from "../components/nav.vue";
 
 export default {
     data: () => {
         return {
-            verified: false
+            verified: false,
+            m_date: "",
+            list:[],
+            LDP_PER_PAGE: 12,
+            curArray: [],
+            curIndex: 0,
+            indexInfo: {
+                curIndex: 0,
+                indexs: []
+            },
         }
     },
     computed: {
@@ -34,6 +84,10 @@ export default {
         logged() {
             return this.$store.state.logged;
         },
+    },
+
+    components: {
+        pageNav
     },
 
     mounted: function() {
@@ -57,7 +111,110 @@ export default {
     methods: {
         gotoLogin: function() {
             this.$router.push("/login");
-        }
+        },
+
+        processArr: function(orgArr) {
+                // {
+                //     "_id": 117,
+                //     "tu": "挂机",
+                //     "dsp": "网易有道",
+                //     "m_date": "2017-09-10T16:00:00.000Z",
+                //     "ldp": "http://win.jzhj66.com/new/20170905/\n",
+                //     "material": "http://oimageb8.ydstatic.com/image?id=-7042301259022038969&product=adpublish&w=640&h=960",
+                //     "pv": 131,
+                //     "opter": null,
+                //     "m_status": "NEW",
+                //     "last_edit": "2017-09-25T01:34:32.000Z"
+                // }
+
+            let tempObj = {};
+            if (Array.isArray(orgArr)) {
+                orgArr.forEach(item => {
+                    let ldpUrl = item.ldp.split("?")[0];
+                    if (!Array.isArray(tempObj[ldpUrl])) {
+                        tempObj[ldpUrl] = [];
+                    }
+                    tempObj[ldpUrl].push(item);
+                });
+            }
+            this.list = Object.entries(tempObj);
+            let length = parseInt(this.list.length / this.LDP_PER_PAGE) + 1;
+            this.indexInfo.indexs = new Array(length).fill(0).map((item, index) => index);
+            this.curArray = this.list.slice(this.curIndex * this.LDP_PER_PAGE, (this.curIndex + 1) * this.LDP_PER_PAGE);
+        },
+
+        setCurPage: function(index) {
+            this.curIndex = index;
+            this.curArray = this.list.slice(this.curIndex * this.LDP_PER_PAGE, (this.curIndex + 1) * this.LDP_PER_PAGE);
+        },
+
+        fetchMate: function() {
+            if (this.m_date) {
+                console.log("this.m_date:" + JSON.stringify(this.m_date));
+                requester.send("/crm-inner/censor/fetch", 
+                    { 
+                        token: this.token, 
+                        m_date: this.m_date.replace(/(\/|\-)/gi, "")
+                    },
+                    result => {
+                        if (result.status === RESULT_CODE.SUCCESS) {
+                            this.processArr(result.content.ret);
+                        }
+                    }, (status, msg) => {
+                        if (status === RESULT_CODE.LOGIN_EXPIRE) {
+                            this.$store.dispatch("asyncQuit");
+                            setTimeout(() => {
+                                this.gotoLogin();
+                            }, 3000);
+                        }
+                    });
+            }
+        },
+        pass: function(id, ldp) {
+            console.log("pass:" + id);
+            let _id = id.replace("material_", "");
+            requester.send("/crm-inner/censor/update", 
+                    { 
+                        token: this.token, 
+                        ids: [_id],
+                        action: "pass"
+                    },
+                    result => {
+                        if (result.status === RESULT_CODE.SUCCESS) {
+                            this.curArray.find(item => {
+                                return ldp.indexOf(item[0]) > -1;
+                            })
+                        }
+                    }, (status, msg) => {
+                        if (status === RESULT_CODE.LOGIN_EXPIRE) {
+                            this.$store.dispatch("asyncQuit");
+                            setTimeout(() => {
+                                this.gotoLogin();
+                            }, 3000);
+                        }
+                    });
+        },
+        denied: function(id) {
+            console.log("denied:" + id);
+
+        },
+        delay:function(id) {
+            console.log("delay:" + id);
+
+        },
+        passAll: function(id) {
+            console.log("passAll:" + id);
+
+        },
+        deniedAll: function(id) {
+            console.log("deniedAll:" + id);
+
+        },
+        delayAll:function(id) {
+            console.log("delayAll:" + id);
+
+        },
+
     }
 }
 </script>

@@ -251,10 +251,25 @@ router
         } else {
             ctx.body = _util.verifyTokenResult(verify);
         }
+    })
+    .post("/crm-inner/censor/update", async(ctx, next) => {
+        let verify = await verifyToken(ctx, "censor", "opter");
+        if (!verify) {
+            return;
+        } else if (verify.pass) {
+            let opter = verify.info.u_name;
+            let postData = ctx.request.body;
+            if (!_util.verifyParams(postData, ["ids", "action"])) {
+                ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
+            }
+            await courier.sendAsyncCall("censor", "asyncUpdateStatus", ret => {
+                ctx.body = { status: RESULT.SUCCESS, msg: "update query success" };
+            }, postData.ids, postData.action, opter);
+        } else {
+            ctx.body = _util.verifyTokenResult(verify);
+        }
     });
-
 // censor module end
-
 
 
 router
