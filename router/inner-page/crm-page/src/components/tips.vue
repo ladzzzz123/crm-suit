@@ -38,5 +38,10 @@ export default {
 </script>
 
 <style>
-
+    .top-tips{
+        position: fixed;
+        top: 2%;
+        width: 97%;
+        z-index: 999;
+    }
 </style>

@@ -5,6 +5,7 @@ Vue.use(VueRoter);
 import routerInfos from "./router";
 import store from "./store/store";
 import tips from "./components/tips.vue";
+import idialog from "./components/idialog.vue";
 const app = new Vue({
     el: "#app",
     data: {
@@ -20,7 +21,8 @@ const app = new Vue({
     router: new VueRoter({ routes: routerInfos }),
     template: `
     <div class="index">
-            <nav class="navbar navbar-default" role="navigation">
+        <idialog />
+        <nav class="navbar navbar-default" role="navigation">
             <div class="container-fluid">
                 <div class="navbar-header">
                     <a class="navbar-brand" href="http://www.cootek.com/index.html">
@@ -63,7 +65,8 @@ const app = new Vue({
         }
     },
     components: {
-        tips
+        tips,
+        idialog
     }
 
 });

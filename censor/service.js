@@ -54,7 +54,7 @@ let export_func = {
         return "";
     },
 
-    asyncUpdateStatus: (ids, action, opter) => {
+    asyncUpdateStatus: (ids, action, reason, opter) => {
         return new Promise((resolve, reject) => {
             let status = "";
             switch (action) {
@@ -75,6 +75,7 @@ let export_func = {
                 m_status: status,
                 opter: opter
             };
+            if (reason) params.reason = reason;
             if (!Array.isArray(ids)) {
                 resolve({ status: "failed", msg: "参数类型错误！" });
                 return;

@@ -19,6 +19,12 @@ export const DEFAULT_STORE = {
         msg: "",
         type: "",
     },
+    dialogInfo: {
+        content: "",
+        dialogType: "",
+        showFlag: false,
+        confirmCB: ""
+    },
     logged: false
 };
 

@@ -9,6 +9,9 @@ export default {
     displayTips: (state, payload) => {
         state.tipsInfo = payload.tipsInfo;
     },
+    displayDialog: (state, payload) => {
+        state.dialogInfo = payload.dialogInfo;
+    },
     quit: (state) => {
         state.userInfo = DEFAULT_STORE;
         window.localStorage.setItem(localStorageKey, "");

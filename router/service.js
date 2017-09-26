@@ -262,9 +262,10 @@ router
             if (!_util.verifyParams(postData, ["ids", "action"])) {
                 ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
             }
+            let reason = postData.reason || "";
             await courier.sendAsyncCall("censor", "asyncUpdateStatus", ret => {
                 ctx.body = { status: RESULT.SUCCESS, msg: "update success" };
-            }, postData.ids, postData.action, opter);
+            }, postData.ids, postData.action, reason, opter);
         } else {
             ctx.body = _util.verifyTokenResult(verify);
         }

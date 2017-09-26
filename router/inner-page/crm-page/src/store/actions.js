@@ -7,6 +7,9 @@ export default {
     asyncShowTips: function({ commit, state }, payload) {
         commit({ type: "displayTips", tipsInfo: payload.tipsInfo });
     },
+    asyncShowDialog: function({ commit, state }, payload) {
+        commit({ type: "displayDialog", dialogInfo: payload.dialogInfo });
+    },
 
     asyncQuit: function({ commit, state }) {
         commit("quit");
