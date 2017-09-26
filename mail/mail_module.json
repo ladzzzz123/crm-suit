@@ -3,5 +3,6 @@
     "【策划】": "plan-order",
     "[设计]": "plan-order",
     "[需求]": "plan-order",
-    "【需求】": "plan-order"
+    "【需求】": "plan-order",
+    "fetchMailInternval": 20
 }
