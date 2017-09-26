@@ -94,9 +94,9 @@ let export_func = {
                         //     `${opter} ${msg.accept_content} ${info.title}!`,
                         //     info.m_cc
                         // );
-                        resolve({ status: "success", msg: "接单成功" });
+                        resolve({ status: "success", msg: "更新成功" });
                     } else {
-                        resolve({ status: "failed", msg: "接单失败" });
+                        resolve({ status: "failed", msg: "更新失败" });
                     }
 
                 })

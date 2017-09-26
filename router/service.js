@@ -263,7 +263,7 @@ router
                 ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
             }
             await courier.sendAsyncCall("censor", "asyncUpdateStatus", ret => {
-                ctx.body = { status: RESULT.SUCCESS, msg: "update query success" };
+                ctx.body = { status: RESULT.SUCCESS, msg: "update success" };
             }, postData.ids, postData.action, opter);
         } else {
             ctx.body = _util.verifyTokenResult(verify);
