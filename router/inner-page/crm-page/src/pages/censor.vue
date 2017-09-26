@@ -39,7 +39,7 @@
                             </div>
                         </li>
                     </ul>
-                    <div v-show="item[1].length > 1 && item[1].some(item => item.m_status === 'NEW') " class="btn-group" role="group" aria-label="edit">
+                    <div v-show="item[1].length > 1 && item[1].every(item => item.m_status === 'NEW') " class="btn-group" role="group" aria-label="edit">
                         <button class="btn btn-primary" @click="passAll('dsp_' + pos)">该组全部通过</button>
                         <button class="btn btn-info" @click="deniedAll('dsp_' + pos)">该组全部拒绝</button>
                         <button class="btn btn-warning" @click="delayAll('dsp_' + pos)">该组全部再议</button>
@@ -220,7 +220,7 @@ export default {
                         });
                         neoArr = neoArr || ["", []];
                         let neoItem = neoArr[1].find(subItem => ("" + subItem._id) === _id);
-                        (neoItem) && (neoItem.m_status = "REJECT");
+                        (neoItem) && (neoItem.m_status = "REJECT") && (neoItem.reason = reason);
                         func.hideDialog();
                     }, (status, msg) => {
                         func.hideDialog();
@@ -251,8 +251,10 @@ export default {
                         });
                         neoArr = neoArr || ["", []];
                         let neoItem = neoArr[1].find(subItem => ("" + subItem._id) === _id);
-                        (neoItem) && (neoItem.m_status = "REJECT");
+                        (neoItem) && (neoItem.m_status = "TBD") && (neoItem.reason = reason);
+                        func.hideDialog();
                     }, (status, msg) => {
+                        func.hideDialog();
                         if (status === RESULT_CODE.LOGIN_EXPIRE) {
                             this.$store.dispatch("asyncQuit");
                             setTimeout(() => {
