@@ -31,8 +31,8 @@
                                     <p> 
                                         <span class="label label-info" v-if="material.m_status === 'NEW' ">待审核</span>
                                         <span class="label label-success" v-else-if="material.m_status === 'PASS' ">已通过</span>
-                                        <span class="label label-danger" v-else-if="material.m_status === 'REJECT' ">已拒绝</span>
-                                        <span class="label label-warning" v-else-if="material.m_status === 'TBD' ">再议</span>
+                                        <span class="label label-danger" v-else-if="material.m_status === 'REJECT' ">已拒绝，原因：{{ material.reason || "未填写" }}</span>
+                                        <span class="label label-warning" v-else-if="material.m_status === 'TBD' ">再议，原因：{{ material.reason || "未填写" }}</span>
                                         <span class="label label-default" v-else>未知状态</span>
                                     </p>
                                 </div>

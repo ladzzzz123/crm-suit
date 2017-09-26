@@ -62,5 +62,6 @@ function hideDialog() {
 export default {
     goToLogin: goToLogin,
     showTips: showTips,
-    showDialog: showDialog
+    showDialog: showDialog,
+    hideDialog: hideDialog
 };
