@@ -29,6 +29,24 @@ let export_func = {
 };
 let courier = new Courier(export_func);
 
+async function verifyToken(ctx, module_name, role) {
+    let _ret = "",
+        verify = {};
+    let postData = ctx.request.body;
+    logger.warn("verifyToken postData: %s", JSON.stringify(postData));
+
+    if (!_util.verifyParams(postData, "token")) {
+        ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
+        return false;
+    }
+    logger.warn("before verify");
+    verify = await courier.sendAsyncCall("account", "asyncVerify", () => {},
+        postData.token, module_name, role);
+    logger.warn("after verify");
+    logger.warn("verify:%s", JSON.stringify(verify));
+    return verify;
+}
+
 // account module start
 router
     .get("/crm-inner", async(ctx, next) => {
@@ -195,43 +213,44 @@ router
 
 // censor module start
 router
-    .post("/crm-inner/censor/query-update", async(ctx, next) => {
-        let _ret = "",
-            verify = {};
-        let postData = ctx.request.body;
-        if (!_util.verifyParams(postData, "token")) {
-            ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
+    .post("/crm-inner/censor", async(ctx, next) => {
+        let verify = await verifyToken(ctx, "censor", "opter");
+        if (!verify) {
             return;
+        } else if (verify.pass) {
+            ctx.body = { status: RESULT.SUCCESS, msg: "verify pass" };
+        } else {
+            ctx.body = _util.verifyTokenResult(verify);
         }
-        verify = await courier.sendAsyncCall("account", "asyncVerify", () => {},
-            postData.token, "censor", "opter");
-        if (verify.pass) {
+    })
+    .post("/crm-inner/censor/query-update", async(ctx, next) => {
+        let verify = await verifyToken(ctx, "censor", "opter");
+        if (!verify) {
+            return;
+        } else if (verify.pass) {
             await courier.sendCall("censor", "insertMaterialIntoDB", ret => {
-                _ret = { status: RESULT.SUCCESS, msg: "update query success" };
+                ctx.body = { status: RESULT.SUCCESS, msg: "update query success" };
             }, "20170911");
         } else {
-            _ret = _util.verifyTokenResult(verify);
+            ctx.body = _util.verifyTokenResult(verify);
         }
-        ctx.body = _ret;
     })
     .post("/crm-inner/censor/fetch", async(ctx, next) => {
-        let _ret = "",
-            verify = {};
-        let postData = ctx.request.body;
-        if (!_util.verifyParams(postData, "token", "m_date")) {
-            ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
+        let verify = await verifyToken(ctx, "censor", "opter");
+        logger.warn("[router] verify:%s", JSON.stringify(verify));
+        if (!verify) {
             return;
-        }
-        verify = await courier.sendAsyncCall("account", "asyncVerify", () => {},
-            postData.token, "censor", "opter");
-        if (verify.pass) {
+        } else if (verify.pass) {
+            let postData = ctx.request.body;
+            if (!_util.verifyParams(postData, "m_date")) {
+                ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
+            }
             await courier.sendAsyncCall("censor", "asyncFetchMaterialFromDB", ret => {
-                _ret = { status: RESULT.SUCCESS, content: ret, msg: "fetch list end" };
+                ctx.body = { status: RESULT.SUCCESS, content: ret, msg: "fetch list end" };
             }, postData.m_date);
         } else {
-            _ret = _util.verifyTokenResult(verify);
+            ctx.body = _util.verifyTokenResult(verify);
         }
-        ctx.body = _ret;
     });
 
 // censor module end

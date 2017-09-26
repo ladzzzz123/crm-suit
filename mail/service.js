@@ -137,7 +137,7 @@ let insertMail = async function() {
 
 courier.listening(() => {
     insertMail();
-}, 10 * 1000);
+}, 1000 * 1000);
 
 const REG_FETCH_SYM = /(\n|\t|\\.|\ )/gi;
 const REG_MATCH_MAIL = /<.*?>/gi;
