@@ -220,7 +220,7 @@ export default {
                         });
                         neoArr = neoArr || ["", []];
                         let neoItem = neoArr[1].find(subItem => ("" + subItem._id) === _id);
-                        (neoItem) && (neoItem.m_status = "REJECT") && (neoItem.reason = reason);
+                        (neoItem) && (neoItem.m_status = "REJECT") && (neoItem.reason = inputText);
                         func.hideDialog();
                     }, (status, msg) => {
                         func.hideDialog();
@@ -251,7 +251,7 @@ export default {
                         });
                         neoArr = neoArr || ["", []];
                         let neoItem = neoArr[1].find(subItem => ("" + subItem._id) === _id);
-                        (neoItem) && (neoItem.m_status = "TBD") && (neoItem.reason = reason);
+                        (neoItem) && (neoItem.m_status = "TBD") && (neoItem.reason = inputText);
                         func.hideDialog();
                     }, (status, msg) => {
                         func.hideDialog();
@@ -293,11 +293,67 @@ export default {
         },
         deniedAll: function(id) {
             console.log("deniedAll:" + id);
-
+            func.showDialog("input", "确认拒绝该组素材？", inputText => {
+                let _id = id.replace("dsp_", "");
+                let ids = this.curArray[_id][1].map(item => {
+                    return item._id;
+                });
+                requester.send("/crm-inner/censor/update", 
+                    {
+                        token: this.token, 
+                        ids: ids,
+                        action: "denied",
+                        reason: inputText || ""
+                    },
+                    result => {
+                        func.showTips("alert-success", "已拒绝该组素材！");
+                        this.curArray[_id][1].forEach(item => {
+                            item.m_status = "REJECT";
+                            item.reason = inputText || "";
+                        });
+                        func.hideDialog();
+                    }, (status, msg) => {
+                        func.hideDialog();
+                        if (status === RESULT_CODE.LOGIN_EXPIRE) {
+                            this.$store.dispatch("asyncQuit");
+                            setTimeout(() => {
+                                this.gotoLogin();
+                            }, 3000);
+                        }
+                    });
+            });
         },
         delayAll:function(id) {
             console.log("delayAll:" + id);
-
+            func.showDialog("input", "该素材需要再议？", inputText => {
+                let _id = id.replace("dsp_", "");
+                let ids = this.curArray[_id][1].map(item => {
+                    return item._id;
+                });
+                requester.send("/crm-inner/censor/update", 
+                    {
+                        token: this.token, 
+                        ids: ids,
+                        action: "tbd",
+                        reason: inputText || ""
+                    },
+                    result => {
+                        func.showTips("alert-success", "已确定再议该素材！");
+                        this.curArray[_id][1].forEach(item => {
+                            item.m_status = "TBD";
+                            item.reason = inputText || "";
+                        });
+                        func.hideDialog();
+                    }, (status, msg) => {
+                        func.hideDialog();
+                        if (status === RESULT_CODE.LOGIN_EXPIRE) {
+                            this.$store.dispatch("asyncQuit");
+                            setTimeout(() => {
+                                this.gotoLogin();
+                            }, 3000);
+                        }
+                    });
+            });
         },
 
     }
