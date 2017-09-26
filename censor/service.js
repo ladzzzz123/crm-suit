@@ -73,7 +73,7 @@ let export_func = {
 
             let params = {
                 m_status: status,
-                m_opter: opter
+                opter: opter
             };
             if (!Array.isArray(ids)) {
                 resolve({ status: "failed", msg: "参数类型错误！" });
@@ -83,17 +83,17 @@ let export_func = {
             courier.sendAsyncCall("dbopter", "asyncUpdate", () => {}, "market_db", "material", params, conditions)
                 .then(ret => {
                     if (ret.status === "success") {
-                        let info = {};
-                        if (Array.isArray(ret.ret) && ret.ret.length > 0) {
-                            info = ret.ret[0];
-                        }
-                        courier.sendAsyncCall("mail", "asyncSendMail", ret => {
-                                _ret = ret;
-                            }, info.m_from,
-                            `${opter} ${msg.accept_title} ${info.title}`,
-                            `${opter} ${msg.accept_content} ${info.title}!`,
-                            info.m_cc
-                        );
+                        // let info = {};
+                        // if (Array.isArray(ret.ret) && ret.ret.length > 0) {
+                        //     info = ret.ret[0];
+                        // }
+                        // courier.sendAsyncCall("mail", "asyncSendMail", ret => {
+                        //         _ret = ret;
+                        //     }, info.m_from,
+                        //     `${opter} ${msg.accept_title} ${info.title}`,
+                        //     `${opter} ${msg.accept_content} ${info.title}!`,
+                        //     info.m_cc
+                        // );
                         resolve({ status: "success", msg: "接单成功" });
                     } else {
                         resolve({ status: "failed", msg: "接单失败" });
