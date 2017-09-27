@@ -112,22 +112,45 @@ let export_func = {
 
     asyncNotice: (dateStr, to, opter) => {
         return new Promise((resolve, reject) => {
-            let sql_query_count = " SELECT m_status, COUNT(*) FROM material WHERE m_date = ? GROUP BY m_status ";
+            let sql_query_count = " SELECT m_status, COUNT(*) AS count FROM material WHERE m_date = ? GROUP BY m_status ";
             sql_query_count = mysql.format(sql_query_count, [dateStr]);
 
             let sql_opt = "SELECT tu, dsp, ldp, material, pv, opter FROM material WHERE m_date = ? AND (m_status = 'REJECT' OR m_status = 'TBD') ";
             sql_opt = mysql.format(sql_opt, [dateStr]);
-            let fileName = `censor_${dateStr}`;
+            let fileName = `censor_${dateStr}.csv`;
             let tempCountContent = "";
             courier.sendAsyncCall("dbopter", "asyncQuery", () => {}, "market_db", sql_query_count)
                 .then(query_count_ret => {
-                    tempCountContent = query_count_ret;
+                    query_count_ret.forEach(item => {
+                        let statusStr = "";
+                        switch (item.m_status) {
+                            case "NEW":
+                                statusStr = "未审核";
+                                break;
+                            case "PASS":
+                                statusStr = "已通过";
+                                break;
+                            case "REJECT":
+                                statusStr = "未通过";
+                                break;
+                            case "TBD":
+                                statusStr = "再议";
+                                break;
+                            default:
+                                break;
+                        }
+                        tempCountContent += `${statusStr}: ${item.count} \n`;
+                    });
                 })
                 .then(ret => {
                     return courier.sendAsyncCall("dbopter", "asyncQuery", () => {}, "market_db", sql_opt);
                 })
                 .then(query_ret => {
-                    fs.writeFile(`${CONFIG.savePath}/${fileName}`, query_ret, "utf8", writeRet => {
+                    let query_content = "广告位,dsp,落地页,素材链接,pv,操作者\n";
+                    query_ret.forEach(item => {
+                        query_content += `${item.tu},${item.dsp},${item.ldp},${item.material},${item.pv},${item.opter}\n`;
+                    });
+                    fs.writeFile(`${CONFIG.savePath}/${fileName}`, query_content, "utf8", writeRet => {
                         return Promise.resolve(writeRet);
                     });
                 })
