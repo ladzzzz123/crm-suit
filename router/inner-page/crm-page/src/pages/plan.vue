@@ -42,7 +42,7 @@
                         </p>
                         <template v-if="item.m_attachments">
                             <a v-for="(attach, index) in item.m_attachments.split(',')" 
-                                class="list-group-item-text" :href="attach" v-bind:key="index">
+                                class="list-group-item-text" :href="attach" target="_blank" v-bind:key="index">
                                 附件{{ index + 1}}
                             </a>
                         </template>
@@ -180,7 +180,6 @@ export default {
             requester.upload("/crm-inner/plan-order/upload", el_upload, content => {
                 func.showTips("alert-success", "上传成功");
             });
-            // action="/crm-inner/plan-order/upload" method="post" 
         }
     }
 

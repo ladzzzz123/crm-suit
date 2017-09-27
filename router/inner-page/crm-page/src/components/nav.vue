@@ -1,9 +1,9 @@
 <template>
     <nav aria-label="Page navigation">
         <ul class="pagination">
-            <li v-for="index in indexInfo.indexs" @click="setCurPage(index)" v-bind:key="index">
-                <a v-if="index === indexInfo.curIndex" class="selected">{{ index + 1 }}</a>
-                <a v-else >{{ index + 1 }}</a>
+            <li v-for="index in indexInfo.indexs" @click="setCurPage(index)"
+                v-bind:key="index" :class="index === indexInfo.curIndex ? 'active' : '' ">
+                <a class="nav-index">{{ index + 1 }}</a>
             </li>
         </ul>
     </nav> 
@@ -14,6 +14,7 @@ export default {
     props: ["indexInfo"],
     methods: {
         setCurPage: function(index) {
+            this.indexInfo.curIndex = index;
             this.$emit("setCurPage", index);
         }
     }
@@ -21,5 +22,4 @@ export default {
 </script>
 
 <style>
-
 </style>

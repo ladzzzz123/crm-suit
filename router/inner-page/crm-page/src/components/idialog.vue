@@ -9,16 +9,16 @@
         <div v-else-if="dialogType === 'confirm' " class="dialog-body layer-top">
             <h2 class="content">{{ content }}</h2>
             <div class="btn-group" role="group" aria-label="confirm">
-                <button class="btn btn-primary" @click="confirm()">确定</button>
-                <button class="btn btn-info" @click="close()">取消</button>
+                <button class="btn btn-success" @click="confirm()">确定</button>
+                <button class="btn" @click="close()">取消</button>
             </div>
         </div>
         <div v-else-if="dialogType === 'input' " class="dialog-body layer-top">
             <h2 class="content">{{ content }}</h2>
-            <input type="text" v-model="inputText" placeholder="请填写内容"/>
+            <textarea rows="8" cols="20" v-model="inputText" placeholder="请填写内容"/>
             <div class="btn-group" role="group" aria-label="input">
-                <button class="btn btn-primary" @click="confirm()">确定</button>
-                <button class="btn btn-info" @click="close()">取消</button>
+                <button class="btn btn-danger" @click="confirm()">确定</button>
+                <button class="btn" @click="close()">取消</button>
             </div>
         </div>
         <div v-else>
@@ -104,5 +104,11 @@ export default {
     }
     .dialog .btn-group {
         margin-top: 1rem;
+    }
+    
+    .dialog textarea {
+        display: block;
+        margin: 0 auto;
+        width: 100%;
     }
 </style>

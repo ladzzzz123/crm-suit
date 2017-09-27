@@ -18,21 +18,23 @@
                         <ul class="list-group">
                             <li v-for="material in item[1]" class="list-group-item" v-bind:key="'material_' + material._id">
                                 <div class="row">
-                                    <div class="col-md-5">
+                                    <div class="col-md-4">
                                         <div>DSP名称：{{ material.dsp }}</div>
                                         <div>广告位置：{{ material.tu }}</div>
-                                        <img :src="material.material" width="30%" :alt="material.material" />
+                                        <a :href="material.material" target="_blank">
+                                            <img :src="material.material" width="30%" :alt="material.material" />
+                                        </a>
                                         <br/>
-                                        <a :href="material.ldp">落地页链接</a>
+                                        <a :href="material.ldp" target="_blank">落地页链接</a>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <div v-if="material.m_status === 'NEW' " class="btn-group" role="group" aria-label="edit">
                                             <button class="btn btn-success" @click="pass('material_' + material._id, material.ldp)">通过</button>
                                             <button class="btn btn-info" @click="denied('material_' + material._id, material.ldp)">拒绝</button>
                                             <button class="btn btn-warning" @click="delay('material_' + material._id, material.ldp)">再议</button>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         当前状态：
                                         <p> 
                                             <span class="label label-info" v-if="material.m_status === 'NEW' ">待审核</span>
