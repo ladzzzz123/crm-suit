@@ -122,27 +122,29 @@ let export_func = {
             courier.sendAsyncCall("dbopter", "asyncQuery", () => {}, "market_db", sql_query_count)
                 .then(query_count_ret => {
                     logger.info("query_count_ret: %s", JSON.stringify(query_count_ret));
-
-                    query_count_ret.forEach(item => {
-                        let statusStr = "";
-                        switch (item.m_status) {
-                            case "NEW":
-                                statusStr = "未审核";
-                                break;
-                            case "PASS":
-                                statusStr = "已通过";
-                                break;
-                            case "REJECT":
-                                statusStr = "未通过";
-                                break;
-                            case "TBD":
-                                statusStr = "再议";
-                                break;
-                            default:
-                                break;
-                        }
-                        tempCountContent += `${statusStr}: ${item.count} \n`;
-                    });
+                    let ret_array = query_count_ret.ret;
+                    if (Array.isArray(ret_array)) {
+                        ret_array.forEach(item => {
+                            let statusStr = "";
+                            switch (item.m_status) {
+                                case "NEW":
+                                    statusStr = "未审核";
+                                    break;
+                                case "PASS":
+                                    statusStr = "已通过";
+                                    break;
+                                case "REJECT":
+                                    statusStr = "未通过";
+                                    break;
+                                case "TBD":
+                                    statusStr = "再议";
+                                    break;
+                                default:
+                                    break;
+                            }
+                            tempCountContent += `${statusStr}: ${item.count} \n`;
+                        });
+                    }
                     logger.info("tempCountContent: %s", tempCountContent);
                     return Promise.resolve(tempCountContent);
                 })
@@ -152,18 +154,19 @@ let export_func = {
                 })
                 .then(query_ret => {
                     logger.info("before write file");
-
                     let query_content = "广告位,dsp,落地页,素材链接,pv,操作者\n";
-                    query_ret.forEach(item => {
-                        query_content += `${item.tu},${item.dsp},${item.ldp},${item.material},${item.pv},${item.opter}\n`;
-                    });
+                    let ret_array = query_ret.ret;
+                    if (Array.isArray(ret_array)) {
+                        ret_array.forEach(item => {
+                            query_content += `${item.tu},${item.dsp},${item.ldp},${item.material},${item.pv},${item.opter}\n`;
+                        });
+                    }
                     fs.writeFile(`${CONFIG.savePath}/${fileName}`, query_content, "utf8", writeRet => {
                         return Promise.resolve(writeRet);
                     });
                 })
                 .then(ret => {
                     logger.info("before send mail");
-
                     courier.sendAsyncCall("mail", "asyncSendMail", () => {}, to,
                         `${dateStr}素材审核结果`,
                         `审核情况：${tempCountContent} \n
