@@ -8,6 +8,8 @@
                 <button class="btn btn-success" @click="fetchMate">获取素材列表</button>
                 <button class="btn btn-primary" @click="noticeRet">发送审核结果</button>
             </form>
+            <br/>
+            <br/>
             <ul class="list-group">
                 <template v-if="curArray.length < 1">
                     未检索到任何信息！
@@ -28,13 +30,6 @@
                                         <a :href="material.ldp" target="_blank">落地页链接</a>
                                     </div>
                                     <div class="col-md-3">
-                                        <div v-if="material.m_status === 'NEW' " class="btn-group" role="group" aria-label="edit">
-                                            <button class="btn btn-success" @click="pass('material_' + material._id, material.ldp)">通过</button>
-                                            <button class="btn btn-info" @click="denied('material_' + material._id, material.ldp)">拒绝</button>
-                                            <button class="btn btn-warning" @click="delay('material_' + material._id, material.ldp)">再议</button>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
                                         当前状态：
                                         <p> 
                                             <span class="label label-info" v-if="material.m_status === 'NEW' ">待审核</span>
@@ -44,12 +39,19 @@
                                             <span class="label label-default" v-else>未知状态</span>
                                         </p>
                                     </div>
+                                     <div class="col-md-3">
+                                        <div v-if="material.m_status === 'NEW' " class="btn-group" role="group" aria-label="edit">
+                                            <button class="btn btn-success" @click="pass('material_' + material._id, material.ldp)">通过</button>
+                                            <button class="btn btn-danger" @click="denied('material_' + material._id, material.ldp)">拒绝</button>
+                                            <button class="btn btn-warning" @click="delay('material_' + material._id, material.ldp)">再议</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </li>
                         </ul>
                         <div v-show="item[1].length > 1 && item[1].every(item => item.m_status === 'NEW') " class="btn-group" role="group" aria-label="edit">
                             <button class="btn btn-primary" @click="passAll('dsp_' + pos)">该组全部通过</button>
-                            <button class="btn btn-info" @click="deniedAll('dsp_' + pos)">该组全部拒绝</button>
+                            <button class="btn btn-danger" @click="deniedAll('dsp_' + pos)">该组全部拒绝</button>
                             <button class="btn btn-warning" @click="delayAll('dsp_' + pos)">该组全部再议</button>
                         </div>
                     </li>
