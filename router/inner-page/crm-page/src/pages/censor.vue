@@ -9,45 +9,50 @@
                 <button class="btn btn-primary" @click="noticeRet">发送审核结果</button>
             </form>
             <ul class="list-group">
-                <li v-for="(item, pos) in curArray" class="list-group-item" v-bind:key="'dsp_' + pos">
-                    <h4>{{ item[0] }}</h4>
-                    <ul class="list-group">
-                        <li v-for="material in item[1]" class="list-group-item" v-bind:key="'material_' + material._id">
-                            <div class="row">
-                                <div class="col-md-5">
-                                    <div>DSP名称：{{ material.dsp }}</div>
-                                    <div>广告位置：{{ material.tu }}</div>
-                                    <img :src="material.material" width="30%" :alt="material.material" />
-                                    <br/>
-                                    <a :href="material.ldp">落地页链接</a>
-                                </div>
-                                <div class="col-md-4">
-                                    <div v-if="material.m_status === 'NEW' " class="btn-group" role="group" aria-label="edit">
-                                        <button class="btn btn-success" @click="pass('material_' + material._id, material.ldp)">通过</button>
-                                        <button class="btn btn-info" @click="denied('material_' + material._id, material.ldp)">拒绝</button>
-                                        <button class="btn btn-warning" @click="delay('material_' + material._id, material.ldp)">再议</button>
+                <template v-if="curArray.length < 1">
+                    未检索到任何信息！
+                </template>
+                <template v-else>
+                    <li v-for="(item, pos) in curArray" class="list-group-item" v-bind:key="'dsp_' + pos">
+                        <h4>{{ item[0] }}</h4>
+                        <ul class="list-group">
+                            <li v-for="material in item[1]" class="list-group-item" v-bind:key="'material_' + material._id">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <div>DSP名称：{{ material.dsp }}</div>
+                                        <div>广告位置：{{ material.tu }}</div>
+                                        <img :src="material.material" width="30%" :alt="material.material" />
+                                        <br/>
+                                        <a :href="material.ldp">落地页链接</a>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div v-if="material.m_status === 'NEW' " class="btn-group" role="group" aria-label="edit">
+                                            <button class="btn btn-success" @click="pass('material_' + material._id, material.ldp)">通过</button>
+                                            <button class="btn btn-info" @click="denied('material_' + material._id, material.ldp)">拒绝</button>
+                                            <button class="btn btn-warning" @click="delay('material_' + material._id, material.ldp)">再议</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        当前状态：
+                                        <p> 
+                                            <span class="label label-info" v-if="material.m_status === 'NEW' ">待审核</span>
+                                            <span class="label label-success" v-else-if="material.m_status === 'PASS' ">已通过</span>
+                                            <span class="label label-danger" v-else-if="material.m_status === 'REJECT' ">已拒绝，原因：{{ material.reason || "未填写" }}</span>
+                                            <span class="label label-warning" v-else-if="material.m_status === 'TBD' ">再议，原因：{{ material.reason || "未填写" }}</span>
+                                            <span class="label label-default" v-else>未知状态</span>
+                                        </p>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    当前状态：
-                                    <p> 
-                                        <span class="label label-info" v-if="material.m_status === 'NEW' ">待审核</span>
-                                        <span class="label label-success" v-else-if="material.m_status === 'PASS' ">已通过</span>
-                                        <span class="label label-danger" v-else-if="material.m_status === 'REJECT' ">已拒绝，原因：{{ material.reason || "未填写" }}</span>
-                                        <span class="label label-warning" v-else-if="material.m_status === 'TBD' ">再议，原因：{{ material.reason || "未填写" }}</span>
-                                        <span class="label label-default" v-else>未知状态</span>
-                                    </p>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                    <div v-show="item[1].length > 1 && item[1].every(item => item.m_status === 'NEW') " class="btn-group" role="group" aria-label="edit">
-                        <button class="btn btn-primary" @click="passAll('dsp_' + pos)">该组全部通过</button>
-                        <button class="btn btn-info" @click="deniedAll('dsp_' + pos)">该组全部拒绝</button>
-                        <button class="btn btn-warning" @click="delayAll('dsp_' + pos)">该组全部再议</button>
-                    </div>
-                </li>
-                <pageNav :indexInfo="indexInfo" v-on:setCurPage="setCurPage"/>
+                            </li>
+                        </ul>
+                        <div v-show="item[1].length > 1 && item[1].every(item => item.m_status === 'NEW') " class="btn-group" role="group" aria-label="edit">
+                            <button class="btn btn-primary" @click="passAll('dsp_' + pos)">该组全部通过</button>
+                            <button class="btn btn-info" @click="deniedAll('dsp_' + pos)">该组全部拒绝</button>
+                            <button class="btn btn-warning" @click="delayAll('dsp_' + pos)">该组全部再议</button>
+                        </div>
+                    </li>
+                    <pageNav :indexInfo="indexInfo" v-on:setCurPage="setCurPage"/>
+                </template>    
             </ul>
         </div>
         <div class="data-list" v-else>
