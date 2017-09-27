@@ -99,6 +99,7 @@ let export_func = {
             let _info = JSON.parse(JSON.stringify(user_info));
             logger.info("[account] _info:" + JSON.stringify(_info));
             _info.passwd = r_util.encode(_info.passwd);
+            logger.info("[account] after encode _info:" + JSON.stringify(_info));
             dbOpter.addUserInfo(_info)
                 .then(ret => {
                     if (ret) {
