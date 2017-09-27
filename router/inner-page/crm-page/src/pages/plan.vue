@@ -4,9 +4,9 @@
             <li v-for="item in list" class="list-group-item" :id="'msg_' + item._id" v-bind:key="'msg_' + item._id">
                 <div class="row">
                     <div class="col-md-6">
-                        <h4 class="list-group-item-heading">{{ item.title }}</h4>
+                        <h4 class="list-group-item-heading" :title="item.title">{{ item.title }}</h4>
                         <p class="list-group-item-text">发起人: {{ item.m_from }}</p>
-                        <p class="list-group-item-text">抄送: {{ item.m_cc }}</p>
+                        <p class="list-group-item-text" :title="item.m_cc">抄送: {{ item.m_cc }}</p>
                         <p class="list-group-item-text">发送日期: {{ new Date(item.m_date).toLocaleString() }}</p>
                         <p class="list-group-item-text">谁在处理: <span class="label label-success">{{ item.m_opter }}</span> </p>
                         <p class="list-group-item-text">最后编辑日期: {{ new Date(item.last_edit).toLocaleString() }}</p>
@@ -187,6 +187,13 @@ export default {
 </script>
 
 <style>
+    .list-group-item {
+        width:90%;
+        overflow:hidden;
+        white-space:nowrap;
+        text-overflow:ellipsis;
+        -o-text-overflow:ellipsis;
+    }
 </style>
 
 
