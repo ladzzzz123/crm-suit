@@ -4,6 +4,7 @@
             <form onsubmit="return false">
                 <input type="date" class="censor-date" v-model="m_date" required/>
                 <br/>
+                <br/>
                 <button class="btn btn-success" @click="fetchMate">获取素材列表</button>
             </form>
             <ul class="list-group">
@@ -47,6 +48,7 @@
                 </li>
                 <pageNav :indexInfo="indexInfo" v-on:setCurPage="setCurPage"/>
             </ul>
+            <button class="btn btn-primary" @click="noticeRet">发送审核结果</button>
         </div>
         <div class="data-list" v-else>
             <p>您没有该功能的使用权限，请点击<a @click="gotoLogin">此处</a>重新登录，</p>
@@ -120,19 +122,6 @@ export default {
         },
 
         processArr: function(orgArr) {
-                // {
-                //     "_id": 117,
-                //     "tu": "挂机",
-                //     "dsp": "网易有道",
-                //     "m_date": "2017-09-10T16:00:00.000Z",
-                //     "ldp": "http://win.jzhj66.com/new/20170905/\n",
-                //     "material": "http://oimageb8.ydstatic.com/image?id=-7042301259022038969&product=adpublish&w=640&h=960",
-                //     "pv": 131,
-                //     "opter": null,
-                //     "m_status": "NEW",
-                //     "last_edit": "2017-09-25T01:34:32.000Z"
-                // }
-
             let tempObj = {};
             if (Array.isArray(orgArr)) {
                 orgArr.forEach(item => {
@@ -176,6 +165,35 @@ export default {
                     });
             }
         },
+        noticeRet: function() {
+            if (this.m_date) {
+                func.showDialog("input", "请填写收件人，多个收件人用半角逗号分隔", inputText => {
+                    requester.send("/crm-inner/censor/notice", 
+                        {
+                            token: this.token, 
+                            m_date: this.m_date.replace(/(\/|\-)/gi, ""),
+                            to: inputText
+                        },
+                        result => {
+                            if (result.status === RESULT_CODE.SUCCESS) {
+                                func.showTips("alert-success", "发送成功");
+                            }
+                            func.hideDialog();
+                        }, (status, msg) => {
+                            func.hideDialog();
+                            if (status === RESULT_CODE.LOGIN_EXPIRE) {
+                                this.$store.dispatch("asyncQuit");
+                                setTimeout(() => {
+                                    this.gotoLogin();
+                                }, 3000);
+                            }
+                        });
+                });
+            } else {
+                func.showTips("alert-danger", "素材日期未选择!");
+            }
+        },
+
         pass: function(id, ldp) {
             console.log("pass:" + id);
             let _id = id.replace("material_", "");

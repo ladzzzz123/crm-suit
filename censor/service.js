@@ -142,7 +142,7 @@ let export_func = {
                                 default:
                                     break;
                             }
-                            tempCountContent += `${statusStr}: ${item.count} \n`;
+                            tempCountContent += `${statusStr}: ${item.count}, `;
                         });
                     }
                     logger.info("tempCountContent: %s", tempCountContent);
@@ -190,7 +190,7 @@ let export_func = {
                          ${tempCountContent} \n
                          发送者：${opter} \n
                          拒绝及再议列表详见: \n
-                         ${CONFIG.visitPath}/${fileName}`,
+                         ${CONFIG.visitPath}${fileName}`,
                         ""
                     );
                     resolve({ status: "success", msg: "邮件已经发送！" });
