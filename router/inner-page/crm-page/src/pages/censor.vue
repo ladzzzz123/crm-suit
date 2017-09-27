@@ -16,7 +16,7 @@
                 </template>
                 <template v-else>
                     <li v-for="(item, pos) in curArray" class="list-group-item" v-bind:key="'dsp_' + pos">
-                        <h4>{{ item[0] }}</h4>
+                        <h4 :title="item[0]">{{ item[0] }}</h4>
                         <ul class="list-group">
                             <li v-for="material in item[1]" class="list-group-item" v-bind:key="'material_' + material._id">
                                 <div class="row">
@@ -24,7 +24,7 @@
                                         <div>DSP名称：{{ material.dsp }}</div>
                                         <div>广告位置：{{ material.tu }}</div>
                                         <a :href="material.material" target="_blank">
-                                            <img :src="material.material" width="30%" :alt="material.material" />
+                                            <img :src="material.material" width="60%" :alt="material.material" />
                                         </a>
                                         <br/>
                                         <a :href="material.ldp" target="_blank">落地页链接</a>
@@ -42,8 +42,8 @@
                                      <div class="col-md-3">
                                         <div v-if="material.m_status === 'NEW' " class="btn-group" role="group" aria-label="edit">
                                             <button class="btn btn-success" @click="pass('material_' + material._id, material.ldp)">通过</button>
-                                            <button class="btn btn-danger" @click="denied('material_' + material._id, material.ldp)">拒绝</button>
                                             <button class="btn btn-warning" @click="delay('material_' + material._id, material.ldp)">再议</button>
+                                            <button class="btn btn-danger" @click="denied('material_' + material._id, material.ldp)">拒绝</button>
                                         </div>
                                     </div>
                                 </div>
@@ -51,8 +51,8 @@
                         </ul>
                         <div v-show="item[1].length > 1 && item[1].every(item => item.m_status === 'NEW') " class="btn-group" role="group" aria-label="edit">
                             <button class="btn btn-primary" @click="passAll('dsp_' + pos)">该组全部通过</button>
-                            <button class="btn btn-danger" @click="deniedAll('dsp_' + pos)">该组全部拒绝</button>
                             <button class="btn btn-warning" @click="delayAll('dsp_' + pos)">该组全部再议</button>
+                            <button class="btn btn-danger" @click="deniedAll('dsp_' + pos)">该组全部拒绝</button>
                         </div>
                     </li>
                     <pageNav :indexInfo="indexInfo" v-on:setCurPage="setCurPage"/>
@@ -388,5 +388,11 @@ export default {
 </script>
 
 <style>
-
+    h4 {
+        width:60%;
+        overflow:hidden;
+        white-space:nowrap;
+        text-overflow:ellipsis;
+        -o-text-overflow:ellipsis;
+    }
 </style>

@@ -6,6 +6,8 @@ import routerInfos from "./router";
 import store from "./store/store";
 import tips from "./components/tips.vue";
 import idialog from "./components/idialog.vue";
+import crouter from "./components/crouter.vue";
+
 const app = new Vue({
     el: "#app",
     data: {
@@ -39,15 +41,9 @@ const app = new Vue({
             </div>
         </nav>
         <div class="container">
-        <tips />
+            <tips />
             <div class="panel-left">
-                <ul class="nav nav-pills nav-stacked">
-                    <li role="presentation" v-for="info in routerInfos" :key="info.path" v-show="!info.hide">
-                        <router-link v-bind:to="info.path" class="left-pad-item">
-                                {{ info.content }}
-                        </router-link>
-                    </li>
-                </ul>
+                <crouter :routerInfos="routerInfos"/>
             </div>
             <div class="panel-right">
                 <router-view></router-view>
@@ -66,7 +62,8 @@ const app = new Vue({
     },
     components: {
         tips,
-        idialog
+        idialog,
+        crouter
     }
 
 });
