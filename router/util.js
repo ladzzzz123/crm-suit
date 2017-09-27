@@ -1,14 +1,16 @@
 const RESULT = require("./codemap.json");
 const md5 = require("../utils/md5");
-const crypto = require("crypto");
 
 function encode(passwd) {
-    if (cypto) {
+    let crypto;
+    try {
+        crypto = require("crypto");
         let neo = crypto.createCipher("md5");
         neo.update(passwd);
         return neo.digest("hex");
-    } else {
+    } catch (err) {
         return md5.hex_md5(passwd);
+
     }
 }
 
