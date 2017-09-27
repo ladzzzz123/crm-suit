@@ -141,12 +141,16 @@ let export_func = {
                         }
                         tempCountContent += `${statusStr}: ${item.count} \n`;
                     });
+                    logger.info("tempCountContent: %s", tempCountContent);
                     return Promise.resolve(tempCountContent);
                 })
                 .then(ret => {
+                    logger.info("before asyncQuery");
                     return courier.sendAsyncCall("dbopter", "asyncQuery", () => {}, "market_db", sql_opt);
                 })
                 .then(query_ret => {
+                    logger.info("before write file");
+
                     let query_content = "广告位,dsp,落地页,素材链接,pv,操作者\n";
                     query_ret.forEach(item => {
                         query_content += `${item.tu},${item.dsp},${item.ldp},${item.material},${item.pv},${item.opter}\n`;
@@ -156,6 +160,8 @@ let export_func = {
                     });
                 })
                 .then(ret => {
+                    logger.info("before send mail");
+
                     courier.sendAsyncCall("mail", "asyncSendMail", () => {}, to,
                         `${dateStr}素材审核结果`,
                         `审核情况：${tempCountContent} \n
