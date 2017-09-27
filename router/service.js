@@ -315,7 +315,7 @@ router
                 let info = insert_ret.ret;
                 await courier.sendAsyncCall("mail", "asyncSendMail", ret => {
                     logger.info("[router] get New Mail:" + JSON.stringify(ret));
-                }, info.mail, "您的账号已经创建成功", `点击此处登录：${MSG["add-user-mail"]["address"]}  \n ${MSG["add-user-mail"]} \n 用户名：${info.u_name} \n 密码：${info.passwd}`);
+                }, info.mail, "您的账号已经创建成功", `点击此处登录：${MSG["add-user-mail"]["address"]}  \n 用户名：${info.u_name} \n 密码：${info.passwd}`);
                 _ret = { status: RESULT.SUCCESS, msg: "create user success" };
             }
         } else {
