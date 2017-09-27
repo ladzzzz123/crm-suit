@@ -1,4 +1,6 @@
 {
     "materialUrl": "http://10.0.10.103:8080/arbiter/getdspmaterial",
-    "db_name": "material"
+    "db_name": "material",
+    "savePath": "router/static/censor/",
+    "visitPath": "router/static/censor/"
 }

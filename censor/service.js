@@ -2,6 +2,8 @@ const Courier = require("node-process-bearer").Courier;
 const logger = require("node-process-bearer").logger.getLogger();
 const mysql = require("mysql");
 let request = require("request");
+const fs = require("fs");
+
 const CONFIG = require("./config.json");
 
 let export_func = {
@@ -107,6 +109,44 @@ let export_func = {
                 });
         });
     },
+
+    asyncNotice: (dateStr, to, opter) => {
+        return new Promise((resolve, reject) => {
+            let sql_query_count = " SELECT m_status, COUNT(*) FROM material WHERE m_date = ? GROUP BY m_status ";
+            sql_query_count = mysql.format(sql_query_count, [dateStr]);
+
+            let sql_opt = "SELECT tu, dsp, ldp, material, pv, opter FROM material WHERE m_date = ? AND (m_status = 'REJECT' OR m_status = 'TBD') ";
+            sql_opt = mysql.format(sql_opt, [dateStr]);
+            let fileName = `censor_${dateStr}`;
+            let tempCountContent = "";
+            courier.sendAsyncCall("dbopter", "asyncQuery", () => {}, "market_db", sql_query_count)
+                .then(query_count_ret => {
+                    tempCountContent = query_count_ret;
+                })
+                .then(ret => {
+                    return courier.sendAsyncCall("dbopter", "asyncQuery", () => {}, "market_db", sql_opt);
+                })
+                .then(query_ret => {
+                    fs.writeFile(`${CONFIG.savePath}/${fileName}`, query_ret, "utf8", writeRet => {
+                        return Promise.resolve(writeRet);
+                    });
+                })
+                .then(ret => {
+                    courier.sendAsyncCall("mail", "asyncSendMail", () => {}, to,
+                        `${dateStr}素材审核结果`,
+                        `审核情况：${tempCountContent} \n
+                         发送者：${opter} \n
+                         拒绝及再议列表详见${CONFIG.visitePath}/${fileName}`,
+                        ""
+                    );
+                    resolve({ status: "success", msg: "邮件已经发送！" });
+                })
+                .catch(err => {
+                    logger.warn("[censor] notice err:" + JSON.stringify(err));
+                    reject(err);
+                });
+        });
+    }
 
 };
 
