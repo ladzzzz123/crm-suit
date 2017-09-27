@@ -141,6 +141,7 @@ let export_func = {
                         }
                         tempCountContent += `${statusStr}: ${item.count} \n`;
                     });
+                    return Promise.resolve();
                 })
                 .then(ret => {
                     return courier.sendAsyncCall("dbopter", "asyncQuery", () => {}, "market_db", sql_opt);
