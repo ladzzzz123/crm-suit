@@ -10,7 +10,6 @@
     "license": "LGPL-3.0",
     "dependencies": {
         "babel-eslint": "^7.2.3",
-        "crypto": "^1.0.1",
         "imap": "^0.8.19",
         "koa": "^2.3.0",
         "koa-body": "^2.3.0",
