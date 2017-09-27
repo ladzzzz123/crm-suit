@@ -277,7 +277,7 @@ router
         } else if (verify.pass) {
             let opter = verify.info.u_name;
             let postData = ctx.request.body;
-            if (!_util.verifyParams(postData, ["to", "dateStr"])) {
+            if (!_util.verifyParams(postData, ["to", "m_date"])) {
                 ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
             }
             await courier.sendAsyncCall("censor", "asyncNotice", ret => {
