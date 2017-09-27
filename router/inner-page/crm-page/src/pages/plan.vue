@@ -187,7 +187,7 @@ export default {
 </script>
 
 <style>
-    .list-group-item {
+    .list-group-item-text {
         width:90%;
         overflow:hidden;
         white-space:nowrap;
