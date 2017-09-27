@@ -121,6 +121,8 @@ let export_func = {
             let tempCountContent = "";
             courier.sendAsyncCall("dbopter", "asyncQuery", () => {}, "market_db", sql_query_count)
                 .then(query_count_ret => {
+                    logger.info("query_count_ret: %s", JSON.stringify(query_count_ret));
+
                     query_count_ret.forEach(item => {
                         let statusStr = "";
                         switch (item.m_status) {
