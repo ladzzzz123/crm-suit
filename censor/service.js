@@ -175,10 +175,10 @@ let export_func = {
                                 default:
                                     break;
                             }
-                            query_content += `${item.tu},${item.dsp},${item.ldp},${item.material},${item.pv},${item.opter},${statusStr},${item.reason || "未填写"}\n`;
+                            query_content += `${item.tu},${item.dsp},'${item.ldp}','${item.material}',${item.pv},${item.opter},${statusStr},${item.reason || "未填写"}\n`;
                         });
                     }
-                    fs.writeFile(`${CONFIG.savePath}/${fileName}`, query_content, "utf8", writeRet => {
+                    fs.writeFile(`${CONFIG.savePath}${fileName}`, query_content, "utf8", writeRet => {
                         return Promise.resolve(writeRet);
                     });
                 })
