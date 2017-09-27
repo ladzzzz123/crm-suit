@@ -97,6 +97,7 @@ let export_func = {
     asyncAddUser: (user_info) => {
         return new Promise((resolve, reject) => {
             let _info = JSON.parse(JSON.stringify(user_info));
+            logger.info("[account] _info:" + JSON.stringify(_info));
             _info.passwd = r_util.encode(_info.passwd);
             dbOpter.addUserInfo(_info)
                 .then(ret => {
