@@ -280,7 +280,7 @@ router
             if (!_util.verifyParams(postData, ["to", "m_date"])) {
                 ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
             }
-            let ret = await courier.sendAsyncCall("censor", "asyncNotice", () => {}, postData.dateStr, postData.to, opter);
+            let ret = await courier.sendAsyncCall("censor", "asyncNotice", () => {}, postData.m_date, postData.to, opter);
             if (ret.status === "success") {
                 ctx.body = { status: RESULT.SUCCESS, msg: ret.msg };
             } else {
