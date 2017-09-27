@@ -6,6 +6,7 @@
                 <br/>
                 <br/>
                 <button class="btn btn-success" @click="fetchMate">获取素材列表</button>
+                <button class="btn btn-primary" @click="noticeRet">发送审核结果</button>
             </form>
             <ul class="list-group">
                 <li v-for="(item, pos) in curArray" class="list-group-item" v-bind:key="'dsp_' + pos">
@@ -48,7 +49,6 @@
                 </li>
                 <pageNav :indexInfo="indexInfo" v-on:setCurPage="setCurPage"/>
             </ul>
-            <button class="btn btn-primary" @click="noticeRet">发送审核结果</button>
         </div>
         <div class="data-list" v-else>
             <p>您没有该功能的使用权限，请点击<a @click="gotoLogin">此处</a>重新登录，</p>
