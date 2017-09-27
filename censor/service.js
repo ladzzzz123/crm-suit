@@ -115,7 +115,7 @@ let export_func = {
             let sql_query_count = " SELECT m_status, COUNT(*) AS count FROM material WHERE m_date = ? GROUP BY m_status ";
             sql_query_count = mysql.format(sql_query_count, [dateStr]);
 
-            let sql_opt = "SELECT tu, dsp, ldp, material, pv, opter FROM material WHERE m_date = ? AND (m_status = 'REJECT' OR m_status = 'TBD') ";
+            let sql_opt = "SELECT tu, dsp, ldp, material, pv, opter, m_status, reason FROM material WHERE m_date = ? AND (m_status = 'REJECT' OR m_status = 'TBD') ";
             sql_opt = mysql.format(sql_opt, [dateStr]);
             let fileName = `censor_${dateStr}.csv`;
             let tempCountContent = "";
@@ -154,11 +154,28 @@ let export_func = {
                 })
                 .then(query_ret => {
                     logger.info("before write file");
-                    let query_content = "广告位,dsp,落地页,素材链接,pv,操作者\n";
+                    let query_content = "广告位,dsp,落地页,素材链接,pv,操作者,状态,原因\n";
                     let ret_array = query_ret.ret;
                     if (Array.isArray(ret_array)) {
                         ret_array.forEach(item => {
-                            query_content += `${item.tu},${item.dsp},${item.ldp},${item.material},${item.pv},${item.opter}\n`;
+                            let statusStr = "";
+                            switch (item.m_status) {
+                                case "NEW":
+                                    statusStr = "未审核";
+                                    break;
+                                case "PASS":
+                                    statusStr = "已通过";
+                                    break;
+                                case "REJECT":
+                                    statusStr = "未通过";
+                                    break;
+                                case "TBD":
+                                    statusStr = "再议";
+                                    break;
+                                default:
+                                    break;
+                            }
+                            query_content += `${item.tu},${item.dsp},${item.ldp},${item.material},${item.pv},${item.opter},${statusStr},${item.reason || "未填写"}\n`;
                         });
                     }
                     fs.writeFile(`${CONFIG.savePath}/${fileName}`, query_content, "utf8", writeRet => {
@@ -169,9 +186,10 @@ let export_func = {
                     logger.info("before send mail");
                     courier.sendAsyncCall("mail", "asyncSendMail", () => {}, to,
                         `${dateStr}素材审核结果`,
-                        `审核情况：${tempCountContent} \n
+                        `审核情况：\n
+                         ${tempCountContent} \n
                          发送者：${opter} \n
-                         拒绝及再议列表详见${CONFIG.visitePath}/${fileName}`,
+                         拒绝及再议列表详见:${CONFIG.visitPath}/${fileName}`,
                         ""
                     );
                     resolve({ status: "success", msg: "邮件已经发送！" });
