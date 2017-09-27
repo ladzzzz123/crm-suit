@@ -189,7 +189,8 @@ let export_func = {
                         `审核情况：\n
                          ${tempCountContent} \n
                          发送者：${opter} \n
-                         拒绝及再议列表详见:${CONFIG.visitPath}/${fileName}`,
+                         拒绝及再议列表详见: \n
+                         <a href="${CONFIG.visitPath}/${fileName}"</a>`,
                         ""
                     );
                     resolve({ status: "success", msg: "邮件已经发送！" });
