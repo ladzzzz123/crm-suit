@@ -175,7 +175,7 @@ let export_func = {
                                 default:
                                     break;
                             }
-                            query_content += `${item.tu},${item.dsp},'${item.ldp}','${item.material}',${item.pv},${item.opter},${statusStr},${item.reason || "未填写"}\n`;
+                            query_content += `${item.tu},${item.dsp},${item.ldp.replace(/\n/gi, "")},${item.material.replace(/\n/gi, "")},${item.pv},${item.opter},${statusStr},${item.reason || "未填写"}\n`;
                         });
                     }
                     fs.writeFile(`${CONFIG.savePath}${fileName}`, query_content, "utf8", writeRet => {
@@ -190,7 +190,7 @@ let export_func = {
                          ${tempCountContent} \n
                          发送者：${opter} \n
                          拒绝及再议列表详见: \n
-                         <a href="${CONFIG.visitPath}/${fileName}"</a>`,
+                         ${CONFIG.visitPath}/${fileName}`,
                         ""
                     );
                     resolve({ status: "success", msg: "邮件已经发送！" });
