@@ -304,6 +304,7 @@ router
             return;
         }
         verify = await courier.sendAsyncCall("account", "asyncVerify", () => {}, postData.token, "account", "admin");
+        logger.info("[router] verify: %s", JSON.stringify(verify));
         if (verify.pass) {
             _ret = { status: RESULT.FAILED, msg: "add failed" };
             let insert_ret = await courier.sendAsyncCall("account", "asyncAddUser", ret => {

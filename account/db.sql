@@ -4,10 +4,9 @@ CREATE TABLE account (
     passwd      VARCHAR(255) NOT NULL COMMENT "用户密码", 
     role_pos    VARCHAR(128) NOT NULL COMMENT "用户角色，一个用户可以有多个角色，详见role_map表", 
     mail        VARCHAR(128) UNIQUE NOT NULL COMMENT "用户邮箱", 
-    nick_name        VARCHAR(128) COMMENT "昵称", 
-    sex        VARCHAR(2) COMMENT "性别", 
-    phone        VARCHAR(16) COMMENT "联系电话", 
-    mail        VARCHAR(128) UNIQUE NOT NULL COMMENT "用户邮箱", 
+    nick_name   VARCHAR(128) COMMENT "昵称", 
+    sex         VARCHAR(2) COMMENT "性别", 
+    phone       VARCHAR(16) COMMENT "联系电话", 
     u_status    VARCHAR(32) NOT NULL DEFAULT "NEW" COMMENT "用户状态，包括[NEW, ACTIVE, BAN]", 
     KEY(u_name, role_pos, u_status)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT "用户信息表";
