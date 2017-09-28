@@ -6,7 +6,7 @@
                 <br/>
                 <br/>
                 <button class="btn btn-success" @click="fetchMate">获取素材列表</button>
-                <button class="btn btn-primary" @click="noticeRet">发送审核结果</button>
+                <button class="btn btn-primary" @click="reportRet">发送审核结果</button>
             </form>
             <br/>
             <br/>
@@ -31,7 +31,7 @@
                                     </div>
                                     <div class="col-md-3">
                                         当前状态：
-                                        <p> 
+                                        <p>
                                             <span class="label label-info" v-if="material.m_status === 'NEW' ">待审核</span>
                                             <span class="label label-success" v-else-if="material.m_status === 'PASS' ">已通过</span>
                                             <span class="label label-danger" v-else-if="material.m_status === 'REJECT' ">已拒绝，原因：{{ material.reason || "未填写" }}</span>
@@ -174,10 +174,10 @@ export default {
                     });
             }
         },
-        noticeRet: function() {
+        reportRet: function() {
             if (this.m_date) {
                 func.showDialog("input", "请填写收件人，多个收件人用半角逗号分隔", inputText => {
-                    requester.send("/crm-inner/censor/notice", 
+                    requester.send("/crm-inner/censor/report", 
                         {
                             token: this.token, 
                             m_date: this.m_date.replace(/(\/|\-)/gi, ""),

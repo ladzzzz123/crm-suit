@@ -6,6 +6,11 @@ export default {
         console.log("localStorageKey:%s,  state.userInfo:%s", localStorageKey, JSON.stringify(state.userInfo));
         window.localStorage.setItem(localStorageKey, JSON.stringify(state));
     },
+
+    updateBadge: (state, payload) => {
+        Object.assign(state.badgeInfo, payload.badgeInfo);
+    },
+
     displayTips: (state, payload) => {
         state.tipsInfo = payload.tipsInfo;
     },

@@ -25,6 +25,7 @@ export const DEFAULT_STORE = {
         showFlag: false,
         confirmCB: ""
     },
+    badgeInfo: {},
     logged: false
 };
 

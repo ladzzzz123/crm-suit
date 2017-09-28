@@ -4,6 +4,10 @@ export default {
         commit({ type: "updateUserInfo", userInfo: payload.userInfo });
     },
 
+    asyncUpdateBadge: function({ commit, state }, payload) {
+        commit({ type: "updateBadge", badgeInfo: payload.badgeInfo });
+    },
+
     asyncShowTips: function({ commit, state }, payload) {
         commit({ type: "displayTips", tipsInfo: payload.tipsInfo });
     },

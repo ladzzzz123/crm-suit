@@ -1,5 +1,5 @@
 <template>
-  <div class="container" v-if="logged">
+    <div class="container" v-if="logged">
         <ul class="list-group">
             <li v-for="item in list" class="list-group-item" :id="'msg_' + item._id" v-bind:key="'msg_' + item._id">
                 <div class="row">
@@ -130,10 +130,20 @@ export default {
                     let arr = result.content.ret;
                     if (Array.isArray(arr)) {
                         this.list = arr;
+                        let newCount = 0;
+                        this.list.forEach(item => {
+                            newCount += (item.m_status === "NEW" ? 1 : 0);
+                        });
+                        this.$store.dispatch({
+                            type: "asyncUpdateBadge",
+                            badgeInfo: {
+                                "/plan": newCount
+                            }
+                        });
+                        
                     }
                 }, (status, msg) => {
                     if (status === RESULT_CODE.LOGIN_EXPIRE) {
-                        this.$store.dispatch("asyncQuit");
                         this.gotoLogin();
                     }
                 });

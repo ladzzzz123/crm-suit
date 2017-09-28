@@ -4,6 +4,7 @@
             v-show="!info.hide" :class="info.path === curRouter ? 'active' : '' ">
             <router-link v-bind:to="info.path" class="left-pad-item">
                 {{ info.content }}
+                <span v-if="badgeInfo[info.path] > 0" class="badge">{{ badgeInfo[info.path] }}</span>
             </router-link>
         </li>
     </ul>
@@ -17,11 +18,25 @@ export default {
             curRouter: ""
         }
     },
+    computed: {
+        userInfo() {
+            return this.$store.state.userInfo;
+        },
+        logged() {
+            return this.$store.state.logged;
+        },
+        token() {
+            return this.$store.state.userInfo.token;
+        },
+        badgeInfo() {
+            return this.$store.state.badgeInfo;
+        }
+    },
     methods: {
         setCurrentRouter: function(curRouter) {
             this.curRouter = curRouter;
+            // this.badgeInfo[curRouter] = 0;
         }
-
     }
 }
 </script>

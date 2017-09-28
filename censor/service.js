@@ -110,7 +110,7 @@ let export_func = {
         });
     },
 
-    asyncNotice: (dateStr, to, opter) => {
+    asyncReport: (dateStr, to, opter) => {
         return new Promise((resolve, reject) => {
             let sql_query_count = " SELECT m_status, COUNT(*) AS count FROM material WHERE m_date = ? GROUP BY m_status ";
             sql_query_count = mysql.format(sql_query_count, [dateStr]);
@@ -196,7 +196,7 @@ let export_func = {
                     resolve({ status: "success", msg: "邮件已经发送！" });
                 })
                 .catch(err => {
-                    logger.warn("[censor] notice err:" + JSON.stringify(err));
+                    logger.warn("[censor] report err:" + JSON.stringify(err));
                     reject(err);
                 });
         });
