@@ -154,6 +154,7 @@ router
         }
         if (verify.pass) {
             let postData = ctx.request.body;
+            logger.info("[router] notice-add:%s", JSON.stringify(postData));
             if (!_util.verifyParams(postData, "mail")) {
                 ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
                 return;

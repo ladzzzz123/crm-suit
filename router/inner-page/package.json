@@ -17,6 +17,7 @@
         "css-loader": "latest",
         "extract-text-webpack-plugin": "latest",
         "file-loader": "latest",
+        "iview": "^2.4.0",
         "koa-body": "^2.3.0",
         "log4js": "^2.3.0",
         "style-loader": "latest",
