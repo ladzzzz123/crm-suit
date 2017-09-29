@@ -228,7 +228,7 @@ function asyncMail(mailArr) {
         if (ret) {
             redisClient.hgetall(MAIL_NOTICE_KEY)
                 .then(arr => {
-                    logger.info("[asyncMail] mail.arr:%s", arr);
+                    logger.info("[asyncMail] mail.arr:%s", JSON.stringify(arr));
                     let mails = "";
                     if (Array.isArray(arr)) {
                         arr.forEach(mail => {
