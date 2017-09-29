@@ -25,7 +25,7 @@ export default {
             this.$store.dispatch("asyncQuit");
             setTimeout(() => {
                 this.$router.push("/login");
-            }, 2 * 1000);
+            }, 500);
         }
     },
 }

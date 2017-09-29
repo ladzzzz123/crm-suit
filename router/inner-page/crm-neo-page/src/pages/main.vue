@@ -35,7 +35,7 @@
         <idialog />
         <Row type="flex">
             <Col :span="spanLeft" class="layout-menu-left panel-left">
-                <crouter v-if="logged" :routerInfos="routerInfos" />
+                <crouter v-if="logged" />
             </Col>
             <Col :span="spanRight" class="panel-right">
                <router-view></router-view>
@@ -62,11 +62,13 @@ export default {
         logged() {
             return this.$store.state.logged;
         },
-        routerInfos() {
-            return this.$store.state.routerInfos;
-        },
         iconSize () {
             return this.spanLeft === 5 ? 14 : 24;
+        }
+    },
+    mounted: function(){
+        if(!this.logged) {
+            this.$router.push("/login");
         }
     },
     components: {

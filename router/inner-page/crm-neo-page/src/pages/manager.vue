@@ -113,7 +113,7 @@
                             <Col span="16">
                                 <Form ref="passwdInfo" :model="passwdInfo" :rules="rulePasswd" :label-width="80">
                                     <FormItem label="原密码" prop="old_passwd">
-                                        <Input type="password" v-model="passwdInfo.passwd"></Input>
+                                        <Input type="password" v-model="passwdInfo.old_passwd"></Input>
                                     </FormItem>
                                     <FormItem label="新密码" prop="passwd">
                                         <Input type="password" v-model="passwdInfo.passwd"></Input>
@@ -132,39 +132,6 @@
                 </Panel>
             </Collapse>
         </Col>
-
-                <!-- <div class="page-header">
-                    <h1>修改密码</h1>
-                </div>
-                <form class="passwd-form" onsubmit="return false">
-                    <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon1">原密码</span>
-                        <input type="password" class="form-control" 
-                        v-model="passwdInfo.old_passwd" aria-describedby="basic-addon1"
-                        required  v-if="passwdChanged" >
-                        <input type="password" class="form-control" 
-                        v-model="passwdInfo.old_passwd" aria-describedby="basic-addon1"
-                        required readonly v-else>
-                            <span class="input-group-btn">
-                                <button class="btn btn-default"
-                                    type="button" @click="unlockPasswd">修改</button>
-                            </span>
-                        </input> 
-                    </div>
-                    <br/>
-                    <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon1">新密码</span>
-                        <input type="password" class="form-control" 
-                        v-model="passwdInfo.passwd" aria-describedby="basic-addon1"
-                        required v-if="passwdChanged"/>
-                        <input type="password" class="form-control" 
-                        v-model="passwdInfo.passwd" aria-describedby="basic-addon1"
-                        required readonly v-else/>
-                    </div>
-                    <br/>
-                    <button v-if="passwdChanged" class="btn btn-info" type="submit" @click="submitPasswd">提交</button>
-                    <button v-else class="btn btn-disable" type="">提交</button>
-                </form> -->
     </Row>
     <Row type="flex" justify="center" v-else>
         您尚未登录，请点击<a @click="gotoLogin">此处</a>登录
@@ -176,16 +143,56 @@ import requester from "../utils/request";
 import func from "../main";
 import encode from "../utils/encode";
 
+
 export default {
     // props: ["userInfo"],
-    data: () => {
+    data: function() {
+        const validateOldPass = (rule, value, callback) => {
+            console.log("value:%s", value);
+            if (!value) {
+                callback(new Error("请输入密码"));
+            } else {
+                callback();
+            }
+        };
+        const validatePass = (rule, value, callback) => {
+            console.log("value:%s", value);
+            if (!value) {
+                callback(new Error("请输入密码"));
+            } else {
+                if (this.passwdInfo.passwdCheck && this.passwdInfo.passwdCheck !== "") {
+                    this.$refs.passwdInfo.validateField("passwdCheck");
+                }
+                callback();
+            }
+        };
+        const validatePassCheck = (rule, value, callback) => {
+            if (!value) {
+                callback(new Error("请再次输入密码"));
+            } else if (value !== this.passwdInfo.passwd) {
+                callback(new Error("两次输入密码不一致!"));
+            } else {
+                callback();
+            }
+        };
         return {
             defaultPanel: "userInfo",
             infoChanged: false,
             ruleUserInfo: {
-                u_name: { required: true, message: "姓名不能为空", trigger: "blur" },
+                nick_name: { required: false, message: "姓名不能为空", trigger: "blur" },
                 mail: { required: true, message: "邮箱不能为空", trigger: "blur" },
-                phone: { required: true, message: "联系电话不能为空", trigger: "blur" },
+                phone: { required: false, message: "联系电话不能为空", trigger: "blur" },
+            },
+            rulePasswd: {
+                old_passwd: [
+                    { validator: validateOldPass, trigger: "blur" }
+                ],
+                passwd: [
+                    { validator: validatePass, trigger: "blur" }
+                ],
+                passwdCheck: [
+                    { validator: validatePassCheck, trigger: "blur" }
+                ],
             },
             passwdInfo: {},
             passwdChanged: false

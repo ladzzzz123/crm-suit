@@ -15,10 +15,10 @@ const app = new Vue({
     router: new VueRoter({ routes: routerInfos }),
     store,
     mounted: function() {
-        this.$store.dispatch({
-            type: "asyncUpdateRouterInfo",
-            routerInfos: routerInfos
-        });
+        // this.$store.dispatch({
+        //     type: "asyncUpdateRouterInfo",
+        //     routerInfos: routerInfos
+        // });
     },
     render: h => h(mainPage)
 });

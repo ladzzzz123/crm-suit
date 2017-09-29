@@ -76,7 +76,8 @@ router
                 phone: info.phone || "",
                 mail: info.mail || "",
                 u_status: info.u_status || "",
-                token: info.token
+                token: info.token,
+                roleInfo: info.roleInfo || []
             };
         } else {
             ctx.body = { status: RESULT.LOGIN_FAILED, msg: "login failed" };
@@ -107,7 +108,7 @@ router
         }
 
         verify = await courier.sendAsyncCall("account", "asyncVerify", () => {},
-            postData.token, "account", "admin");
+            postData.token, "account", "opter");
         if (verify.pass) {
             let opter = verify.info.u_name;
             postData.info.old_passwd = postData.info.old_passwd;

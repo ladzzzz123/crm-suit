@@ -16,21 +16,6 @@
             </FormItem>
         </Form>
     </Row>
-
-
-    <!-- <form class="login-from" onsubmit="return false">
-        <div class="input-group">
-            <input type="text" class="form-control" placeholder="用户名(邮箱)" 
-                name="u_name" v-model="formData.u_name" required>
-        </div>
-        <br/>
-        <div class="input-group">
-            <input type="password" class="form-control" placeholder="密码" 
-                name="passwd" v-model="formData.passwd" required>
-        </div>
-        <br/>
-        <button class="btn btn-success" type="submit" @click="login">登录</button>
-    </form> -->
 </template>
 
 <script>
@@ -74,21 +59,27 @@ export default {
                                 type: "asyncUpdateUserInfo",
                                 userInfo: userInfo
                             });
+                            let neoRouterInfos = [];
+                            let remoteRole = [];
                             if (userInfo.roleInfo) {
-                                let roles = userInfo.roleInfo;
-                                if(Array.is(roles)) {
-                                    let neoRouterInfos = [];
-                                    roles.forEach(info => {
-                                        neoRouterInfos.push(routerInfos.find(item => {
-                                            item.path.indexOf(info.module) > -1;
-                                        }));
-                                    });
+                                let remoteRole = userInfo.roleInfo;
+                                if(!Array.is(remoteRole)) {
+                                    remoteRole = [];
                                 }
-                                this.$store.dispatch({
+                            }
+                            routerInfos.forEach(item => {
+                                let exist = remoteRole.find(info => {
+                                    return item.path.indexOf(info.module) > -1;
+                                });
+                                if (exist || item.based) {
+                                    neoRouterInfos.push(item);
+                                }
+                            });
+                            
+                            this.$store.dispatch({
                                     type: "asyncUpdateRouterInfo",
                                     routerInfos: neoRouterInfos
                                 });
-                            }
                             this.$router.push("/manager");
                         });
                     } else {
