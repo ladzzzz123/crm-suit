@@ -51,7 +51,7 @@ async function verifyToken(ctx, module_name, role) {
 router
     .get("/crm-inner", async(ctx, next) => {
         logger.info("[router] path: /");
-        ctx.redirect("/crm-inner/static/crm-page-dist/crm-page.html");
+        ctx.redirect("/crm-inner/static/crm-neo-page-dist/crm-neo-page.html");
     })
     .post("/crm-inner/account/login", async(ctx, next) => {
         logger.info("[router] path: /account/login");
