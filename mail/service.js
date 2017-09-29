@@ -230,11 +230,9 @@ function asyncMail(mailArr) {
                 .then(arr => {
                     logger.info("[asyncMail] mail.arr:%s", JSON.stringify(arr));
                     let mails = "";
-                    if (Array.isArray(arr)) {
-                        arr.forEach(mail => {
-                            mails += `,${mail}`;
-                        });
-                    }
+                    Object.keys(arr).forEach(mail => {
+                        mails += `,${mail}`;
+                    });
                     logger.info("[asyncMail] mail.to:%s", mails);
                     export_func.asyncSendMail(mails, "有新的策划任务，请注意查收！", "FYI");
                 })
