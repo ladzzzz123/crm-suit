@@ -158,13 +158,17 @@ router
                 ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
                 return;
             }
-            await courier.sendAsyncCall("mail", "asyncAddToNoticeArray", ret => {
-                _ret = { status: RESULT.SUCCESS, msg: "add success" };
-            }, postData.mail);
+            try {
+                await courier.sendAsyncCall("mail", "asyncAddToNoticeArray", ret => {
+                    ctx.body = { status: RESULT.SUCCESS, msg: "add success" };
+                }, postData.mail);
+            } catch (e) {
+                ctx.body = { status: RESULT.REQ_ERROR, msg: "Internal Error" };
+            }
+
         } else {
-            _ret = _util.verifyTokenResult(verify);
+            ctx.body = _util.verifyTokenResult(verify);
         }
-        ctx.body = _ret;
     })
     .post("/crm-inner/plan-order/notice-remove", async(ctx, next) => {
         let verify = await verifyToken(ctx, "plan-order", "opter");
@@ -177,13 +181,17 @@ router
                 ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
                 return;
             }
-            await courier.sendAsyncCall("mail", "asyncRemoveFromNoticeArray", ret => {
-                _ret = { status: RESULT.SUCCESS, msg: "add success" };
-            }, postData.mail);
+            try {
+                await courier.sendAsyncCall("mail", "asyncRemoveFromNoticeArray", ret => {
+                    ctx.body = { status: RESULT.SUCCESS, msg: "add success" };
+                }, postData.mail);
+            } catch (e) {
+                ctx.body = { status: RESULT.REQ_ERROR, msg: "Internal Error" };
+            }
+
         } else {
-            _ret = _util.verifyTokenResult(verify);
+            ctx.body = _util.verifyTokenResult(verify);
         }
-        ctx.body = _ret;
     })
     .post("/crm-inner/plan-order/accept", async(ctx, next) => {
         let _ret = "",
