@@ -152,7 +152,6 @@ router
         if (!verify) {
             return;
         } else if (verify.pass) {
-            logger.info("[router] notice-add after verify:%s", JSON.stringify(postData));
             try {
                 await courier.sendAsyncCall("mail", "asyncAddToNoticeArray", ret => {
                     ctx.body = { status: RESULT.SUCCESS, msg: "add success" };
