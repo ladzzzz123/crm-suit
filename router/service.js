@@ -151,8 +151,7 @@ router
         let verify = await verifyToken(ctx, "plan-order", "opter");
         if (!verify) {
             return;
-        }
-        if (verify.pass) {
+        } else if (verify.pass) {
             let postData = ctx.request.body;
             logger.info("[router] notice-add:%s", JSON.stringify(postData));
             if (!_util.verifyParams(postData, "mail")) {
@@ -175,8 +174,7 @@ router
         let verify = await verifyToken(ctx, "plan-order", "opter");
         if (!verify) {
             return;
-        }
-        if (verify.pass) {
+        } else if (verify.pass) {
             let postData = ctx.request.body;
             if (!_util.verifyParams(postData, "mail")) {
                 ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
