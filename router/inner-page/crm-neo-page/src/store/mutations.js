@@ -22,7 +22,7 @@ export default {
         state.dialogInfo = payload.dialogInfo;
     },
     quit: (state) => {
-        state.userInfo = DEFAULT_STORE;
+        Object.assign(state, DEFAULT_STORE);
         window.localStorage.clear();
     }
 };

@@ -35,29 +35,13 @@
         <idialog />
         <Row type="flex">
             <Col :span="spanLeft" class="layout-menu-left panel-left">
-                <crouter :routerInfos="routerInfos" />
+                <crouter v-if="logged" :routerInfos="routerInfos" />
             </Col>
             <Col :span="spanRight" class="panel-right">
                <router-view></router-view>
             </Col>
         </Row>
     </div>
-
-
-<!-- <div class="index">
-        <idialog />
-        <cheader :logged="logged" />
-        <div class="container">
-            <tips />
-            <div class="panel-left">
-                <crouter :routerInfos="routerInfos"/>
-            </div>
-            <div class="panel-right">
-                <router-view></router-view>
-            </div>
-        </div>
-    </div> -->
-
 
 </template>
 

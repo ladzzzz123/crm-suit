@@ -56,9 +56,30 @@ module.exports = {
                         logger.info("[Db] updateToken success ret_info: %s", JSON.stringify(ret_info));
                         redisClient.expire(ret_info.token);
                         redisClient.hset(USER_TOKEN_MAP, ret_info.u_name, ret_info.token);
-                        resolve(ret_info);
+                        return Promise.resolve(ret_info);
                     } else {
                         reject();
+                    }
+                })
+                .then(ret_info => {
+                    let SQL_QUERY_ROLE = " SELECT role_pos, module, role_name FROM role_map WHERE CONV(role_pos, 2, 10) & CONV(?, 2, 10) = CONV(role_pos, 2, 10) ";
+                    if (db_self.isConnected) {
+                        db_self.query(SQL_QUERY_ROLE, [ret_info.role_pos], (err, ret) => {
+                            if (err) {
+                                logger.warn("[account] SQL_QUERY_ROLE error: %s", JSON.stringify(err));
+                                connect();
+                                reject(err);
+                            } else if (ret && ret.length > 0) {
+                                logger.debug("[account] SQL_QUERY_ROLE ret: %s", JSON.stringify(ret));
+                                ret_info.roleInfo = ret;
+                                resolve(ret_info);
+                            } else {
+                                logger.debug("[account] SQL_QUERY_ROLE null");
+                                resolve(ret_info);
+                            }
+                        });
+                    } else {
+                        reject(ret_info);
                     }
                 })
                 .catch(err => {

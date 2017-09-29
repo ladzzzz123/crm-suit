@@ -5,7 +5,7 @@ export default {
     },
 
     asyncUpdateRouterInfo: function({ commit, state }, payload) {
-        console.log("userInfo:" + JSON.stringify(payload.routerInfos));
+        console.log("routerInfos:" + JSON.stringify(payload.routerInfos));
         commit({ type: "updateRouterInfo", routerInfos: payload.routerInfos });
     },
 
