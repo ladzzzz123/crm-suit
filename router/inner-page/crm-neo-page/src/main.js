@@ -70,7 +70,60 @@ function showTips(tipsType, msg, sustained) {
     }
 }
 
-function showDialog(type, content, confirmCB) {
+function showDialog(type, content, confirmCB, placeholder) {
+    switch (type) {
+        case "info":
+            app.$Modal.info({
+                title: content,
+                content: content
+            });
+            break;
+        case "confirm":
+            app.$Modal.confirm({
+                title: content,
+                content: content,
+                onOk: () => {
+                    confirmCB();
+                },
+                onCancel: () => {
+                    hideDialog();
+                }
+            });
+            break;
+        case "input":
+            let inputText = "";
+            app.$Modal.confirm({
+                render: (h) => {
+                    return h("div", {}, [
+                        h("h4", content),
+                        h("br", ""),
+                        h("textarea", {
+                            attrs: {
+                                rows: "8",
+                                cols: "50",
+                                value: "",
+                                autofocus: true,
+                                placeholder: placeholder || "请填写内容"
+                            },
+                            on: {
+                                input: (val) => {
+                                    inputText = val.target.value;
+                                }
+                            }
+                        })
+                    ]);
+                },
+                onOk: () => {
+                    confirmCB(inputText);
+                },
+                onCancel: () => {
+                    hideDialog();
+                }
+            });
+            break;
+        default:
+            break;
+    }
     app.$store.dispatch({
         type: "asyncShowDialog",
         dialogInfo: {

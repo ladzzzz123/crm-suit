@@ -7,9 +7,12 @@ const MAIL_MODULE = require("./mail_module");
 
 const mysql = require("mysql");
 
+const RedisClient = require("../utils/RedisClient");
+const MAIL_NOTICE_KEY = "MAIL_NOTICE_KEY";
 
 let imapManager = {},
-    smtpManager = {};
+    smtpManager = {},
+    redisClient = {};
 
 function promiseConnect(manager) {
     return new Promise((resolve, reject) => {
@@ -119,6 +122,30 @@ let export_func = {
 
     },
 
+    asyncAddToNoticeArray: (mail) => {
+        return new Promise((resolve, reject) => {
+            redisClient.hset(MAIL_NOTICE_KEY, mail, mail)
+                .then(ret => {
+                    resolve("success");
+                })
+                .catch(err => {
+                    reject(err);
+                });
+        });
+    },
+
+    asyncRemoveFromNoticeArray: (mail) => {
+        return new Promise((resolve, reject) => {
+            redisClient.hdel(MAIL_NOTICE_KEY, mail)
+                .then(ret => {
+                    resolve("success");
+                })
+                .catch(err => {
+                    reject(err);
+                });
+        });
+    }
+
 };
 
 let courier = new Courier(export_func);
@@ -199,6 +226,17 @@ async function insertOpt(mailArr, callback) {
 function asyncMail(mailArr) {
     insertOpt(mailArr, ret => {
         if (ret) {
+            redisClient.hgetall(MAIL_NOTICE_KEY)
+                .then(arr => {
+                    let mails = "";
+                    arr.forEach(mail => {
+                        mails += `,${mail}`;
+                    });
+                    asyncSendMail(mails, "有新的策划任务，请注意查收！", "FYI");
+                })
+                .catch(err => {
+
+                });
             return Promise.resolve(ret);
         } else {
             return Promise.resolve("nothing to insert");
@@ -213,5 +251,6 @@ function init() {
     logger.info("[mail] init:" + JSON.stringify(mailConfig.imap));
     export_func.imapConnect(mailConfig.imap);
     export_func.smtpConnect(mailConfig.smtp);
+    redisClient = new RedisClient(mailConfig.redis_config);
 }
 init();

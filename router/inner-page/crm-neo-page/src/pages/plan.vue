@@ -1,100 +1,98 @@
 <template>
-    <div class="container" v-if="logged">
-        <ul class="list-group">
-            <li v-for="item in list" class="list-group-item" :id="'msg_' + item._id" v-bind:key="'msg_' + item._id">
-                <div class="row">
-                    <div class="col-md-6">
-                        <h4 class="list-group-item-heading" :title="item.title">{{ item.title }}</h4>
-                        <p class="list-group-item-text">发起人: {{ item.m_from }}</p>
-                        <p class="list-group-item-text" :title="item.m_cc">抄送: {{ item.m_cc }}</p>
-                        <p class="list-group-item-text">发送日期: {{ new Date(item.m_date).toLocaleString() }}</p>
-                        <p class="list-group-item-text">谁在处理: <span class="label label-success">{{ item.m_opter }}</span> </p>
-                        <p class="list-group-item-text">最后编辑日期: {{ new Date(item.last_edit).toLocaleString() }}</p>
-                        
-                        <br/>
-                        <br/>
-                        
-                        <button type="button" v-if="item.m_status === 'NEW'" class="btn btn-success" @click="acceptPlan(item._id)">接受</button>
-                        <button type="button" class="btn btn-disable" v-else>已接受</button>
-                        
+    <Row v-if="logged" type="flex" justify="center">
+        <p class="list-group-item-text">
+            <Dropdown style="margin-left: 20px">
+                <Button type="primary">
+                    排序方式
+                    <Icon type="arrow-down-b"></Icon>
+                </Button>
+                <DropdownMenu slot="list">
+                    <DropdownItem @click.native="sortArray('time')">按时间正序</DropdownItem>
+                    <DropdownItem @click.native="sortArray('r_time')">按时间倒序</DropdownItem>
+                    <!-- <DropdownItem @click.native="sortArray('status')">按状态正序</DropdownItem>
+                    <DropdownItem @click.native="sortArray('r_status')">按状态倒序</DropdownItem>
+                    <DropdownItem disabled>随机</DropdownItem> -->
+                </DropdownMenu>
+            </Dropdown>
+        </p>
+        <i-switch v-model="switchNotice" @on-change="switchNoticeStatus" size="large">
+            <span slot="open">开启邮件通知</span>
+            <span slot="close">关闭邮件通知</span>
+        </i-switch>
+        <Card style="width:96%;height:99%;margin-bottom:0.1rem;" v-for="item in planList" :id="'msg_' + item._id" v-bind:key="'msg_' + item._id">
+            <p slot="title" :title="item.title">{{ item.title }}</p>
+            <Row>
+                <Col span="10">
+                    <p class="list-group-item-text">发起人: {{ item.m_from }}</p>
+                    <p class="list-group-item-text" :title="item.m_cc">抄送: {{ item.m_cc }}</p>
+                    <p class="list-group-item-text">发送日期: {{ new Date(item.m_date).toLocaleString() }}</p>
+                    <p class="list-group-item-text">谁在处理: <span class="label label-success">{{ item.m_opter }}</span> </p>
+                    <p class="list-group-item-text">最后编辑日期: {{ new Date(item.last_edit).toLocaleString() }}</p>
+                    
+                    <br/>
+                    <br/>
+
+                    <p class="list-group-item-text">
+                        <Button type="success" v-if="item.m_status === 'NEW'" @click="acceptPlan(item._id)">接受</Button>
+                        <Button disabled v-else>{{ item.m_opter === userInfo.u_name ? "已接受" : "已被他人接受" }} </Button>
                         <template v-if="item.m_opter === userInfo.u_name">
                             <template v-if="item.m_status === 'ACCEPT' ">
-                                <button type="button" class="btn btn-primary" @click="finishPlan(item._id)">我完成啦</button>
+                                <Button type="primary" @click="finishPlan(item._id)">我完成啦</Button>
                                 <Upload
-                                        multiple
-                                        action="http://121.52.235.231:40718/crm-inner/plan-order/upload"
-                                        type="drag">
-                                        <div style="padding: 20px 0">
-                                            <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
-                                            <p>点击或将文件拖拽到这里上传</p>
-                                        </div>
+                                    multiple
+                                    :on-error="onUploadError"
+                                    :on-success="handleUploadSuccess"
+                                    :data="{ token: token, plan_id: item._id}"
+                                    :action="UPLOAD_URL"
+                                    type="drag">
+                                    <div style="padding: 20px 0">
+                                        <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
+                                        <p>点击或将文件拖拽到这里上传</p>
+                                    </div>
                                 </Upload>
-                                <!-- <form :id="'upload_' + item._id" enctype="multipart/form-data" onsubmit="return false">
-                                    <input class="hidden" type="text" name="plan_id" :value="item._id" />
-                                    <input class="hidden" type="text" name="token" :value="token" />
-                                    <input class="btn btn-error" type="file" name="file" multiple required />
-                                </form> -->
                             </template>
-                            <button type="button" v-else-if="item.m_status === 'RESOLVE'" class="btn btn-disable">该任务已经完成</button>
+                            <Button disabled v-else-if="item.m_status === 'RESOLVE' ">该任务已经完成</Button>
                         </template>
+                    </p>
 
-                        <br/>
-                        <br/>
-                    </div>
-                    <div class="col-md-5 btn-group-vertical">
-                        <p class="list-group-item-text">邮件正文:
-                            <button type="button" class="btn btn-info btn-xs" @click="showHtml(item._id)">获取</button>
-                            <br/>
-                            <iframe class="embed-responsive-item">
-                            </iframe>
-                        </p>
-                        <template v-if="item.m_attachments">
-                            <a v-for="(attach, index) in item.m_attachments.split(',')" 
-                                class="list-group-item-text" :href="attach" target="_blank" v-bind:key="index">
-                                附件{{ index + 1}}
-                            </a>
-                        </template>
-                    </div>
-                    
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-warning" role="progressbar" 
-                            v-if="item.m_status === 'NEW'"
-                            aria-valuenow="20" aria-valuemin="0" 
-                            aria-valuemax="100"
-                            style="width: 20%;">
-                            等待处理
-                        </div>
-
-                        <div class="progress-bar progress-bar-info" role="progressbar" 
-                            v-else-if="item.m_status === 'ACCEPT'"
-                            aria-valuenow="50" aria-valuemin="0" 
-                            aria-valuemax="100"
-                            style="width: 50%;">
-                            正在处理
-                        </div>                        
-
-                        <div class="progress-bar progress-bar-success" role="progressbar" 
-                            v-else-if="item.m_status === 'RESOLVE'"
-                            aria-valuenow="100" aria-valuemin="0" 
-                            aria-valuemax="100"
-                            style="width: 100%;">
-                            完成！
-                        </div>
-
-                        <div class="progress-bar" role="progressbar" 
-                            v-else
-                            aria-valuenow="0" aria-valuemin="0" 
-                            aria-valuemax="100"
-                            style="width: 0%;">
-                            未知
-                        </div>
-                    </div>
-
-                </div>
-            </li>
-        </ul>
-        <button class="btn btn-info queryPlan" @click="query">查询当前任务</button>
-    </div>
+                    <br/>
+                    <br/>
+                </Col>
+                <Col span="14">
+                    <Collapse v-model="mailContent['content_' + item._id]" @click.native="showHtml(item._id)">
+                        <Panel :name="'content_' + item._id">
+                            邮件正文
+                            <p slot="content">
+                                <iframe :id="'mail_' + item._id" class="embed-responsive-item">
+                                </iframe>
+                            </p>
+                        </Panel>
+                        <Panel :name="'attach_' + item._id" v-if="item.m_attachments">
+                            附件
+                            <p class="list-group-item-text" slot="content" >
+                                <a v-for="(attach, index) in item.m_attachments.split(',')" 
+                                    class="list-group-item-text" :href="attach" target="_blank" v-bind:key="index">
+                                    附件{{ index + 1}}
+                                </a>
+                            </p>
+                        </Panel>
+                    </Collapse>
+                    <br/>
+                </Col>
+            </Row>
+            <Row>
+                <Steps :current="item.m_status === 'NEW' ? 0 :  
+                    item.m_status === 'ACCEPT' ? 1 : 
+                    item.m_status === 'RESOLVE' ? 2 : 
+                    0">
+                    <Step title="等待处理" content="等待策划接受任务"></Step>
+                    <Step title="正在处理" content="策划正在处理中"></Step>
+                    <Step title="完成！" content="完成啦"></Step>
+                </Steps>
+            </Row>
+        </Card>
+        <Button type="info" icon="ios-search" @click="query">查询当前任务</Button>
+    </Row>
     <div class="container" v-else>
         您尚未登录，请点击<a @click="gotoLogin">此处</a>登录
     </div>
@@ -108,7 +106,13 @@ import func from "../main";
 export default {
     // props: ["userInfo"],
     data: () => {
-        return { list: [] };
+        return { 
+            planList: [],
+            uploadData:{},
+            UPLOAD_URL: requester.UPLOAD_URL,
+            mailContent: {},
+            switchNotice: false
+        };
     },
     computed: {
         userInfo() {
@@ -137,9 +141,9 @@ export default {
                 result => {
                     let arr = result.content.ret;
                     if (Array.isArray(arr)) {
-                        this.list = arr;
+                        this.planList = arr;
                         let newCount = 0;
-                        this.list.forEach(item => {
+                        this.planList.forEach(item => {
                             newCount += (item.m_status === "NEW" ? 1 : 0);
                         });
                         this.$store.dispatch({
@@ -148,7 +152,6 @@ export default {
                                 "/plan": newCount
                             }
                         });
-                        
                     }
                 }, (status, msg) => {
                     if (status === RESULT_CODE.LOGIN_EXPIRE) {
@@ -158,15 +161,17 @@ export default {
         },
 
         showHtml: function(id) {
-            let el_li = document.querySelector(`#msg_${id}`);
-            let mailMsg = this.list.find(item => item._id === id);
-            el_li.querySelector("iframe").contentDocument.open();
-            el_li.querySelector("iframe").contentDocument.write(mailMsg.m_content);
-            el_li.querySelector("iframe").contentDocument.close();
+            let el_li = document.querySelector(`#mail_${id}`);
+            let mailMsg = this.planList.find(item => item._id === id);
+            if (el_li) {
+                el_li.contentDocument.open();
+                el_li.contentDocument.write(mailMsg.m_content);
+                el_li.contentDocument.close();
+            }
         },
 
         acceptPlan: function(plan_id) {
-            let mailMsg = this.list.find(item => item._id === plan_id);
+            let mailMsg = this.planList.find(item => item._id === plan_id);
             mailMsg.m_status = "ACCEPT";
 
             requester.send("/crm-inner/plan-order/accept", {
@@ -178,27 +183,97 @@ export default {
             });
         },
         finishPlan: function(plan_id) {
-            let mailMsg = this.list.find(item => item._id === plan_id);
-            mailMsg.m_status = "RESOLVE";
-
-            requester.send("/crm-inner/plan-order/finish", {
-                plan_id: plan_id,
-                token: this.token
-            }, content => {
-                func.showTips("alert-success", "已完成任务！");
-                this.query();
+            func.showDialog("confirm", "确认已经完成？", () => {
+            let mailMsg = this.planList.find(item => item._id === plan_id);
+                mailMsg.m_status = "RESOLVE";
+                requester.send("/crm-inner/plan-order/finish", {
+                    plan_id: plan_id,
+                    token: this.token
+                }, content => {
+                    func.showTips("alert-success", "已完成任务！");
+                    this.query();
+                });
             });
         },
-        uploadReply: function(plan_id) {
-            // let el_upload = document.querySelector(`#upload_${plan_id}`);
-            // if (!el_upload.checkValidity()) {
-            //     func.showTips("alert-danger", "上传文件不能为空！");
-            //     return false;
-            // }
-            // requester.upload("/crm-inner/plan-order/upload", el_upload, content => {
-            //     func.showTips("alert-success", "上传成功");
-            // });
-            return;
+
+        sortArray: function(type) {
+            console.log(type);
+            switch(type) {
+                case "time":
+                    this.planList.sort((a,b) => {
+                        if( a._id > b._id) {
+                            return 1;
+                        } else if (a._id < b._id){
+                            return -1;
+                        } else {
+                            return 0;
+                        }
+                    });
+                    break;
+                case "r_time":
+                    this.planList.sort((a,b) => {
+                        return parseInt(b._id) - parseInt(a._id);
+                    });
+                    break;
+                case "status":
+                    this.planList.sort((a) => {
+                        if (a.m_status === 'NEW') {
+                            return 1;
+                        } else {
+                            return -1;
+                        }
+                    });
+                    break;
+                case "r_status":
+                    this.planList.sort((a) => {
+                        if (a.m_status !== 'NEW') {
+                            return 1;
+                        } else {
+                            return -1;
+                        }
+                    });
+                    break;
+                default:
+                    break;                                        
+            }
+        },
+
+        switchNoticeStatus: function(status) {
+            if (status) {
+                requester.send("/crm-inner/plan-order/notice-add", { token: this.token, mail: this.userInfo.mail },
+                    result => {
+                        this.switchNotice = true;
+                    }, (status, msg) => {
+                        this.switchNotice = !this.switchNotice;
+                        if (status === RESULT_CODE.LOGIN_EXPIRE) {
+                            this.gotoLogin();
+                        }
+                    });
+            } else {
+                requester.send("/crm-inner/plan-order/notice-remove", { token: this.token, mail: this.userInfo.mail },
+                    result => {
+                        this.switchNotice = false;
+                    }, (status, msg) => {
+                            this.switchNotice = !this.switchNotice;
+                        if (status === RESULT_CODE.LOGIN_EXPIRE) {
+                            this.gotoLogin();
+                        }
+                    });
+            }
+        },
+
+
+        onUploadError(error, file, fileList) {
+            console.log(JSON.stringify(error));
+        },
+        handleUploadSuccess(res, file, fileList) {
+            console.log(JSON.stringify(res));
+            console.log(JSON.stringify(file));
+            if(res.status === 2000) {
+                func.showTips("alert-success", "文件上传成功！！");
+            } else {
+                func.showTips("alert-danger", "文件上传失败！！");
+            }
         }
     }
 
@@ -207,11 +282,15 @@ export default {
 
 <style>
     .list-group-item-text {
+        text-align: left;
         width:90%;
         overflow:hidden;
         white-space:nowrap;
         text-overflow:ellipsis;
         -o-text-overflow:ellipsis;
+    }
+    iframe {
+        border: none;
     }
 </style>
 

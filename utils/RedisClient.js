@@ -82,6 +82,19 @@ class RedisClient {
         });
     }
 
+    hdel(key, field) {
+        return new Promise((resolve, reject) => {
+            this.client.hdel(key, field, (err, ret) => {
+                logger.info("[RedisClient] del key:%s, err: %s,  ret: %s", key, err || "", ret || "");
+                if (err) {
+                    reject({ msg: "del error" });
+                } else {
+                    resolve(ret || "");
+                }
+            });
+        });
+    }
+
     expire(key, duration) {
         return new Promise((resolve, reject) => {
             let _duration = 0;

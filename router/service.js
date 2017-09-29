@@ -147,6 +147,44 @@ router
         }
         ctx.body = _ret;
     })
+    .post("/crm-inner/plan-order/notice-add", async(ctx, next) => {
+        let verify = await verifyToken(ctx, "plan-order", "opter");
+        if (!verify) {
+            return;
+        }
+        if (verify.pass) {
+            let postData = ctx.request.body;
+            if (!_util.verifyParams(postData, "mail")) {
+                ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
+                return;
+            }
+            await courier.sendAsyncCall("mail", "asyncAddToNoticeArray", ret => {
+                _ret = { status: RESULT.SUCCESS, msg: "add success" };
+            }, postData.mail);
+        } else {
+            _ret = _util.verifyTokenResult(verify);
+        }
+        ctx.body = _ret;
+    })
+    .post("/crm-inner/plan-order/notice-remove", async(ctx, next) => {
+        let verify = await verifyToken(ctx, "plan-order", "opter");
+        if (!verify) {
+            return;
+        }
+        if (verify.pass) {
+            let postData = ctx.request.body;
+            if (!_util.verifyParams(postData, "mail")) {
+                ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
+                return;
+            }
+            await courier.sendAsyncCall("mail", "asyncRemoveFromNoticeArray", ret => {
+                _ret = { status: RESULT.SUCCESS, msg: "add success" };
+            }, postData.mail);
+        } else {
+            _ret = _util.verifyTokenResult(verify);
+        }
+        ctx.body = _ret;
+    })
     .post("/crm-inner/plan-order/accept", async(ctx, next) => {
         let _ret = "",
             verify = {};

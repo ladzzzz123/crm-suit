@@ -143,8 +143,6 @@ let export_func = {
         });
 
     }
-
-
 };
 
 let courier = new Courier(export_func);

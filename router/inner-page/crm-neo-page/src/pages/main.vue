@@ -31,8 +31,8 @@
 
     <div class="layout container">
         <cheader :logged="logged" />
-        <tips />
-        <idialog />
+        <!-- <tips /> -->
+        <!-- <idialog /> -->
         <Row type="flex">
             <Col :span="spanLeft" class="layout-menu-left panel-left">
                 <crouter v-if="logged" />
@@ -47,8 +47,8 @@
 
 <script>
 import cheader from "../components/cheader.vue";
-import tips from "../components/tips.vue";
-import idialog from "../components/idialog.vue";
+// import tips from "../components/tips.vue";
+// import idialog from "../components/idialog.vue";
 import crouter from "../components/crouter.vue";
 
 export default {
@@ -72,8 +72,8 @@ export default {
         }
     },
     components: {
-        tips,
-        idialog,
+        // tips,
+        // idialog,
         crouter,
         cheader
     }
