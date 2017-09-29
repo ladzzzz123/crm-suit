@@ -232,7 +232,8 @@ function asyncMail(mailArr) {
                     arr.forEach(mail => {
                         mails += `,${mail}`;
                     });
-                    asyncSendMail(mails, "有新的策划任务，请注意查收！", "FYI");
+                    logger.info("[asyncMail] mail.to:%s", mails);
+                    export_func.asyncSendMail(mails, "有新的策划任务，请注意查收！", "FYI");
                 })
                 .catch(err => {
 
