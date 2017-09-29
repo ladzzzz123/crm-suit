@@ -228,10 +228,13 @@ function asyncMail(mailArr) {
         if (ret) {
             redisClient.hgetall(MAIL_NOTICE_KEY)
                 .then(arr => {
+                    logger.info("[asyncMail] mail.arr:%s", arr);
                     let mails = "";
-                    arr.forEach(mail => {
-                        mails += `,${mail}`;
-                    });
+                    if (Array.isArray(arr)) {
+                        arr.forEach(mail => {
+                            mails += `,${mail}`;
+                        });
+                    }
                     logger.info("[asyncMail] mail.to:%s", mails);
                     export_func.asyncSendMail(mails, "有新的策划任务，请注意查收！", "FYI");
                 })
