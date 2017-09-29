@@ -94,6 +94,7 @@ let export_func = {
 
     asyncUploadFile: (file, plan_id, opter) => {
         return new Promise((resolve, reject) => {
+            logger.info("[upload] file.path:%s", file.path);
             let reader = fs.createReadStream(file.path);
             let stream = fs.createWriteStream(CONFIG.savePath + file.name);
             reader.pipe(stream);

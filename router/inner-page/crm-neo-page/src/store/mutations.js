@@ -7,8 +7,9 @@ export default {
         window.localStorage.setItem(localStorageKey, JSON.stringify(state));
     },
     updateRouterInfo: (state, payload) => {
-        state.routerInfos = payload.routerInfos;
-        console.log("localStorageKey:%s,  state.routerInfos:%s", localStorageKey, JSON.stringify(state.routerInfos));
+        state.routerInfos.length = 0;
+        Object.assign(state.routerInfos, payload.routerInfos);
+        console.log("localStorageKey:%s, state.routerInfos:%s", localStorageKey, JSON.stringify(state.routerInfos));
         window.localStorage.setItem(localStorageKey, JSON.stringify(state));
     },
     updateBadge: (state, payload) => {

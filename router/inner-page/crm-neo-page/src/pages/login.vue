@@ -1,3 +1,6 @@
+<style>
+</style>
+
 <template>
     <Row type="flex" justify="center">
         <Form ref="formData" :model="formData" :rules="ruleData" span="6">
@@ -62,8 +65,8 @@ export default {
                             let neoRouterInfos = [];
                             let remoteRole = [];
                             if (userInfo.roleInfo) {
-                                let remoteRole = userInfo.roleInfo;
-                                if(!Array.is(remoteRole)) {
+                                remoteRole = userInfo.roleInfo;
+                                if(!Array.isArray(remoteRole)) {
                                     remoteRole = [];
                                 }
                             }
@@ -92,8 +95,4 @@ export default {
 
 };
 </script>
-
-<style>
-
-</style>
 

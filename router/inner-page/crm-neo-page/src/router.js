@@ -7,7 +7,7 @@ export default [
     // { path: "/", component: cmptLogin, content: "根" },
     { path: "/login", component: cmptLogin, content: "登录", hide: true, based: true },
     { path: "/manager", component: cmptManager, content: "个人信息", based: true },
-    { path: "/plan", component: cmptPlan, content: "策划任务" },
+    { path: "/plan-order", component: cmptPlan, content: "策划任务" },
     { path: "/dist-analy", component: cmptDistAnaly, content: "用户分布分析", based: true },
     { path: "/censor", component: cmptCensor, content: "素材审核" },
 ];

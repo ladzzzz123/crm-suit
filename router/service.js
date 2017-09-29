@@ -191,7 +191,9 @@ router
             verify = {};
 
         let postData = ctx.request.body;
+        logger.info("[router] upload postData.keys(): %s", Object.keys(postData));
         if (!_util.verifyParams(postData.fields, ["token", "plan_id"])) {
+            logger.info("[router] upload: missing params");
             ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
             return;
         }

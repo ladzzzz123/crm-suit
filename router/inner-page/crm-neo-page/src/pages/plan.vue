@@ -18,14 +18,22 @@
                         <button type="button" class="btn btn-disable" v-else>已接受</button>
                         
                         <template v-if="item.m_opter === userInfo.u_name">
-                            <template v-if="item.m_status === 'ACCEPT'">
+                            <template v-if="item.m_status === 'ACCEPT' ">
                                 <button type="button" class="btn btn-primary" @click="finishPlan(item._id)">我完成啦</button>
-                                <form :id="'upload_' + item._id" enctype="multipart/form-data" onsubmit="return false">
+                                <Upload
+                                        multiple
+                                        action="http://121.52.235.231:40718/crm-inner/plan-order/upload"
+                                        type="drag">
+                                        <div style="padding: 20px 0">
+                                            <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
+                                            <p>点击或将文件拖拽到这里上传</p>
+                                        </div>
+                                </Upload>
+                                <!-- <form :id="'upload_' + item._id" enctype="multipart/form-data" onsubmit="return false">
                                     <input class="hidden" type="text" name="plan_id" :value="item._id" />
                                     <input class="hidden" type="text" name="token" :value="token" />
                                     <input class="btn btn-error" type="file" name="file" multiple required />
-                                    <input class="btn btn-warning" type="submit" value="上传" @click="uploadReply(item._id)"/>
-                                </form>
+                                </form> -->
                             </template>
                             <button type="button" v-else-if="item.m_status === 'RESOLVE'" class="btn btn-disable">该任务已经完成</button>
                         </template>
@@ -182,14 +190,15 @@ export default {
             });
         },
         uploadReply: function(plan_id) {
-            let el_upload = document.querySelector(`#upload_${plan_id}`);
-            if (!el_upload.checkValidity()) {
-                func.showTips("alert-danger", "上传文件不能为空！");
-                return;
-            }
-            requester.upload("/crm-inner/plan-order/upload", el_upload, content => {
-                func.showTips("alert-success", "上传成功");
-            });
+            // let el_upload = document.querySelector(`#upload_${plan_id}`);
+            // if (!el_upload.checkValidity()) {
+            //     func.showTips("alert-danger", "上传文件不能为空！");
+            //     return false;
+            // }
+            // requester.upload("/crm-inner/plan-order/upload", el_upload, content => {
+            //     func.showTips("alert-success", "上传成功");
+            // });
+            return;
         }
     }
 
