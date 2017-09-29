@@ -152,16 +152,11 @@ router
         if (!verify) {
             return;
         } else if (verify.pass) {
-            let postData = ctx.request.body;
-            logger.info("[router] notice-add:%s", JSON.stringify(postData));
-            if (!_util.verifyParams(postData, "mail")) {
-                ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
-                return;
-            }
+            logger.info("[router] notice-add after verify:%s", JSON.stringify(postData));
             try {
                 await courier.sendAsyncCall("mail", "asyncAddToNoticeArray", ret => {
                     ctx.body = { status: RESULT.SUCCESS, msg: "add success" };
-                }, postData.mail);
+                }, verify.info.mail);
             } catch (e) {
                 ctx.body = { status: RESULT.REQ_ERROR, msg: "Internal Error" };
             }
@@ -175,15 +170,10 @@ router
         if (!verify) {
             return;
         } else if (verify.pass) {
-            let postData = ctx.request.body;
-            if (!_util.verifyParams(postData, "mail")) {
-                ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
-                return;
-            }
             try {
                 await courier.sendAsyncCall("mail", "asyncRemoveFromNoticeArray", ret => {
                     ctx.body = { status: RESULT.SUCCESS, msg: "add success" };
-                }, postData.mail);
+                }, verify.info.mail);
             } catch (e) {
                 ctx.body = { status: RESULT.REQ_ERROR, msg: "Internal Error" };
             }
