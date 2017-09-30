@@ -1,13 +1,11 @@
 <template>
     <div class="container" v-if="logged">
         <div class="data-list" v-if="verified">
-            <form onsubmit="return false">
-                <input type="date" class="censor-date" v-model="m_date" required/>
+                <DatePicker type="date" placeholder="选择日期和时间" v-model="m_date" confirm style="width: 200px"></DatePicker>
                 <br/>
                 <br/>
-                <button class="btn btn-success" @click="fetchMate">获取素材列表</button>
-                <button class="btn btn-primary" @click="reportRet">发送审核结果</button>
-            </form>
+                <Button type="success" @click="fetchMate">获取素材列表</Button>
+                <Button type="primary" @click="reportRet">发送审核结果</Button>
             <br/>
             <br/>
             <ul class="list-group">
@@ -158,7 +156,7 @@ export default {
                 requester.send("/crm-inner/censor/fetch", 
                     { 
                         token: this.token, 
-                        m_date: this.m_date.replace(/(\/|\-)/gi, "")
+                        m_date: this.m_date.toLocaleDateString()
                     },
                     result => {
                         if (result.status === RESULT_CODE.SUCCESS) {
