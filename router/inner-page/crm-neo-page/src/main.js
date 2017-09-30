@@ -29,41 +29,42 @@ function goToLogin() {
     window.location.reload();
 }
 
-function showTips(tipsType, msg, sustained) {
+function showTips(tipsType, title, orgDesc, sustained) {
     let duration = sustained ? 0 : 5;
+    let desc = orgDesc || title;
     switch (tipsType) {
         case "alert-success":
             app.$Notice.success({
-                title: msg,
-                desc: msg,
+                title: title,
+                desc: desc,
                 duration: duration
             });
             break;
         case "alert-info":
             app.$Notice.info({
-                title: msg,
-                desc: msg,
+                title: title,
+                desc: desc,
                 duration: duration
             });
             break;
         case "alert-warning":
             app.$Notice.warning({
-                title: msg,
-                desc: msg,
+                title: title,
+                desc: desc,
                 duration: duration
             });
             break;
         case "alert-danger":
             app.$Notice.error({
-                title: msg,
-                desc: msg,
+                title: title,
+                desc: desc,
                 duration: duration
             });
             break;
         default:
             app.$Notice.info({
-                title: msg,
-                desc: msg,
+                title: title,
+                desc: desc,
                 duration: duration
             });
             break;

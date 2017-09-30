@@ -22,6 +22,12 @@ export default {
     displayDialog: (state, payload) => {
         state.dialogInfo = payload.dialogInfo;
     },
+
+    noticeFlag: (state, payload) => {
+        state.noticeFlag = payload.noticeFlag;
+        window.localStorage.setItem(localStorageKey, JSON.stringify(state));
+    },
+
     quit: (state) => {
         Object.assign(state, DEFAULT_STORE);
         window.localStorage.clear();

@@ -1,24 +1,33 @@
 <template>
     <Row v-if="logged" type="flex" justify="center">
-        <p class="list-group-item-text">
-            <Dropdown style="margin-left: 20px">
-                <Button type="primary">
-                    排序方式
-                    <Icon type="arrow-down-b"></Icon>
-                </Button>
-                <DropdownMenu slot="list">
-                    <DropdownItem @click.native="sortArray('time')">按时间正序</DropdownItem>
-                    <DropdownItem @click.native="sortArray('r_time')">按时间倒序</DropdownItem>
-                    <!-- <DropdownItem @click.native="sortArray('status')">按状态正序</DropdownItem>
-                    <DropdownItem @click.native="sortArray('r_status')">按状态倒序</DropdownItem>
-                    <DropdownItem disabled>随机</DropdownItem> -->
-                </DropdownMenu>
-            </Dropdown>
-        </p>
-        <i-switch v-model="switchNotice" @on-change="switchNoticeStatus" size="large">
-            <span slot="open">开启邮件通知</span>
-            <span slot="close">关闭邮件通知</span>
-        </i-switch>
+        <Row type="flex" justify="start" align="middle" style="width:100%">
+            <Col span="4">
+                <Dropdown style="margin-left: 20px">
+                    <Button type="primary">
+                        排序方式
+                        <Icon type="arrow-down-b"></Icon>
+                    </Button>
+                    <DropdownMenu slot="list">
+                        <DropdownItem @click.native="sortArray('time')">按时间正序</DropdownItem>
+                        <DropdownItem @click.native="sortArray('r_time')">按时间倒序</DropdownItem>
+                        <!-- <DropdownItem @click.native="sortArray('status')">按状态正序</DropdownItem>
+                        <DropdownItem @click.native="sortArray('r_status')">按状态倒序</DropdownItem>
+                        <DropdownItem disabled>随机</DropdownItem> -->
+                    </DropdownMenu>
+                </Dropdown>
+            </Col>
+            <Col span="4" offset="16">
+                <Tooltip content="开启邮件通知" placement="bottom">
+                    <i-switch v-model="noticeFlag" @on-change="noticeFlagStatus" size="large">
+                        <span slot="open">开启</span>
+                        <span slot="close">关闭</span>
+                    </i-switch>
+                </Tooltip>
+                
+            </Col>
+        </Row>
+        <br/>
+        <br/>
         <Card style="width:96%;height:99%;margin-bottom:0.1rem;" v-for="item in planList" :id="'msg_' + item._id" v-bind:key="'msg_' + item._id">
             <p slot="title" :title="item.title">{{ item.title }}</p>
             <Row>
@@ -111,7 +120,6 @@ export default {
             uploadData:{},
             UPLOAD_URL: requester.UPLOAD_URL,
             mailContent: {},
-            switchNotice: false
         };
     },
     computed: {
@@ -124,6 +132,9 @@ export default {
         logged() {
             return this.$store.state.logged;
         },
+        noticeFlag() {
+            return this.$store.state.noticeFlag;
+        }
     },
 
     mounted: function() {
@@ -238,13 +249,16 @@ export default {
             }
         },
 
-        switchNoticeStatus: function(status) {
+        noticeFlagStatus: function(status) {
             if (status) {
                 requester.send("/crm-inner/plan-order/notice-add", { token: this.token, mail: this.userInfo.mail },
                     result => {
-                        this.switchNotice = true;
+                        func.showTips("alert-success", "已开启邮件通知！", "您将在有新任务时收到邮件通知！");
+                        this.$store.dispatch({
+                            type: "noticeFlag",
+                            noticeFlag: true
+                        });
                     }, (status, msg) => {
-                        this.switchNotice = !this.switchNotice;
                         if (status === RESULT_CODE.LOGIN_EXPIRE) {
                             this.gotoLogin();
                         }
@@ -252,9 +266,12 @@ export default {
             } else {
                 requester.send("/crm-inner/plan-order/notice-remove", { token: this.token, mail: this.userInfo.mail },
                     result => {
-                        this.switchNotice = false;
+                        func.showTips("alert-success", "已关闭邮件通知！","您不会再收到任何邮件通知！");
+                        this.$store.dispatch({
+                            type: "noticeFlag",
+                            noticeFlag: false
+                        });
                     }, (status, msg) => {
-                            this.switchNotice = !this.switchNotice;
                         if (status === RESULT_CODE.LOGIN_EXPIRE) {
                             this.gotoLogin();
                         }

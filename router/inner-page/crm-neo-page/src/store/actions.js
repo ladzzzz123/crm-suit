@@ -20,6 +20,11 @@ export default {
         commit({ type: "displayDialog", dialogInfo: payload.dialogInfo });
     },
 
+
+    noticeFlag: function({ commit, state }, payload) {
+        commit({ type: "noticeFlag", noticeFlag: payload.noticeFlag });
+    },
+
     asyncQuit: function({ commit, state }) {
         commit("quit");
     }

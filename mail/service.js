@@ -4,6 +4,7 @@ const ImapManager = require("./ImapManager");
 const nodemailer = require("nodemailer");
 const SMTPConnection = require("nodemailer/lib/smtp-connection");
 const MAIL_MODULE = require("./mail_module");
+const MSG = require("../config/msg");
 
 const mysql = require("mysql");
 
@@ -234,7 +235,7 @@ function asyncMail(mailArr) {
                         mails += `,${mail}`;
                     });
                     logger.info("[asyncMail] mail.to:%s", mails);
-                    export_func.asyncSendMail(mails, "有新的策划任务，请注意查收！", "FYI");
+                    export_func.asyncSendMail(mails, "有新的策划任务，请注意查收！", `点击此处登录：\n${MSG["add-user-mail"]["address"]} 查看 `);
                 })
                 .catch(err => {
 
