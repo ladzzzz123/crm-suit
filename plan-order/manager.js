@@ -1,7 +1,7 @@
 module.exports = {
     deletePlan: (courier, plan_id, opter) => {
-        let conditions = `_id = ${plan_id} AND m_opter = "${opter}" `;
-        courier.sendAsyncCall("dbopter", "asyncDelete", () => {}, "market_db", "mail_info", conditions)
+        let conditions = `_id = ${plan_id}`;
+        courier.sendAsyncCall("dbopter", "asyncArchived", () => {}, "market_db", "mail_info", conditions)
             .then(ret => {
                 if (ret.status === "success") {
                     resolve({ status: "success", msg: "删除任务成功" });

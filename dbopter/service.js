@@ -83,6 +83,31 @@ let export_func = {
             });
     },
 
+    asyncArchived: (target, table, conditions) => {
+        let SQL_ARCHIVED = `INSERT INTO ${table}_archived 
+            SELECT * FROM ${table} WHERE ${conditions}`;
+        let SQL_DELETE = `DELETE FROM ${table} WHERE ${conditions}`;
+        logger.info(`[dbopter] asyncArchived called: ${target}, ${table}, ${conditions}`);
+        return execOpt(target, SQL_ARCHIVED)
+            .then(ret => {
+                if (ret.status === "success" && ret.ret.affectedRows && ret.ret.affectedRows > 0) {
+                    return execOpt(target, SQL_DELETE);
+                } else {
+                    return Promise.resolve({ status: "failed", ret: ret });
+                }
+            })
+            .then(ret => {
+                if (ret.status === "success" && ret.ret.affectedRows && ret.ret.affectedRows > 0) {
+                    Promise.resolve({ status: "success", ret: ret });
+                } else {
+                    return Promise.resolve({ status: "failed", ret: ret });
+                }
+            })
+            .catch(err => {
+                return Promise.reject({ status: "error", ret: err });
+            });
+    },
+
     reConnect: () => {
         connect();
     },
