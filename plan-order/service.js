@@ -127,24 +127,22 @@ let export_func = {
     },
 
     asyncManagerPlan: (action, plan_id, opter) => {
-        return new Promise((resolve, reject) => {
-            switch (action) {
-                case "edit":
+        switch (action) {
+            case "edit":
 
-                    break;
-                case "close":
+                break;
+            case "close":
 
-                    break;
-                case "re-active":
+                break;
+            case "re-active":
 
-                    break;
-                case "delete":
-                    return manager.deletePlan(courier, plan_id, opter);
-                    break;
-                default:
-                    break;
-            }
-        });
+                break;
+            case "delete":
+                return manager.deletePlan(courier, plan_id, opter);
+                break;
+            default:
+                break;
+        }
 
     }
 };
