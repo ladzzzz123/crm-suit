@@ -97,7 +97,7 @@ let export_func = {
                 }
             })
             .catch(err => {
-                return Promise.reject({ status: "error", ret: err });
+                return Promise.resolve({ status: "error", ret: err });
             });
     },
 
