@@ -6,6 +6,8 @@ const fs = require("fs");
 const CONFIG = require("./config.json");
 const msg = require("./msg-template");
 
+const manager = require("./manager");
+
 let export_func = {
     name: "plan-order",
     asyncFetchPlan: () => {
@@ -124,7 +126,7 @@ let export_func = {
         });
     },
 
-    asyncManagerPlan: (plan_id, action, params) => {
+    asyncManagerPlan: (action, plan_id, opter) => {
         return new Promise((resolve, reject) => {
             switch (action) {
                 case "edit":
@@ -136,9 +138,11 @@ let export_func = {
                 case "re-active":
 
                     break;
+                case "delete":
+                    return manager.deletePlan(courier, plan_id, opter);
+                    break;
                 default:
                     break;
-
             }
         });
 

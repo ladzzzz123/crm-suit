@@ -181,6 +181,23 @@ router
             ctx.body = _util.verifyTokenResult(verify);
         }
     })
+    .post("/crm-inner/plan-order/manager", async(ctx, next) => {
+        let verify = await verifyToken(ctx, "plan-order", "admin");
+        if (!verify) {
+            return;
+        } else if (verify.pass) {
+            let opter = verify.info.u_name;
+            try {
+                await courier.sendAsyncCall("plan-order", "asyncManagerPlan", ret => {
+                    ctx.body = { status: RESULT.SUCCESS, msg: "add success" };
+                }, postData.plan_id, opter);
+            } catch (e) {
+                ctx.body = { status: RESULT.REQ_ERROR, msg: "Internal Error" };
+            }
+        } else {
+            ctx.body = _util.verifyTokenResult(verify);
+        }
+    })
     .post("/crm-inner/plan-order/accept", async(ctx, next) => {
         let _ret = "",
             verify = {};

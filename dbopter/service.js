@@ -70,6 +70,19 @@ let export_func = {
             });
     },
 
+    asyncDelete: (target, table, conditions) => {
+        let SQL_DELETE = `DELETE FROM ${table} WHERE ${conditions}`;
+        logger.info(`[dbopter] asyncDelete called: ${target}, ${table}, ${conditions}`);
+        return execOpt(target, SQL_DELETE)
+            .then(ret => {
+                if (ret.status === "success" && ret.ret.affectedRows && ret.ret.affectedRows > 0) {
+                    return Promise.resolve({ status: "success", ret: ret });
+                } else {
+                    return Promise.resolve({ status: "failed", ret: ret });
+                }
+            });
+    },
+
     reConnect: () => {
         connect();
     },
