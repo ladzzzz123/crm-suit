@@ -8,6 +8,10 @@ export default {
         console.log("routerInfos:" + JSON.stringify(payload.routerInfos));
         commit({ type: "updateRouterInfo", routerInfos: payload.routerInfos });
     },
+    asyncUpdateRoleInfo: function({ commit, state }, payload) {
+        console.log("roleInfo:" + JSON.stringify(payload.roleInfo));
+        commit({ type: "updateRoleInfo", roleInfo: payload.roleInfo });
+    },
 
     asyncUpdateBadge: function({ commit, state }, payload) {
         commit({ type: "updateBadge", badgeInfo: payload.badgeInfo });

@@ -6,6 +6,12 @@ export default {
         console.log("localStorageKey:%s,  state.userInfo:%s", localStorageKey, JSON.stringify(state.userInfo));
         window.localStorage.setItem(localStorageKey, JSON.stringify(state));
     },
+
+    updateRoleInfo: function(state, payload) {
+        console.log("roleInfo:" + JSON.stringify(payload.roleInfo));
+        Object.assign(state.roleInfo, payload.roleInfo);
+    },
+
     updateRouterInfo: (state, payload) => {
         state.routerInfos.length = 0;
         Object.assign(state.routerInfos, payload.routerInfos);

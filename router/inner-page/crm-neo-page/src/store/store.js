@@ -25,6 +25,7 @@ export const DEFAULT_STORE = {
         showFlag: false,
         confirmCB: ""
     },
+    roleInfo: {},
     badgeInfo: {},
     routerInfos: {},
     logged: false

@@ -12,6 +12,9 @@
         height:99%;
         margin-bottom:0.1rem;
     }
+    .left {
+        text-align: left;
+    }
 </style>
 <template>
     <div class="container" v-if="logged">
@@ -30,41 +33,42 @@
                     未检索到任何信息！
                 </template>
                 <template v-else>
-                    <Card class="card" 
-                    v-for="(item, pos) in curArray" v-bind:key="'dsp_' + pos">
+                    <Card class="card" v-for="(item, pos) in curArray" v-bind:key="'dsp_' + pos">
                         <h4 :title="item[0]">{{ item[0] }}</h4>
-                        <ul class="list-group">
-                            <Card v-for="material in item[1]" class="card" v-bind:key="'material_' + material._id">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div>DSP名称：{{ material.dsp }}</div>
-                                        <div>广告位置：{{ material.tu }}</div>
-                                        <a :href="material.material" target="_blank">
-                                            <img :src="material.material" width="60%" :alt="material.material" />
-                                        </a>
-                                        <br/>
-                                        <a :href="material.ldp" target="_blank">落地页链接</a>
-                                    </div>
-                                    <div class="col-md-3">
-                                        当前状态：
-                                        <p>
-                                            <span class="label label-info" v-if="material.m_status === 'NEW' ">待审核</span>
-                                            <span class="label label-success" v-else-if="material.m_status === 'PASS' ">已通过</span>
-                                            <span class="label label-danger" v-else-if="material.m_status === 'REJECT' ">已拒绝，原因：{{ material.reason || "未填写" }}</span>
-                                            <span class="label label-warning" v-else-if="material.m_status === 'TBD' ">再议，原因：{{ material.reason || "未填写" }}</span>
-                                            <span class="label label-default" v-else>未知状态</span>
-                                        </p>
-                                    </div>
-                                     <div class="col-md-3">
-                                        <ButtonGroup v-if="material.m_status === 'NEW' " class="btn-group" role="group" aria-label="edit">
-                                            <Button type="success" @click="pass('material_' + material._id, material.ldp)">通过</Button>
-                                            <Button type="warning" @click="delay('material_' + material._id, material.ldp)">再议</Button>
-                                            <Button type="error" @click="denied('material_' + material._id, material.ldp)">拒绝</Button>
-                                        </ButtonGroup>
-                                    </div>
-                                </div>
-                            </Card>
-                        </ul>
+                        <Card v-for="material in item[1]" class="card" v-bind:key="'material_' + material._id">
+                            <Row>
+                                <Col span="10" class="left">
+                                    <div>DSP名称：{{ material.dsp }}</div>
+                                    <div>广告位置：{{ material.tu }}</div>
+                                    <a :href="material.material" target="_blank">
+                                        <img :src="material.material" width="60%" :alt="material.material" />
+                                    </a>
+                                    <br/>
+                                    <a :href="material.ldp" target="_blank">落地页链接</a>
+                                </Col>
+                                <Col span="6" class="left">
+                                    当前状态：
+                                    <p>
+                                        <Tag color="blue" v-if="material.m_status === 'NEW' ">待审核</Tag>
+                                        <Tag color="green" v-else-if="material.m_status === 'PASS' ">已通过</Tag>
+                                        <Tag color="red" v-else-if="material.m_status === 'REJECT' " :title="material.reason || '未填写' ">
+                                            已拒绝，原因：{{ material.reason || "未填写" }}
+                                        </Tag>
+                                        <Tag color="yellow" v-else-if="material.m_status === 'TBD' " :title="material.reason || '未填写' ">
+                                            再议，原因：{{ material.reason || "未填写" }}
+                                        </Tag>
+                                        <Tag v-else>未知状态</Tag>
+                                    </p>
+                                </Col>
+                                <Col span="8">
+                                    <ButtonGroup v-if="material.m_status === 'NEW' " class="btn-group" role="group" aria-label="edit">
+                                        <Button type="success" @click="pass('material_' + material._id, material.ldp)">通过</Button>
+                                        <Button type="warning" @click="delay('material_' + material._id, material.ldp)">再议</Button>
+                                        <Button type="error" @click="denied('material_' + material._id, material.ldp)">拒绝</Button>
+                                    </ButtonGroup>
+                                </Col>
+                            </Row>
+                        </Card>
                         <ButtonGroup v-show="item[1].length > 1 && item[1].every(item => item.m_status === 'NEW') " class="btn-group" role="group" aria-label="edit">
                             <Button type="success" @click="passAll('dsp_' + pos)">该组全部通过</button>
                             <Button type="warning" @click="delayAll('dsp_' + pos)">该组全部再议</button>
@@ -79,6 +83,7 @@
             <p>您没有该功能的使用权限，请点击<a @click="gotoLogin">此处</a>重新登录，</p>
             <p>或者联系您的系统管理员</p>
         </div>
+        <BackTop></BackTop>
     </div>
     <div class="container" v-else>
         您尚未登录，请点击<a @click="gotoLogin">此处</a>登录
@@ -364,7 +369,7 @@ export default {
                             }, 3000);
                         }
                     });
-            });
+            }, "请填写拒绝理由");
         },
         delayAll:function(id) {
             console.log("delayAll:" + id);
@@ -396,7 +401,7 @@ export default {
                             }, 3000);
                         }
                     });
-            });
+            }, "请填写理由");
         },
 
     }

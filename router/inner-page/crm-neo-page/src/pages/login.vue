@@ -69,21 +69,30 @@ export default {
                                 if(!Array.isArray(remoteRole)) {
                                     remoteRole = [];
                                 }
+                                this.$store.dispatch({
+                                    type: "asyncUpdateRoleInfo",
+                                    roleInfo: userInfo.roleInfo
+                                });
                             }
                             routerInfos.forEach(item => {
                                 let exist = remoteRole.find(info => {
                                     return item.path.indexOf(info.module) > -1;
                                 });
                                 if (exist || item.based) {
-                                    neoRouterInfos.push(item);
+                                    if (!neoRouterInfos.find(neoItem => {
+                                        return neoItem.path === item.path;
+                                    })) {
+                                        neoRouterInfos.push(item);
+                                    }
                                 }
                             });
+                            
                             
                             this.$store.dispatch({
                                     type: "asyncUpdateRouterInfo",
                                     routerInfos: neoRouterInfos
                                 });
-                            this.$router.push("/manager");
+                            this.$router.push("/enterance");
                         });
                     } else {
                         this.$Message.error("输入信息有误!!");

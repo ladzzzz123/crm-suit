@@ -42,8 +42,9 @@
                     <br/>
 
                     <p class="list-group-item-text">
-                        <Button type="success" v-if="item.m_status === 'NEW'" @click="acceptPlan(item._id)">接受</Button>
+                        <Button v-if="item.m_status === 'NEW'" type="success" @click="acceptPlan(item._id)">接受</Button>
                         <Button disabled v-else>{{ item.m_opter === userInfo.u_name ? "已接受" : "已被他人接受" }} </Button>
+                        <Button v-if="isAdmin && item.m_status !== 'RESOLVE'" type="error" @click="delPlan(item._id)">删除任务</Button>
                         <template v-if="item.m_opter === userInfo.u_name">
                             <template v-if="item.m_status === 'ACCEPT' ">
                                 <Button type="primary" @click="finishPlan(item._id)">我完成啦</Button>
@@ -132,6 +133,17 @@ export default {
         logged() {
             return this.$store.state.logged;
         },
+        isAdmin() {
+            let roleArr = this.$store.state.roleInfo;
+            if (!Array.isArray(roleArr)) {
+                roleArr = Object.values(roleArr);
+            }
+            console.log("roleArr:%s", JSON.stringify(roleArr));
+            let role = roleArr.find(item => {
+                return item.module == "plan-order" && item.role_name === "admin";
+            });
+            return role;
+        },
         noticeFlag() {
             return this.$store.state.noticeFlag;
         }
@@ -190,19 +202,33 @@ export default {
                 token: this.token
             }, content => {
                 func.showTips("alert-success", "接受任务成功！");
-                this.query();
+                // this.query();
             });
         },
         finishPlan: function(plan_id) {
             func.showDialog("confirm", "确认已经完成？", () => {
             let mailMsg = this.planList.find(item => item._id === plan_id);
-                mailMsg.m_status = "RESOLVE";
-                requester.send("/crm-inner/plan-order/finish", {
+            mailMsg.m_status = "RESOLVE";
+            requester.send("/crm-inner/plan-order/finish", {
+                plan_id: plan_id,
+                token: this.token
+            }, content => {
+                func.showTips("alert-success", "已完成任务！");
+                // this.query();
+            });
+        });
+        },
+        delPlan: function(plan_id) {
+            func.showDialog("confirm", "确认删除该任务？", () => {
+                let mailMsg = this.planList.find(item => item._id === plan_id);
+                requester.send("/crm-inner/plan-order/manager", {
+                    action: "delete",
                     plan_id: plan_id,
                     token: this.token
                 }, content => {
-                    func.showTips("alert-success", "已完成任务！");
-                    this.query();
+                    func.showTips("alert-success", "已删除任务！");
+                    this.planList.remove(mailMsg);
+                    // this.query();
                 });
             });
         },

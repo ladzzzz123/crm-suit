@@ -13,7 +13,7 @@
                                         <Input v-model="userInfo.nick_name" :placeholder="userInfo.nick_name || '以前还叫人家小甜甜' "></Input>
                                     </FormItem>
                                     <FormItem label="邮箱" prop="mail">
-                                        <Input v-model="userInfo.mail" :placeholder="请输入邮箱"></Input>
+                                        <Input v-model="userInfo.mail" disabled :placeholder="请输入邮箱"></Input>
                                     </FormItem>
                                     <FormItem label="性别" prop="sex">
                                         <RadioGroup v-model="userInfo.sex">
