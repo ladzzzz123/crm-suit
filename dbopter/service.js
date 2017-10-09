@@ -91,14 +91,14 @@ let export_func = {
         return execOpt(target, SQL_ARCHIVED)
             .then(ret => {
                 if (ret.status === "success" && ret.ret.affectedRows && ret.ret.affectedRows > 0) {
-                    return execOpt(target, SQL_DELETE);
-                } else {
-                    return Promise.resolve({ status: "failed", ret: ret });
-                }
-            })
-            .then(ret => {
-                if (ret.status === "success" && ret.ret.affectedRows && ret.ret.affectedRows > 0) {
-                    Promise.resolve({ status: "success", ret: ret });
+                    return execOpt(target, SQL_DELETE)
+                        .then(ret => {
+                            if (ret.status === "success" && ret.ret.affectedRows && ret.ret.affectedRows > 0) {
+                                return Promise.resolve({ status: "success", ret: ret });
+                            } else {
+                                return Promise.resolve({ status: "failed", ret: ret });
+                            }
+                        });
                 } else {
                     return Promise.resolve({ status: "failed", ret: ret });
                 }
