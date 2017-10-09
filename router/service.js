@@ -186,11 +186,16 @@ router
         if (!verify) {
             return;
         } else if (verify.pass) {
+            let postData = ctx.request.body;
+            if (!_util.verifyParams(postData, ["action", "plan_id"])) {
+                ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
+                return;
+            }
             let opter = verify.info.u_name;
             try {
                 await courier.sendAsyncCall("plan-order", "asyncManagerPlan", ret => {
                     ctx.body = { status: RESULT.SUCCESS, msg: "add success" };
-                }, postData.plan_id, opter);
+                }, postData.action, postData.plan_id, opter);
             } catch (e) {
                 ctx.body = { status: RESULT.REQ_ERROR, msg: "Internal Error" };
             }
