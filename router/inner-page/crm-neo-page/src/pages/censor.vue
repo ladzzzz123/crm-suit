@@ -1,10 +1,27 @@
+<style>
+    h4 {
+        overflow:hidden;
+        text-align: left;
+        text-overflow:ellipsis;
+        -o-text-overflow:ellipsis;
+        white-space:nowrap;
+        width:60%;
+    }
+    .card {
+        width:96%;
+        height:99%;
+        margin-bottom:0.1rem;
+    }
+</style>
 <template>
     <div class="container" v-if="logged">
         <div class="data-list" v-if="verified">
-                <DatePicker type="date" placeholder="选择日期和时间" v-model="m_date" confirm style="width: 200px"></DatePicker>
+                <DatePicker type="date" placeholder="选择日期和时间" v-model="m_date" 
+                @on-ok="fetchMate"
+                confirm style="width: 200px"></DatePicker>
                 <br/>
                 <br/>
-                <Button type="success" @click="fetchMate">获取素材列表</Button>
+                <!-- <Button type="success" @click="fetchMate">获取素材列表</Button> -->
                 <Button type="primary" @click="reportRet">发送审核结果</Button>
             <br/>
             <br/>
@@ -13,10 +30,11 @@
                     未检索到任何信息！
                 </template>
                 <template v-else>
-                    <li v-for="(item, pos) in curArray" class="list-group-item" v-bind:key="'dsp_' + pos">
+                    <Card class="card" 
+                    v-for="(item, pos) in curArray" v-bind:key="'dsp_' + pos">
                         <h4 :title="item[0]">{{ item[0] }}</h4>
                         <ul class="list-group">
-                            <li v-for="material in item[1]" class="list-group-item" v-bind:key="'material_' + material._id">
+                            <Card v-for="material in item[1]" class="card" v-bind:key="'material_' + material._id">
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div>DSP名称：{{ material.dsp }}</div>
@@ -38,21 +56,21 @@
                                         </p>
                                     </div>
                                      <div class="col-md-3">
-                                        <div v-if="material.m_status === 'NEW' " class="btn-group" role="group" aria-label="edit">
-                                            <button class="btn btn-success" @click="pass('material_' + material._id, material.ldp)">通过</button>
-                                            <button class="btn btn-warning" @click="delay('material_' + material._id, material.ldp)">再议</button>
-                                            <button class="btn btn-danger" @click="denied('material_' + material._id, material.ldp)">拒绝</button>
-                                        </div>
+                                        <ButtonGroup v-if="material.m_status === 'NEW' " class="btn-group" role="group" aria-label="edit">
+                                            <Button type="success" @click="pass('material_' + material._id, material.ldp)">通过</Button>
+                                            <Button type="warning" @click="delay('material_' + material._id, material.ldp)">再议</Button>
+                                            <Button type="error" @click="denied('material_' + material._id, material.ldp)">拒绝</Button>
+                                        </ButtonGroup>
                                     </div>
                                 </div>
-                            </li>
+                            </Card>
                         </ul>
-                        <div v-show="item[1].length > 1 && item[1].every(item => item.m_status === 'NEW') " class="btn-group" role="group" aria-label="edit">
-                            <button class="btn btn-primary" @click="passAll('dsp_' + pos)">该组全部通过</button>
-                            <button class="btn btn-warning" @click="delayAll('dsp_' + pos)">该组全部再议</button>
-                            <button class="btn btn-danger" @click="deniedAll('dsp_' + pos)">该组全部拒绝</button>
-                        </div>
-                    </li>
+                        <ButtonGroup v-show="item[1].length > 1 && item[1].every(item => item.m_status === 'NEW') " class="btn-group" role="group" aria-label="edit">
+                            <Button type="success" @click="passAll('dsp_' + pos)">该组全部通过</button>
+                            <Button type="warning" @click="delayAll('dsp_' + pos)">该组全部再议</button>
+                            <Button type="error" @click="deniedAll('dsp_' + pos)">该组全部拒绝</button>
+                        </ButtonGroup>
+                    </Card>
                     <pageNav :indexInfo="indexInfo" v-on:setCurPage="setCurPage"/>
                 </template>    
             </ul>
@@ -174,11 +192,11 @@ export default {
         },
         reportRet: function() {
             if (this.m_date) {
-                func.showDialog("input", "请填写收件人，多个收件人用半角逗号分隔", inputText => {
+                func.showDialog("input", "请填写收件人", inputText => {
                     requester.send("/crm-inner/censor/report", 
                         {
                             token: this.token, 
-                            m_date: this.m_date.replace(/(\/|\-)/gi, ""),
+                            m_date: this.m_date.toLocaleDateString(),
                             to: inputText
                         },
                         result => {
@@ -195,7 +213,7 @@ export default {
                                 }, 3000);
                             }
                         });
-                });
+                }, "请填写收件人，多个收件人用半角逗号分隔");
             } else {
                 func.showTips("alert-danger", "素材日期未选择!");
             }
@@ -256,7 +274,7 @@ export default {
                             }, 3000);
                         }
                     });
-            });
+            }, "请填写拒绝理由");
         },
         delay:function(id, ldp) {
             console.log("delay:" + id);
@@ -287,7 +305,7 @@ export default {
                             }, 3000);
                         }
                     });
-            });
+            }, "请填写理由");
         },
         passAll: function(id) {
             console.log("passAll:" + id);
@@ -384,13 +402,3 @@ export default {
     }
 }
 </script>
-
-<style>
-    h4 {
-        width:60%;
-        overflow:hidden;
-        white-space:nowrap;
-        text-overflow:ellipsis;
-        -o-text-overflow:ellipsis;
-    }
-</style>
