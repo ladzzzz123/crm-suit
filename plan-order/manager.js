@@ -1,3 +1,5 @@
+const logger = require("node-process-bearer").logger.getLogger();
+
 module.exports = {
     deletePlan: (courier, plan_id, opter) => {
         let conditions = `_id = ${plan_id}`;
