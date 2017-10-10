@@ -99,8 +99,8 @@ let export_func = {
         });
     },
 
-    asyncReport: (dateStr, to, opter) => {
-        let dateStr = dateStr.replace(/(\/|\-)/gi, "");
+    asyncReport: (orgDateStr, to, opter) => {
+        let dateStr = orgDateStr.replace(/(\/|\-)/gi, "");
         return new Promise((resolve, reject) => {
             let sql_query_count = " SELECT m_status, COUNT(*) AS count FROM material WHERE m_date = ? GROUP BY m_status ";
             sql_query_count = mysql.format(sql_query_count, [dateStr]);
