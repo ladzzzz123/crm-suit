@@ -49,10 +49,10 @@ let export_func = {
             let sql_opt = "SELECT * FROM ?? WHERE m_date >= ? AND m_date <= ?";
             sql_opt = mysql.format(sql_opt, params);
             let query_ret = {};
+            query_ret["statusStr"] = seekMaterialStatus(dates[0]);
             courier.sendAsyncCall("dbopter", "asyncQuery", () => {}, "market_db", sql_opt)
                 .then(ret => {
-                    query_ret = ret;
-                    query_ret["statusStr"] = seekMaterialStatus(dates[0]);
+                    Object.assign(query_ret, ret);
                     resolve(query_ret);
                 })
                 .catch(err => {
