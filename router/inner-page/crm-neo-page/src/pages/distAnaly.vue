@@ -1,109 +1,107 @@
 <template>
     <div class="container" v-if="logged">
-        <form onsubmit="false">
-            <textarea class="input-data" 
-            rows="10" cols="50" v-model="input_data" placeholder="
-            请在此输入城市用户数据信息,
-            例如:
-                北京 	515064
-                广州 	381292
-                杭州 	319511
-                深圳 	280290
-                上海 	254171
-                成都 	216908
-            "  required></textarea>
-            <br/>
-            <button type="submit" class="btn bnt-success" @click="calc">计算</button>
-            <br/>
-            <br/>
-            <div class="row">
-                <div class="col-lg-5">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">城市数据</div>
-                        <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>城市</th>
-                                <th>数量</th>
-                                <th>占比</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="data in parsedData" v-bind:key="data.city">
-                                <td>{{ data.city }}</td>
-                                <td>{{ data.value }}</td>
-                                <td>{{ data.percent }}</td>
-                            </tr>
-                        </tbody>
-                        </table>
-                    </div>
+        <textarea class="input-data" 
+        rows="10" cols="50" v-model="input_data" placeholder="
+        请在此输入城市用户数据信息,
+        例如:
+            北京 	515064
+            广州 	381292
+            杭州 	319511
+            深圳 	280290
+            上海 	254171
+            成都 	216908
+        "  required></textarea>
+        <br/>
+        <button class="btn bnt-success" @click="calc">计算</button>
+        <br/>
+        <br/>
+        <div class="row">
+            <div class="col-lg-5">
+                <div class="panel panel-default">
+                    <div class="panel-heading">城市数据</div>
+                    <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>城市</th>
+                            <th>数量</th>
+                            <th>占比</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="data in parsedData" v-bind:key="data.city">
+                            <td>{{ data.city }}</td>
+                            <td>{{ data.value }}</td>
+                            <td>{{ data.percent }}</td>
+                        </tr>
+                    </tbody>
+                    </table>
                 </div>
-                <div class="split col-lg-1"></div> 
-                <div class="col-lg-5">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">按城市等级分布</div>
-                        <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>分布</th>
-                                <th>数量</th>
-                                <th>占比</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="data in cityLevelData" v-bind:key="data.level">
-                                <td>
-                                    <abbr :title="data.citys">{{ data.level }}</abbr>
-                                </td>
-                                <td>{{ data.value }}</td>
-                                <td>{{ data.percent }}</td>
-                            </tr>
-                        </tbody>
-                        </table>
-                    </div>
-                    <div class="panel panel-default">
-                        <div class="panel-heading">按地区分布</div>
-                        <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>地区</th>
-                                <th>数量</th>
-                                <th>占比</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="data in distData" v-bind:key="data.dist">
-                                <td>{{ data.dist }}</td>
-                                <td>{{ data.value }}</td>
-                                <td>{{ data.percent }}</td>
-                            </tr>
-                        </tbody>
-                        </table>
-                    </div>
-
-                    <div class="panel panel-default">
-                        <div class="panel-heading">按省份分布</div>
-                        <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>省市</th>
-                                <th>数量</th>
-                                <th>占比</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="data in provData" v-bind:key="data.province">
-                                <td>{{ data.province }}</td>
-                                <td>{{ data.value }}</td>
-                                <td>{{ data.percent }}</td>
-                            </tr>
-                        </tbody>
-                        </table>
-                    </div>
-
+            </div>
+            <div class="split col-lg-1"></div> 
+            <div class="col-lg-5">
+                <div class="panel panel-default">
+                    <div class="panel-heading">按城市等级分布</div>
+                    <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>分布</th>
+                            <th>数量</th>
+                            <th>占比</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="data in cityLevelData" v-bind:key="data.level">
+                            <td>
+                                <abbr :title="data.citys">{{ data.level }}</abbr>
+                            </td>
+                            <td>{{ data.value }}</td>
+                            <td>{{ data.percent }}</td>
+                        </tr>
+                    </tbody>
+                    </table>
                 </div>
-            </div>    
-        </form>
+                <div class="panel panel-default">
+                    <div class="panel-heading">按地区分布</div>
+                    <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>地区</th>
+                            <th>数量</th>
+                            <th>占比</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="data in distData" v-bind:key="data.dist">
+                            <td>{{ data.dist }}</td>
+                            <td>{{ data.value }}</td>
+                            <td>{{ data.percent }}</td>
+                        </tr>
+                    </tbody>
+                    </table>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">按省份分布</div>
+                    <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>省市</th>
+                            <th>数量</th>
+                            <th>占比</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="data in provData" v-bind:key="data.province">
+                            <td>{{ data.province }}</td>
+                            <td>{{ data.value }}</td>
+                            <td>{{ data.percent }}</td>
+                        </tr>
+                    </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>    
     </div>
     <div class="container" v-else>
         您尚未登录，请点击<a @click="gotoLogin">此处</a>登录

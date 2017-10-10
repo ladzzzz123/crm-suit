@@ -101,7 +101,7 @@
                 </Steps>
             </Row>
         </Card>
-        <Button type="info" icon="ios-search" @click="query">查询当前任务</Button>
+        <Button type="info" icon="ios-loop-strong" @click="query">刷新任务列表</Button>
     </Row>
     <div class="container" v-else>
         您尚未登录，请点击<a @click="gotoLogin">此处</a>登录

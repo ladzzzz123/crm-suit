@@ -15,17 +15,23 @@
     .left {
         text-align: left;
     }
+    .top{
+        padding: 10px;
+        background: rgba(0, 153, 229, .7);
+        color: #fff;
+        text-align: center;
+        border-radius: 2px;
+    }
 </style>
 <template>
     <div class="container" v-if="logged">
         <div class="data-list" v-if="verified">
-                <DatePicker type="date" placeholder="选择日期和时间" v-model="m_date" 
-                @on-ok="fetchMate"
-                confirm style="width: 200px"></DatePicker>
-                <br/>
-                <br/>
-                <!-- <Button type="success" @click="fetchMate">获取素材列表</Button> -->
-                <Button type="primary" @click="reportRet">发送审核结果</Button>
+            <DatePicker type="date" placeholder="选择日期和时间" v-model="m_date" 
+            @on-ok="fetchMate"
+            confirm style="width: 200px"></DatePicker>
+            <br/>
+            <br/>
+            <Button type="primary" @click="reportRet">发送审核结果</Button>
             <br/>
             <br/>
             <ul class="list-group">
@@ -33,20 +39,25 @@
                     未检索到任何信息！
                 </template>
                 <template v-else>
+                    <BackTop :height="100" :bottom="200">
+                        <div class="top">返回顶端</div>
+                    </BackTop>
+                    <Affix>
+                        <span>{{ statusStr }}</span>
+                    </Affix>
                     <Card class="card" v-for="(item, pos) in curArray" v-bind:key="'dsp_' + pos">
                         <h4 :title="item[0]">{{ item[0] }}</h4>
-                        <Card v-for="material in item[1]" class="card" v-bind:key="'material_' + material._id">
-                            <Row>
-                                <Col span="10" class="left">
+                        <Row>
+                            <Col span="8" v-for="material in item[1]" v-bind:key="'material_' + material._id">
+                                <Card class="card">
                                     <div>DSP名称：{{ material.dsp }}</div>
                                     <div>广告位置：{{ material.tu }}</div>
                                     <a :href="material.material" target="_blank">
-                                        <img :src="material.material" width="60%" :alt="material.material" />
+                                        <img :src="material.material" width="60%" alt="该图片加载失败" style="min-height:0.2rem;min-width:0.2rem" />
                                     </a>
                                     <br/>
                                     <a :href="material.ldp" target="_blank">落地页链接</a>
-                                </Col>
-                                <Col span="6" class="left">
+                                    <br/>
                                     当前状态：
                                     <p>
                                         <Tag color="blue" v-if="material.m_status === 'NEW' ">待审核</Tag>
@@ -59,16 +70,15 @@
                                         </Tag>
                                         <Tag v-else>未知状态</Tag>
                                     </p>
-                                </Col>
-                                <Col span="8">
                                     <ButtonGroup v-if="material.m_status === 'NEW' " class="btn-group" role="group" aria-label="edit">
                                         <Button type="success" @click="pass('material_' + material._id, material.ldp)">通过</Button>
                                         <Button type="warning" @click="delay('material_' + material._id, material.ldp)">再议</Button>
                                         <Button type="error" @click="denied('material_' + material._id, material.ldp)">拒绝</Button>
                                     </ButtonGroup>
-                                </Col>
-                            </Row>
-                        </Card>
+                                </Card>
+                            </Col>
+                        </Row>
+                        
                         <ButtonGroup v-show="item[1].length > 1 && item[1].every(item => item.m_status === 'NEW') " class="btn-group" role="group" aria-label="edit">
                             <Button type="success" @click="passAll('dsp_' + pos)">该组全部通过</button>
                             <Button type="warning" @click="delayAll('dsp_' + pos)">该组全部再议</button>
@@ -83,7 +93,6 @@
             <p>您没有该功能的使用权限，请点击<a @click="gotoLogin">此处</a>重新登录，</p>
             <p>或者联系您的系统管理员</p>
         </div>
-        <BackTop></BackTop>
     </div>
     <div class="container" v-else>
         您尚未登录，请点击<a @click="gotoLogin">此处</a>登录
@@ -103,6 +112,7 @@ export default {
             verified: false,
             m_date: "",
             list:[],
+            statusStr: "",
             LDP_PER_PAGE: 12,
             curArray: [],
             curIndex: 0,
@@ -168,6 +178,12 @@ export default {
             this.curArray = this.list.slice(this.curIndex * this.LDP_PER_PAGE, (this.curIndex + 1) * this.LDP_PER_PAGE);
         },
 
+        processStatus: function(statusStr) {
+            if (statusStr) {
+                this.statusStr = statusStr;
+            }
+        },
+
         setCurPage: function(index) {
             this.curIndex = index;
             this.curArray = this.list.slice(this.curIndex * this.LDP_PER_PAGE, (this.curIndex + 1) * this.LDP_PER_PAGE);
@@ -184,6 +200,7 @@ export default {
                     result => {
                         if (result.status === RESULT_CODE.SUCCESS) {
                             this.processArr(result.content.ret);
+                            this.processStatus(result.content["statusStr"] || "");
                         }
                     }, (status, msg) => {
                         if (status === RESULT_CODE.LOGIN_EXPIRE) {

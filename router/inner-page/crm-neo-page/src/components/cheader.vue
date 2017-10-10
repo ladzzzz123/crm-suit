@@ -29,9 +29,15 @@
             </Col>
             <Col span="2" offset="18" v-if="logged" >
                 <div class="navbar-brand">
-                    <a class="navbar-default" href="javascript:void(0)" @click="quit()">
-                        退出登陆
-                    </a>
+                    <Dropdown>
+                        <a href="javascript:void(0)">
+                            {{ userInfo.u_name }}
+                            <Icon type="arrow-down-b"></Icon>
+                        </a>
+                        <DropdownMenu slot="list">
+                            <DropdownItem @click.native="quit">退出登陆</DropdownItem>
+                        </DropdownMenu>
+                    </Dropdown>
                 </div>
             </Col>
         </Row>
@@ -41,6 +47,11 @@
 <script>
 export default {
     props: ["logged"],
+    computed: {
+        userInfo() {
+            return this.$store.state.userInfo;
+        },
+    },
     methods: {
         quit: function() {
             this.$store.dispatch("asyncQuit");
