@@ -6,6 +6,46 @@ const fs = require("fs");
 
 const CONFIG = require("./config.json");
 
+function seekMaterialStatus() {
+    return new Promise((resolve, reject) => {
+        let sql_query_count = " SELECT m_status, COUNT(*) AS count FROM material WHERE m_date = ? GROUP BY m_status ";
+        sql_query_count = mysql.format(sql_query_count, [dateStr]);
+        let tempCountContent = "";
+        courier.sendAsyncCall("dbopter", "asyncQuery", () => {}, "market_db", sql_query_count)
+            .then(query_count_ret => {
+                logger.info("query_count_ret: %s", JSON.stringify(query_count_ret));
+                let ret_array = query_count_ret.ret;
+                if (Array.isArray(ret_array)) {
+                    ret_array.forEach(item => {
+                        let statusStr = "";
+                        switch (item.m_status) {
+                            case "NEW":
+                                statusStr = "未审核";
+                                break;
+                            case "PASS":
+                                statusStr = "已通过";
+                                break;
+                            case "REJECT":
+                                statusStr = "未通过";
+                                break;
+                            case "TBD":
+                                statusStr = "再议";
+                                break;
+                            default:
+                                break;
+                        }
+                        tempCountContent += `${statusStr}: ${item.count}, `;
+                    });
+                }
+                logger.info("tempCountContent: %s", tempCountContent);
+                resolve(tempCountContent);
+            })
+            .catch(e => {
+                reject(e);
+            });
+    });
+}
+
 let export_func = {
     name: "censor",
     asyncFetchMaterialFromDB: (...dates) => {
@@ -14,9 +54,15 @@ let export_func = {
             logger.info("[censor] params: %s", JSON.stringify(params));
             let sql_opt = "SELECT * FROM ?? WHERE m_date >= ? AND m_date <= ?";
             sql_opt = mysql.format(sql_opt, params);
+            let query_ret = {};
             courier.sendAsyncCall("dbopter", "asyncQuery", () => {}, "market_db", sql_opt)
                 .then(ret => {
-                    resolve(ret);
+                    query_ret = ret;
+                    return seekMaterialStatus();
+                })
+                .then(ret => {
+                    query_ret["statusStr"] = ret;
+                    resolve(query_ret);
                 })
                 .catch(err => {
                     logger.warn("[censor] db select err:" + JSON.stringify(err));
@@ -86,22 +132,10 @@ let export_func = {
             courier.sendAsyncCall("dbopter", "asyncUpdate", () => {}, "market_db", "material", params, conditions)
                 .then(ret => {
                     if (ret.status === "success") {
-                        // let info = {};
-                        // if (Array.isArray(ret.ret) && ret.ret.length > 0) {
-                        //     info = ret.ret[0];
-                        // }
-                        // courier.sendAsyncCall("mail", "asyncSendMail", ret => {
-                        //         _ret = ret;
-                        //     }, info.m_from,
-                        //     `${opter} ${msg.accept_title} ${info.title}`,
-                        //     `${opter} ${msg.accept_content} ${info.title}!`,
-                        //     info.m_cc
-                        // );
                         resolve({ status: "success", msg: "更新成功" });
                     } else {
                         resolve({ status: "failed", msg: "更新失败" });
                     }
-
                 })
                 .catch(err => {
                     logger.warn("[plan-order] db select err:" + JSON.stringify(err));
@@ -112,48 +146,15 @@ let export_func = {
 
     asyncReport: (dateStr, to, opter) => {
         return new Promise((resolve, reject) => {
-            let sql_query_count = " SELECT m_status, COUNT(*) AS count FROM material WHERE m_date = ? GROUP BY m_status ";
-            sql_query_count = mysql.format(sql_query_count, [dateStr]);
-
             let sql_opt = "SELECT tu, dsp, ldp, material, pv, opter, m_status, reason FROM material WHERE m_date = ? AND (m_status = 'REJECT' OR m_status = 'TBD') ";
             sql_opt = mysql.format(sql_opt, [dateStr]);
             let fileName = `censor_${dateStr}.csv`;
-            let tempCountContent = "";
-            courier.sendAsyncCall("dbopter", "asyncQuery", () => {}, "market_db", sql_query_count)
-                .then(query_count_ret => {
-                    logger.info("query_count_ret: %s", JSON.stringify(query_count_ret));
-                    let ret_array = query_count_ret.ret;
-                    if (Array.isArray(ret_array)) {
-                        ret_array.forEach(item => {
-                            let statusStr = "";
-                            switch (item.m_status) {
-                                case "NEW":
-                                    statusStr = "未审核";
-                                    break;
-                                case "PASS":
-                                    statusStr = "已通过";
-                                    break;
-                                case "REJECT":
-                                    statusStr = "未通过";
-                                    break;
-                                case "TBD":
-                                    statusStr = "再议";
-                                    break;
-                                default:
-                                    break;
-                            }
-                            tempCountContent += `${statusStr}: ${item.count}, `;
-                        });
-                    }
-                    logger.info("tempCountContent: %s", tempCountContent);
-                    return Promise.resolve(tempCountContent);
-                })
+            seekMaterialStatus()
                 .then(ret => {
                     logger.info("before asyncQuery");
                     return courier.sendAsyncCall("dbopter", "asyncQuery", () => {}, "market_db", sql_opt);
                 })
                 .then(query_ret => {
-                    logger.info("before write file");
                     let query_content = "广告位,dsp,落地页,素材链接,pv,操作者,状态,原因\n";
                     let ret_array = query_ret.ret;
                     if (Array.isArray(ret_array)) {

@@ -287,9 +287,10 @@ router
         if (!verify) {
             return;
         } else if (verify.pass) {
+            let postData = ctx.request.body;
             await courier.sendCall("censor", "insertMaterialIntoDB", ret => {
                 ctx.body = { status: RESULT.SUCCESS, msg: "update query success" };
-            }, "20170911");
+            }, postData.date || "20170911");
         } else {
             ctx.body = _util.verifyTokenResult(verify);
         }
