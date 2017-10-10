@@ -7,6 +7,7 @@ const fs = require("fs");
 const CONFIG = require("./config.json");
 
 function seekMaterialStatus() {
+    logger.warn("seekMaterialStatus called");
     return new Promise((resolve, reject) => {
         let sql_query_count = " SELECT m_status, COUNT(*) AS count FROM material WHERE m_date = ? GROUP BY m_status ";
         sql_query_count = mysql.format(sql_query_count, [dateStr]);
@@ -61,6 +62,7 @@ let export_func = {
                     return seekMaterialStatus();
                 })
                 .then(ret => {
+                    logger.info("statusStr:%s", ret);
                     query_ret["statusStr"] = ret;
                     resolve(query_ret);
                 })
