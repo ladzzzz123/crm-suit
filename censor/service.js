@@ -42,6 +42,7 @@ function seekMaterialStatus() {
                 resolve(tempCountContent);
             })
             .catch(e => {
+                logger.info("seekMaterialStatus: %s", JSON.stringify(e));
                 reject(e);
             });
     });
