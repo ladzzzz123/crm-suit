@@ -31,6 +31,11 @@
     width: 80%;
 }
 
+.list-group {
+    margin-top: 0.1rem;
+    margin-bottom: 0.2rem;
+}
+
 .list-group-item {
     text-align: left;
 }

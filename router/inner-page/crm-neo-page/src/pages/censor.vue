@@ -22,6 +22,9 @@
         text-align: center;
         border-radius: 2px;
     }
+    .dsp-select {
+
+    }
 </style>
 <template>
     <div class="container" v-if="logged">
@@ -34,16 +37,26 @@
             <Button type="primary" @click="reportRet">发送审核结果</Button>
             <br/>
             <br/>
-            <ul class="list-group">
+            <div class="list-group">
                 <template v-if="curArray.length < 1">
                     未检索到任何信息！
                 </template>
                 <template v-else>
-                    <BackTop :height="100" :bottom="200">
+                    <i-select class="dsp-select" v-model="dsp" style="width:200px">
+                        <i-option v-for="dsp in Object.keys(statusInfo.dspCount)"
+                                :value="dsp"
+                                v-bind:key="dsp"
+                                @click.native="dspChanged(dsp)">
+                            {{ dsp }}
+                        </i-option>
+                        <i-option value="全部" @click.native="dspChanged('全部')">全部</i-option>
+                    </i-select>
+                    <BackTop :height="50">
                         <div class="top">返回顶端</div>
                     </BackTop>
-                    <Affix>
-                        <span>{{ statusStr }}</span>
+                    <Affix :offset-top="1">
+                        <Tag type="border" color="green">{{ JSON.stringify(statusInfo.statusCount) }}</Tag>
+                        <Tag type="border" color="yellow">{{ JSON.stringify(statusInfo.dspCount) }}</Tag>
                     </Affix>
                     <Card class="card" v-for="(item, pos) in curArray" v-bind:key="'dsp_' + pos">
                         <h4 :title="item[0]">{{ item[0] }}</h4>
@@ -86,8 +99,8 @@
                         </ButtonGroup>
                     </Card>
                     <pageNav :indexInfo="indexInfo" v-on:setCurPage="setCurPage"/>
-                </template>    
-            </ul>
+                </template>
+            </div>
         </div>
         <div class="data-list" v-else>
             <p>您没有该功能的使用权限，请点击<a @click="gotoLogin">此处</a>重新登录，</p>
@@ -111,15 +124,13 @@ export default {
         return {
             verified: false,
             m_date: "",
-            list:[],
-            statusStr: "",
+            orgArr:[],
+            localArr:[],
+            list: [],
             LDP_PER_PAGE: 12,
-            curArray: [],
+            // curArray: [],
+            dsp:"",
             curIndex: 0,
-            indexInfo: {
-                curIndex: 0,
-                indexs: []
-            },
         }
     },
     computed: {
@@ -132,6 +143,69 @@ export default {
         logged() {
             return this.$store.state.logged;
         },
+        curArray() {
+            return this.list.slice(this.curIndex * this.LDP_PER_PAGE, (this.curIndex + 1) * this.LDP_PER_PAGE);
+        },
+        indexInfo() {
+            let length = parseInt(this.list.length / this.LDP_PER_PAGE) + 1;
+            let indexs = new Array(length).fill(0).map((item, index) => index);
+            return {
+                curIndex: length,
+                indexs: indexs
+            };
+        },
+       
+        statusInfo() {
+            let tempCountContent = {
+                "未审核":0,
+                "已通过":0,
+                "未通过":0,
+                "再议":0
+            };
+            let dspContent = {};
+            this.orgArr.forEach(item => {
+                console.log(item.m_status);
+                (dspContent[item.dsp]) ? dspContent[item.dsp] += 1 : dspContent[item.dsp] = 1;
+                switch (item.m_status) {
+                    case "NEW":
+                        tempCountContent["未审核"] += 1;
+                        break;
+                    case "PASS":
+                        tempCountContent["已通过"] += 1;
+                        break;
+                    case "REJECT":
+                        tempCountContent["未通过"] += 1;
+                        break;
+                    case "TBD":
+                        tempCountContent["再议"] += 1;
+                        break;
+                    default:
+                        break;
+                }
+            });
+            console.log("tempCountContent:%s", JSON.stringify(tempCountContent));
+            
+            return {
+                statusCount: tempCountContent,
+                dspCount: dspContent
+            };
+        }
+    },
+
+    watch: {
+        localArr: function(_localArr) {
+            let tempObj = {};
+            if (Array.isArray(_localArr)) {
+                _localArr.forEach(item => {
+                    let ldpUrl = item.ldp.split("?")[0];
+                    if (!Array.isArray(tempObj[ldpUrl])) {
+                        tempObj[ldpUrl] = [];
+                    }
+                    tempObj[ldpUrl].push(item);
+                });
+            }
+            this.list = Object.entries(tempObj);
+        }
     },
 
     components: {
@@ -162,31 +236,25 @@ export default {
         },
 
         processArr: function(orgArr) {
-            let tempObj = {};
-            if (Array.isArray(orgArr)) {
-                orgArr.forEach(item => {
-                    let ldpUrl = item.ldp.split("?")[0];
-                    if (!Array.isArray(tempObj[ldpUrl])) {
-                        tempObj[ldpUrl] = [];
-                    }
-                    tempObj[ldpUrl].push(item);
-                });
-            }
-            this.list = Object.entries(tempObj);
-            let length = parseInt(this.list.length / this.LDP_PER_PAGE) + 1;
-            this.indexInfo.indexs = new Array(length).fill(0).map((item, index) => index);
-            this.curArray = this.list.slice(this.curIndex * this.LDP_PER_PAGE, (this.curIndex + 1) * this.LDP_PER_PAGE);
-        },
-
-        processStatus: function(statusStr) {
-            if (statusStr) {
-                this.statusStr = statusStr;
+            if (Array.isArray(this.orgArr)) {
+                this.orgArr = orgArr;
+                Object.assign(this.localArr, orgArr);
+                let tempObj = {};
+                if (Array.isArray(orgArr)) {
+                    orgArr.forEach(item => {
+                        let ldpUrl = item.ldp.split("?")[0];
+                        if (!Array.isArray(tempObj[ldpUrl])) {
+                            tempObj[ldpUrl] = [];
+                        }
+                        tempObj[ldpUrl].push(item);
+                    });
+                }
+                this.list = Object.entries(tempObj);
             }
         },
 
         setCurPage: function(index) {
             this.curIndex = index;
-            this.curArray = this.list.slice(this.curIndex * this.LDP_PER_PAGE, (this.curIndex + 1) * this.LDP_PER_PAGE);
         },
 
         fetchMate: function() {
@@ -200,7 +268,6 @@ export default {
                     result => {
                         if (result.status === RESULT_CODE.SUCCESS) {
                             this.processArr(result.content.ret);
-                            this.processStatus(result.content["statusStr"] || "");
                         }
                     }, (status, msg) => {
                         if (status === RESULT_CODE.LOGIN_EXPIRE) {
@@ -239,6 +306,23 @@ export default {
             } else {
                 func.showTips("alert-danger", "素材日期未选择!");
             }
+        },
+
+        dspChanged: function(dsp) {
+            console.log(dsp);
+            this.dsp = dsp;
+            this.localArr.length = 0;
+            let tempArr = [];
+            if (dsp === "全部"){
+                tempArr = Array.from(this.orgArr);
+            } else {
+                this.orgArr.forEach(item => {
+                    if (item.dsp === dsp) {
+                        tempArr.push(item);
+                    }
+                });
+            }
+            this.localArr = tempArr;
         },
 
         pass: function(id, ldp) {
