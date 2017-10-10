@@ -6,7 +6,7 @@ const fs = require("fs");
 
 const CONFIG = require("./config.json");
 
-async function seekMaterialStatus() {
+async function seekMaterialStatus(dateStr) {
     logger.warn("seekMaterialStatus called");
     let sql_query_count = " SELECT m_status, COUNT(*) AS count FROM material WHERE m_date = ? GROUP BY m_status ";
     sql_query_count = mysql.format(sql_query_count, [dateStr]);
@@ -52,7 +52,7 @@ let export_func = {
             courier.sendAsyncCall("dbopter", "asyncQuery", () => {}, "market_db", sql_opt)
                 .then(ret => {
                     query_ret = ret;
-                    query_ret["statusStr"] = seekMaterialStatus();
+                    query_ret["statusStr"] = seekMaterialStatus(dates[0]);
                     resolve(query_ret);
                 })
                 .catch(err => {
@@ -140,7 +140,7 @@ let export_func = {
             let sql_opt = "SELECT tu, dsp, ldp, material, pv, opter, m_status, reason FROM material WHERE m_date = ? AND (m_status = 'REJECT' OR m_status = 'TBD') ";
             sql_opt = mysql.format(sql_opt, [dateStr]);
             let fileName = `censor_${dateStr}.csv`;
-            let tempCountContent = seekMaterialStatus();
+            let tempCountContent = seekMaterialStatus(dateStr);
             courier.sendAsyncCall("dbopter", "asyncQuery", () => {}, "market_db", sql_opt)
                 .then(query_ret => {
                     let query_content = "广告位,dsp,落地页,素材链接,pv,操作者,状态,原因\n";
