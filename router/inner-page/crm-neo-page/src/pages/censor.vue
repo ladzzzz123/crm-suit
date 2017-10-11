@@ -58,6 +58,7 @@
                         <Row>
                             <Col span="10">
                                 <Tag type="dot" v-for="(status, index) in Object.entries(statusInfo.statusCount)" 
+                                    @click.native="typeChanged(status[0])"
                                     v-bind:key="status[0]" :color="colors[index]" style="width: 1rem" :title="status[0]">
                                     {{ status[0] }}: {{ status[1] }}
                                 </Tag>
@@ -260,6 +261,9 @@ export default {
         },
 
         processArr: function(orgArr) {
+            this.orgArr.length = 0;
+            this.localArr.length = 0;
+            this.list.length = 0;
             if (Array.isArray(this.orgArr)) {
                 this.orgArr = orgArr;
                 Object.assign(this.localArr, orgArr);
@@ -326,11 +330,42 @@ export default {
             this.dsp = dsp;
             this.localArr.length = 0;
             let tempArr = [];
-            if (dsp === "全部"){
+            if (dsp === "全部") {
                 tempArr = Array.from(this.orgArr);
             } else {
                 this.orgArr.forEach(item => {
                     if (item.dsp === dsp) {
+                        tempArr.push(item);
+                    }
+                });
+            }
+            this.localArr = tempArr;
+        },
+
+        typeChanged: function(statusType) {
+            switch (statusType) {
+                    case "未审核":
+                        this.statusType = "NEW";
+                        break;
+                    case "已通过":
+                        this.statusType = "PASS";
+                        break;
+                    case "未通过":
+                        this.statusType = "REJECT";
+                        break;
+                    case "再议":
+                        this.statusType = "TBD";
+                        break;
+                    default:
+                        break;
+                }
+            this.localArr.length = 0;
+            let tempArr = [];
+            if (statusType === "全部") {
+                tempArr = Array.from(this.orgArr);
+            } else {
+                this.orgArr.forEach(item => {
+                    if (item.m_status === this.statusType) {
                         tempArr.push(item);
                     }
                 });
