@@ -75,6 +75,7 @@ let export_func = {
 
             let params = {
                 m_status: status,
+                m_version: m_version + 1,
                 opter: opter
             };
             if (reason) params.reason = reason;
@@ -82,7 +83,7 @@ let export_func = {
                 resolve({ status: "failed", msg: "参数类型错误！" });
                 return;
             }
-            let conditions = `_id IN (${ids.toString()}) `;
+            let conditions = `_id IN (${ids.toString()}) AND m_version <= ${m_version}`;
             courier.sendAsyncCall("dbopter", "asyncUpdate", () => {}, "market_db", "material", params, conditions)
                 .then(ret => {
                     if (ret.status === "success") {
@@ -103,10 +104,10 @@ let export_func = {
         let dateStr = orgDateStr.replace(/(\/|\-)/gi, "");
         return new Promise((resolve, reject) => {
             let sql_query_count = " SELECT m_status, COUNT(*) AS count FROM material WHERE m_date = ? GROUP BY m_status ";
-            sql_query_count = mysql.format(sql_query_count, [dateStr]);
+            sql_query_count = mysql.format(sql_query_count, [orgDateStr]);
 
             let sql_opt = "SELECT tu, dsp, ldp, material, pv, opter, m_status, reason FROM material WHERE m_date = ? AND (m_status = 'REJECT' OR m_status = 'TBD') ";
-            sql_opt = mysql.format(sql_opt, [dateStr]);
+            sql_opt = mysql.format(sql_opt, [orgDateStr]);
             let fileName = `censor_${dateStr}.csv`;
             let tempCountContent = "";
             courier.sendAsyncCall("dbopter", "asyncQuery", () => {}, "market_db", sql_query_count)

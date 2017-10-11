@@ -31,10 +31,19 @@
         <div class="data-list" v-if="verified">
             <DatePicker type="date" placeholder="选择日期和时间" v-model="m_date" 
             @on-ok="fetchMate"
-            confirm style="width: 200px"></DatePicker>
+            confirm style="width: 2rem"></DatePicker>
             <br/>
             <br/>
             <Button type="primary" @click="reportRet">发送审核结果</Button>
+            <i-select v-if="curArray.length > 0" class="dsp-select" v-model="dsp" style="width:1.5rem" placeholder="选择dsp">
+                <i-option v-for="dsp in Object.keys(statusInfo.dspCount)"
+                        :value="dsp"
+                        v-bind:key="dsp"
+                        @click.native="dspChanged(dsp)">
+                    {{ dsp }}
+                </i-option>
+                <i-option value="全部" @click.native="dspChanged('全部')">全部</i-option>
+            </i-select>
             <br/>
             <br/>
             <div class="list-group">
@@ -42,21 +51,25 @@
                     未检索到任何信息！
                 </template>
                 <template v-else>
-                    <i-select class="dsp-select" v-model="dsp" style="width:200px">
-                        <i-option v-for="dsp in Object.keys(statusInfo.dspCount)"
-                                :value="dsp"
-                                v-bind:key="dsp"
-                                @click.native="dspChanged(dsp)">
-                            {{ dsp }}
-                        </i-option>
-                        <i-option value="全部" @click.native="dspChanged('全部')">全部</i-option>
-                    </i-select>
                     <BackTop :height="50">
                         <div class="top">返回顶端</div>
                     </BackTop>
                     <Affix :offset-top="1">
-                        <Tag type="border" color="green">{{ JSON.stringify(statusInfo.statusCount) }}</Tag>
-                        <Tag type="border" color="yellow">{{ JSON.stringify(statusInfo.dspCount) }}</Tag>
+                        <Row>
+                            <Col span="10">
+                                <Tag type="dot" v-for="(status, index) in Object.entries(statusInfo.statusCount)" 
+                                    v-bind:key="status[0]" :color="colors[index]" style="width: 1rem" :title="status[0]">
+                                    {{ status[0] }}: {{ status[1] }}
+                                </Tag>
+                            </Col>
+                            <Col span="14">
+                                <Tag type="dot" v-for="(status, index) in Object.entries(statusInfo.dspCount)" 
+                                    @click.native="dspChanged(status[0])"
+                                    v-bind:key="status[0]" :color="colors[index]" style="width: 1.2rem" :title="status[0]">
+                                    {{ status[0] }}: {{ status[1] }}
+                                </Tag>
+                            </Col>
+                        </Row>
                     </Affix>
                     <Card class="card" v-for="(item, pos) in curArray" v-bind:key="'dsp_' + pos">
                         <h4 :title="item[0]">{{ item[0] }}</h4>
@@ -84,9 +97,9 @@
                                         <Tag v-else>未知状态</Tag>
                                     </p>
                                     <ButtonGroup v-if="material.m_status === 'NEW' " class="btn-group" role="group" aria-label="edit">
-                                        <Button type="success" @click="pass('material_' + material._id, material.ldp)">通过</Button>
-                                        <Button type="warning" @click="delay('material_' + material._id, material.ldp)">再议</Button>
-                                        <Button type="error" @click="denied('material_' + material._id, material.ldp)">拒绝</Button>
+                                        <Button type="success" @click="pass('material_' + material._id, material.ldp, material.m_version)">通过</Button>
+                                        <Button type="warning" @click="delay('material_' + material._id, material.ldp, material.m_version)">再议</Button>
+                                        <Button type="error" @click="denied('material_' + material._id, material.ldp, material.m_version)">拒绝</Button>
                                     </ButtonGroup>
                                 </Card>
                             </Col>
@@ -131,6 +144,12 @@ export default {
             // curArray: [],
             dsp:"",
             curIndex: 0,
+            colors: [
+                "blue",
+                "green",
+                "red",
+                "yellow"
+            ],
         }
     },
     computed: {
@@ -325,14 +344,15 @@ export default {
             this.localArr = tempArr;
         },
 
-        pass: function(id, ldp) {
+        pass: function(id, ldp, m_version) {
             console.log("pass:" + id);
             let _id = id.replace("material_", "");
             requester.send("/crm-inner/censor/update", 
                     {
                         token: this.token, 
                         ids: [_id],
-                        action: "pass"
+                        action: "pass",
+                        m_version: m_version
                     },
                     result => {
                         func.showTips("alert-success", "更新成功！");
@@ -351,7 +371,7 @@ export default {
                         }
                     });
         },
-        denied: function(id, ldp) {
+        denied: function(id, ldp, m_version) {
             console.log("denied:" + id);
             func.showDialog("input", "确认拒绝该素材？", inputText => {
                 let _id = id.replace("material_", "");
@@ -360,7 +380,8 @@ export default {
                         token: this.token, 
                         ids: [_id],
                         action: "denied",
-                        reason: inputText || ""
+                        reason: inputText || "",
+                        m_version: m_version
                     },
                     result => {
                         func.showTips("alert-success", "已拒绝该素材！");
@@ -382,7 +403,7 @@ export default {
                     });
             }, "请填写拒绝理由");
         },
-        delay:function(id, ldp) {
+        delay:function(id, ldp, m_version) {
             console.log("delay:" + id);
             func.showDialog("input", "该素材需要再议？", inputText => {
                 let _id = id.replace("material_", "");
@@ -391,7 +412,8 @@ export default {
                         token: this.token, 
                         ids: [_id],
                         action: "tbd",
-                        reason: inputText || ""
+                        reason: inputText || "",
+                        m_version: m_version
                     },
                     result => {
                         func.showTips("alert-success", "已确定再议该素材！");
