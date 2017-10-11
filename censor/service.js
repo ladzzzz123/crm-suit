@@ -83,7 +83,7 @@ let export_func = {
                 resolve({ status: "failed", msg: "参数类型错误！" });
                 return;
             }
-            let conditions = `_id IN (${ids.toString()}) AND m_version <= ${parseInt(m_version) + 1}`;
+            let conditions = `_id IN (${ids.toString()}) AND m_version <= ${parseInt(m_version)}`;
             courier.sendAsyncCall("dbopter", "asyncUpdate", () => {}, "market_db", "material", params, conditions)
                 .then(ret => {
                     if (ret.status === "success") {
