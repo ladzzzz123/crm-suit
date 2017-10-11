@@ -324,7 +324,11 @@ router
             }
             let reason = postData.reason || "";
             await courier.sendAsyncCall("censor", "asyncUpdateStatus", ret => {
-                ctx.body = { status: RESULT.SUCCESS, msg: "update success" };
+                if (ret.status === "success") {
+                    ctx.body = { status: RESULT.SUCCESS, msg: ret.msg };
+                } else {
+                    ctx.body = { status: RESULT.FAILED, msg: ret.msg };
+                }
             }, postData.ids, postData.action, reason, postData.m_version, opter);
         } else {
             ctx.body = _util.verifyTokenResult(verify);
