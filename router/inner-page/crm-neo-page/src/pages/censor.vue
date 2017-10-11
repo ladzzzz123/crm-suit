@@ -96,7 +96,7 @@
                                         </Tag>
                                         <Tag v-else>未知状态</Tag>
                                     </p>
-                                    <ButtonGroup v-if="material.m_status === 'NEW' " class="btn-group" role="group" aria-label="edit">
+                                    <ButtonGroup class="btn-group" role="group" aria-label="edit">
                                         <Button type="success" @click="pass('material_' + material._id, material.ldp, material.m_version)">通过</Button>
                                         <Button type="warning" @click="delay('material_' + material._id, material.ldp, material.m_version)">再议</Button>
                                         <Button type="error" @click="denied('material_' + material._id, material.ldp, material.m_version)">拒绝</Button>
@@ -363,6 +363,7 @@ export default {
                         let neoItem = neoArr[1].find(subItem => ("" + subItem._id) === _id);
                         (neoItem) && (neoItem.m_status = "PASS");
                     }, (status, msg) => {
+                        func.showTips("alert-error", "更新状态失败，该素材可能已被他人编辑，请刷新列表后再尝试！");
                         if (status === RESULT_CODE.LOGIN_EXPIRE) {
                             this.$store.dispatch("asyncQuit");
                             setTimeout(() => {
@@ -394,6 +395,7 @@ export default {
                         func.hideDialog();
                     }, (status, msg) => {
                         func.hideDialog();
+                        func.showTips("alert-error", "更新状态失败，该素材可能已被他人编辑，请刷新列表后再尝试！");
                         if (status === RESULT_CODE.LOGIN_EXPIRE) {
                             this.$store.dispatch("asyncQuit");
                             setTimeout(() => {
@@ -426,6 +428,7 @@ export default {
                         func.hideDialog();
                     }, (status, msg) => {
                         func.hideDialog();
+                        func.showTips("alert-error", "更新状态失败，该素材可能已被他人编辑，请刷新列表后再尝试！");
                         if (status === RESULT_CODE.LOGIN_EXPIRE) {
                             this.$store.dispatch("asyncQuit");
                             setTimeout(() => {

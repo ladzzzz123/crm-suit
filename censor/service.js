@@ -75,7 +75,7 @@ let export_func = {
 
             let params = {
                 m_status: status,
-                m_version: m_version + 1,
+                m_version: parseInt(m_version) + 1,
                 opter: opter
             };
             if (reason) params.reason = reason;
@@ -83,7 +83,7 @@ let export_func = {
                 resolve({ status: "failed", msg: "参数类型错误！" });
                 return;
             }
-            let conditions = `_id IN (${ids.toString()}) AND m_version <= ${m_version}`;
+            let conditions = `_id IN (${ids.toString()}) AND m_version <= ${parseInt(m_version) + 1}`;
             courier.sendAsyncCall("dbopter", "asyncUpdate", () => {}, "market_db", "material", params, conditions)
                 .then(ret => {
                     if (ret.status === "success") {
@@ -91,7 +91,6 @@ let export_func = {
                     } else {
                         resolve({ status: "failed", msg: "更新失败" });
                     }
-
                 })
                 .catch(err => {
                     logger.warn("[plan-order] db select err:" + JSON.stringify(err));
