@@ -27,7 +27,7 @@
                     <img src="http://www.cootek.com/images/logo.png" height="100%">
                 </a>
             </Col>
-            <Col span="2" offset="18" v-if="logged" >
+            <Col span="4" offset="16" v-if="logged" >
                 <div class="navbar-brand">
                     <Dropdown>
                         <a href="javascript:void(0)">

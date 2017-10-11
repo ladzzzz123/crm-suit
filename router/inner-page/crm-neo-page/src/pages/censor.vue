@@ -22,10 +22,8 @@
         text-align: center;
         border-radius: 2px;
     }
-    .dsp-select {
-
-    }
 </style>
+
 <template>
     <div class="container" v-if="logged">
         <div class="data-list" v-if="verified">
@@ -59,14 +57,14 @@
                             <Col span="10">
                                 <Tag type="dot" v-for="(status, index) in Object.entries(statusInfo.statusCount)" 
                                     @click.native="typeChanged(status[0])"
-                                    v-bind:key="status[0]" :color="colors[index]" style="width: 1rem" :title="status[0]">
+                                    v-bind:key="status[0]" :color="colors[index]" style="width: 1.6rem" :title="status[1]">
                                     {{ status[0] }}: {{ status[1] }}
                                 </Tag>
                             </Col>
                             <Col span="14">
                                 <Tag type="dot" v-for="(status, index) in Object.entries(statusInfo.dspCount)" 
                                     @click.native="dspChanged(status[0])"
-                                    v-bind:key="status[0]" :color="colors[index]" style="width: 1.2rem" :title="status[0]">
+                                    v-bind:key="status[0]" :color="colors[index]" style="width: 1.6rem" :title="status[1]">
                                     {{ status[0] }}: {{ status[1] }}
                                 </Tag>
                             </Col>
@@ -177,10 +175,9 @@ export default {
             return this.list.slice(this.curIndex * this.LDP_PER_PAGE, (this.curIndex + 1) * this.LDP_PER_PAGE);
         },
         indexInfo() {
-            let length = parseInt(this.list.length / this.LDP_PER_PAGE) + 1;
+            let length = parseInt((this.list.length - 1) / this.LDP_PER_PAGE) + 1;
             let indexs = new Array(length).fill(0).map((item, index) => index);
             return {
-                curIndex: length,
                 indexs: indexs
             };
         },
@@ -225,6 +222,7 @@ export default {
     watch: {
         localArr: function(_localArr) {
             let tempObj = {};
+            this.list.length = 0;
             if (Array.isArray(_localArr)) {
                 _localArr.forEach(item => {
                     let ldpUrl = item.ldp.split("?")[0];
@@ -234,6 +232,7 @@ export default {
                     tempObj[ldpUrl].push(item);
                 });
             }
+            this.curIndex = 0;
             this.list = Object.entries(tempObj);
         }
     },
