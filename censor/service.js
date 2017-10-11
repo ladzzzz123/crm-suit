@@ -56,7 +56,7 @@ let export_func = {
         return "";
     },
 
-    asyncUpdateStatus: (ids, action, reason, opter) => {
+    asyncUpdateStatus: (ids, action, reason, m_version, opter) => {
         return new Promise((resolve, reject) => {
             let status = "";
             switch (action) {

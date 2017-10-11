@@ -319,13 +319,13 @@ router
         } else if (verify.pass) {
             let opter = verify.info.u_name;
             let postData = ctx.request.body;
-            if (!_util.verifyParams(postData, ["ids", "action"])) {
+            if (!_util.verifyParams(postData, ["ids", "action", "m_version"])) {
                 ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
             }
             let reason = postData.reason || "";
             await courier.sendAsyncCall("censor", "asyncUpdateStatus", ret => {
                 ctx.body = { status: RESULT.SUCCESS, msg: "update success" };
-            }, postData.ids, postData.action, reason, opter);
+            }, postData.ids, postData.action, reason, postData.m_version, opter);
         } else {
             ctx.body = _util.verifyTokenResult(verify);
         }
