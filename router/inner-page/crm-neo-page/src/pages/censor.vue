@@ -97,7 +97,7 @@
                                         <Tag v-else>未知状态</Tag>
                                     </p>
                                     <ButtonGroup class="btn-group" role="group" aria-label="edit">
-                                        <Button type="success" @click="pass('material_' + material._id, material.ldp, material.m_version)">通过</Button>
+                                        <Button v-if="material.m_status !== 'PASS' " type="success" @click="pass('material_' + material._id, material.ldp, material.m_version)">通过</Button>
                                         <Button type="warning" @click="delay('material_' + material._id, material.ldp, material.m_version)">再议</Button>
                                         <Button type="error" @click="denied('material_' + material._id, material.ldp, material.m_version)">拒绝</Button>
                                     </ButtonGroup>
@@ -131,6 +131,16 @@ import RESULT_CODE from "../../../../codemap.json";
 import pageNav from "../components/nav.vue";
 
 import func from "../main";
+
+function processFailed() {
+    func.hideDialog();
+    if (status === RESULT_CODE.LOGIN_EXPIRE) {
+        this.$store.dispatch("asyncQuit");
+        setTimeout(() => {
+            this.gotoLogin();
+        }, 3000);
+    }
+}
 
 export default {
     data: () => {
@@ -239,12 +249,7 @@ export default {
                         this.verified = true;
                     }
                 }, (status, msg) => {
-                    if (status === RESULT_CODE.LOGIN_EXPIRE) {
-                        this.$store.dispatch("asyncQuit");
-                        setTimeout(() => {
-                            this.gotoLogin();
-                        }, 3000);
-                    }
+                    processFailed(status);
                 });
         }
     },
@@ -289,12 +294,7 @@ export default {
                             this.processArr(result.content.ret);
                         }
                     }, (status, msg) => {
-                        if (status === RESULT_CODE.LOGIN_EXPIRE) {
-                            this.$store.dispatch("asyncQuit");
-                            setTimeout(() => {
-                                this.gotoLogin();
-                            }, 3000);
-                        }
+                        processFailed(status);
                     });
             }
         },
@@ -313,13 +313,7 @@ export default {
                             }
                             func.hideDialog();
                         }, (status, msg) => {
-                            func.hideDialog();
-                            if (status === RESULT_CODE.LOGIN_EXPIRE) {
-                                this.$store.dispatch("asyncQuit");
-                                setTimeout(() => {
-                                    this.gotoLogin();
-                                }, 3000);
-                            }
+                            processFailed(status);
                         });
                 }, "请填写收件人，多个收件人用半角逗号分隔");
             } else {
@@ -361,15 +355,10 @@ export default {
                         });
                         neoArr = neoArr || ["", []];
                         let neoItem = neoArr[1].find(subItem => ("" + subItem._id) === _id);
-                        (neoItem) && (neoItem.m_status = "PASS");
+                        (neoItem) && (neoItem.m_status = "PASS") && (neoItem.m_version = parseInt(neoItem.m_version) + 1);
                     }, (status, msg) => {
                         func.showTips("alert-error", "更新状态失败，该素材可能已被他人编辑，请刷新列表后再尝试！");
-                        if (status === RESULT_CODE.LOGIN_EXPIRE) {
-                            this.$store.dispatch("asyncQuit");
-                            setTimeout(() => {
-                                this.gotoLogin();
-                            }, 3000);
-                        }
+                        processFailed(status);
                     });
         },
         denied: function(id, ldp, m_version) {
@@ -391,17 +380,11 @@ export default {
                         });
                         neoArr = neoArr || ["", []];
                         let neoItem = neoArr[1].find(subItem => ("" + subItem._id) === _id);
-                        (neoItem) && (neoItem.m_status = "REJECT") && (neoItem.reason = inputText);
+                        (neoItem) && (neoItem.m_status = "REJECT") && (neoItem.reason = inputText) && (neoItem.m_version = parseInt(neoItem.m_version) + 1);
                         func.hideDialog();
                     }, (status, msg) => {
-                        func.hideDialog();
                         func.showTips("alert-error", "更新状态失败，该素材可能已被他人编辑，请刷新列表后再尝试！");
-                        if (status === RESULT_CODE.LOGIN_EXPIRE) {
-                            this.$store.dispatch("asyncQuit");
-                            setTimeout(() => {
-                                this.gotoLogin();
-                            }, 3000);
-                        }
+                        processFailed(status);
                     });
             }, "请填写拒绝理由");
         },
@@ -424,17 +407,11 @@ export default {
                         });
                         neoArr = neoArr || ["", []];
                         let neoItem = neoArr[1].find(subItem => ("" + subItem._id) === _id);
-                        (neoItem) && (neoItem.m_status = "TBD") && (neoItem.reason = inputText);
+                        (neoItem) && (neoItem.m_status = "TBD") && (neoItem.reason = inputText)  && (neoItem.m_version = parseInt(neoItem.m_version) + 1);
                         func.hideDialog();
                     }, (status, msg) => {
-                        func.hideDialog();
                         func.showTips("alert-error", "更新状态失败，该素材可能已被他人编辑，请刷新列表后再尝试！");
-                        if (status === RESULT_CODE.LOGIN_EXPIRE) {
-                            this.$store.dispatch("asyncQuit");
-                            setTimeout(() => {
-                                this.gotoLogin();
-                            }, 3000);
-                        }
+                        processFailed(status);
                     });
             }, "请填写理由");
         },
@@ -456,12 +433,7 @@ export default {
                             item.m_status = "PASS";
                         });
                     }, (status, msg) => {
-                        if (status === RESULT_CODE.LOGIN_EXPIRE) {
-                            this.$store.dispatch("asyncQuit");
-                            setTimeout(() => {
-                                this.gotoLogin();
-                            }, 3000);
-                        }
+                        processFailed(status);
                     });
 
         },
@@ -487,13 +459,7 @@ export default {
                         });
                         func.hideDialog();
                     }, (status, msg) => {
-                        func.hideDialog();
-                        if (status === RESULT_CODE.LOGIN_EXPIRE) {
-                            this.$store.dispatch("asyncQuit");
-                            setTimeout(() => {
-                                this.gotoLogin();
-                            }, 3000);
-                        }
+                        processFailed(status);
                     });
             }, "请填写拒绝理由");
         },
@@ -519,13 +485,7 @@ export default {
                         });
                         func.hideDialog();
                     }, (status, msg) => {
-                        func.hideDialog();
-                        if (status === RESULT_CODE.LOGIN_EXPIRE) {
-                            this.$store.dispatch("asyncQuit");
-                            setTimeout(() => {
-                                this.gotoLogin();
-                            }, 3000);
-                        }
+                        processFailed(status);
                     });
             }, "请填写理由");
         },
