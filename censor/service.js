@@ -29,7 +29,7 @@ let export_func = {
         let dateStr = dateS.replace(/(\/|\-)/gi, "");
         request(`${CONFIG.materialUrl}?date=${dateStr}`, (error, response, body) => {
             if (error) {
-                logger.error(`[censor] request material err: ${JSON.stringify(err)}`);
+                logger.error(`[censor] request material err: ${JSON.stringify(error)}`);
             } else if (response.statusCode === 200 && body) {
                 let params = JSON.parse(body);
                 if (params.code === 200) {
@@ -37,7 +37,7 @@ let export_func = {
                     let neo_datas = datas.map(item => {
                         return [item.tu, item.dsp, dateStr, item.ldp, item.material, item.pv];
                     });
-                    let sql_opt = "REPLACE INSERT INTO material (tu, dsp, m_date,ldp, material, pv) VALUES ?";
+                    let sql_opt = "INSERT INTO material (tu, dsp, m_date, ldp, material, pv) VALUES ?";
                     sql_opt = mysql.format(sql_opt, [neo_datas]);
                     courier.sendAsyncCall("dbopter", "asyncQuery", () => {}, "market_db", sql_opt)
                         .then(ret => {

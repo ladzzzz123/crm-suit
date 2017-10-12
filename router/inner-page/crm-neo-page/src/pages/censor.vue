@@ -26,6 +26,7 @@
 
 <template>
     <div class="container" v-if="logged">
+        <Spin size="large" fix v-if="loading"></Spin>
         <div class="data-list" v-if="verified">
             <DatePicker type="date" placeholder="选择日期和时间" v-model="m_date" 
             @on-ok="fetchMate"
@@ -33,7 +34,7 @@
             <br/>
             <br/>
             <Button type="primary" @click="reportRet">发送审核结果</Button>
-            <i-select v-if="curArray.length > 0" class="dsp-select" v-model="dsp" style="width:1.5rem" placeholder="选择dsp">
+            <i-select v-if="orgArr.length > 0" class="dsp-select" v-model="dsp" style="width:1.5rem" placeholder="选择dsp">
                 <i-option v-for="dsp in Object.keys(statusInfo.dspCount)"
                         :value="dsp"
                         v-bind:key="dsp"
@@ -45,7 +46,7 @@
             <br/>
             <br/>
             <div class="list-group">
-                <template v-if="curArray.length < 1">
+                <template v-if="orgArr.length < 1">
                     未检索到任何信息！
                 </template>
                 <template v-else>
@@ -64,7 +65,8 @@
                             <Col span="14">
                                 <Tag type="dot" v-for="(status, index) in Object.entries(statusInfo.dspCount)" 
                                     @click.native="dspChanged(status[0])"
-                                    v-bind:key="status[0]" :color="colors[index]" style="width: 1.6rem" :title="status[1]">
+                                    :color="dsp === status[0] ? colors[1] : colors[4]"
+                                    v-bind:key="status[0]" style="width: 1.6rem" :title="status[1]">
                                     {{ status[0] }}: {{ status[1] }}
                                 </Tag>
                             </Col>
@@ -95,6 +97,13 @@
                                         </Tag>
                                         <Tag v-else>未知状态</Tag>
                                     </p>
+                                    <br/>
+                                    <p v-if="material.opter">
+                                        最后编辑：
+                                        <br/>
+                                        <Tag color="default"> {{ material.opter }} </Tag>
+                                    </p>
+                                    <br/>
                                     <ButtonGroup class="btn-group" role="group" aria-label="edit">
                                         <Button v-if="material.m_status !== 'PASS' " type="success" @click="pass('material_' + material._id, material.ldp, material.m_version)">通过</Button>
                                         <Button type="warning" @click="delay('material_' + material._id, material.ldp, material.m_version)">再议</Button>
@@ -157,8 +166,10 @@ export default {
                 "blue",
                 "green",
                 "red",
-                "yellow"
+                "yellow",
+                "default"
             ],
+            loading: false
         }
     },
     computed: {
@@ -191,7 +202,6 @@ export default {
             };
             let dspContent = {};
             this.orgArr.forEach(item => {
-                console.log(item.m_status);
                 (dspContent[item.dsp]) ? dspContent[item.dsp] += 1 : dspContent[item.dsp] = 1;
                 switch (item.m_status) {
                     case "NEW":
@@ -221,19 +231,22 @@ export default {
 
     watch: {
         localArr: function(_localArr) {
-            let tempObj = {};
-            this.list.length = 0;
-            if (Array.isArray(_localArr)) {
-                _localArr.forEach(item => {
-                    let ldpUrl = item.ldp.split("?")[0];
-                    if (!Array.isArray(tempObj[ldpUrl])) {
-                        tempObj[ldpUrl] = [];
-                    }
-                    tempObj[ldpUrl].push(item);
-                });
-            }
-            this.curIndex = 0;
-            this.list = Object.entries(tempObj);
+            this.loading = true;
+            setTimeout(() => {
+                let tempObj = {};
+                this.list.length = 0;
+                if (Array.isArray(_localArr)) {
+                    _localArr.forEach(item => {
+                        let ldpUrl = item.ldp.split("?")[0];
+                        if (!Array.isArray(tempObj[ldpUrl])) {
+                            tempObj[ldpUrl] = [];
+                        }
+                        tempObj[ldpUrl].push(item);
+                    });
+                }
+                this.curIndex = 0;
+                this.list = Object.entries(tempObj);
+            }, 500);
         }
     },
 
@@ -254,6 +267,17 @@ export default {
         }
     },
     
+    beforeUpdate: function() {
+        // this.loading = true;
+    },
+    updated: function() {
+         this.$nextTick(function () {
+             setTimeout(() => {
+                 this.loading = false;
+             }, 2000);
+        });
+    },
+
     methods: {
         gotoLogin: function() {
             this.$router.push("/login");
@@ -286,7 +310,6 @@ export default {
 
         fetchMate: function() {
             if (this.m_date) {
-                console.log("this.m_date:" + JSON.stringify(this.m_date));
                 requester.send("/crm-inner/censor/fetch", 
                     { 
                         token: this.token, 
@@ -389,7 +412,8 @@ export default {
                         });
                         neoArr = neoArr || ["", []];
                         let neoItem = neoArr[1].find(subItem => ("" + subItem._id) === _id);
-                        (neoItem) && (neoItem.m_status = "PASS") && (neoItem.m_version = parseInt(neoItem.m_version) + 1);
+                        (neoItem) && (neoItem.m_status = "PASS") 
+                            && (neoItem.m_version = parseInt(neoItem.m_version) + 1) && (neoItem.opter = this.userInfo.mail);
                     }, (status, msg) => {
                         func.showTips("alert-error", "更新状态失败，该素材可能已被他人编辑，请刷新列表后再尝试！");
                         processFailed(status);
@@ -414,7 +438,10 @@ export default {
                         });
                         neoArr = neoArr || ["", []];
                         let neoItem = neoArr[1].find(subItem => ("" + subItem._id) === _id);
-                        (neoItem) && (neoItem.m_status = "REJECT") && (neoItem.reason = inputText) && (neoItem.m_version = parseInt(neoItem.m_version) + 1);
+                        (neoItem) && (neoItem.m_status = "REJECT") 
+                            && (neoItem.reason = inputText) 
+                            && (neoItem.m_version = parseInt(neoItem.m_version) + 1)
+                            && (neoItem.opter = this.userInfo.mail);
                         func.hideDialog();
                     }, (status, msg) => {
                         func.showTips("alert-error", "更新状态失败，该素材可能已被他人编辑，请刷新列表后再尝试！");
@@ -441,7 +468,10 @@ export default {
                         });
                         neoArr = neoArr || ["", []];
                         let neoItem = neoArr[1].find(subItem => ("" + subItem._id) === _id);
-                        (neoItem) && (neoItem.m_status = "TBD") && (neoItem.reason = inputText)  && (neoItem.m_version = parseInt(neoItem.m_version) + 1);
+                        (neoItem) && (neoItem.m_status = "TBD") 
+                            && (neoItem.reason = inputText)  
+                            && (neoItem.m_version = parseInt(neoItem.m_version) + 1)
+                            && (neoItem.opter = this.userInfo.mail);
                         func.hideDialog();
                     }, (status, msg) => {
                         func.showTips("alert-error", "更新状态失败，该素材可能已被他人编辑，请刷新列表后再尝试！");
