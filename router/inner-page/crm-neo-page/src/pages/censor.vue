@@ -114,9 +114,9 @@
                         </Row>
                         
                         <ButtonGroup v-show="item[1].length > 1 && item[1].every(item => item.m_status === 'NEW') " class="btn-group" role="group" aria-label="edit">
-                            <Button type="success" @click="passAll('dsp_' + pos)">该组全部通过</button>
-                            <Button type="warning" @click="delayAll('dsp_' + pos)">该组全部再议</button>
-                            <Button type="error" @click="deniedAll('dsp_' + pos)">该组全部拒绝</button>
+                            <Button type="success" @click="passAll('dsp_' + pos, item[1][0].m_version)">该组全部通过</button>
+                            <Button type="warning" @click="delayAll('dsp_' + pos, item[1][0].m_version)">该组全部再议</button>
+                            <Button type="error" @click="deniedAll('dsp_' + pos, item[1][0].m_version)">该组全部拒绝</button>
                         </ButtonGroup>
                     </Card>
                     <pageNav :indexInfo="indexInfo" v-on:setCurPage="setCurPage"/>
@@ -479,7 +479,7 @@ export default {
                     });
             }, "请填写理由");
         },
-        passAll: function(id) {
+        passAll: function(id, m_version) {
             console.log("passAll:" + id);
             let _id = id.replace("dsp_", "");
             let ids = this.curArray[_id][1].map(item => {
@@ -489,7 +489,8 @@ export default {
                     { 
                         token: this.token, 
                         ids: ids,
-                        action: "pass"
+                        action: "pass",
+                        m_version: m_version
                     },
                     result => {
                         func.showTips("alert-success", "该组更新成功！");
@@ -501,7 +502,7 @@ export default {
                     });
 
         },
-        deniedAll: function(id) {
+        deniedAll: function(id, m_version) {
             console.log("deniedAll:" + id);
             func.showDialog("input", "确认拒绝该组素材？", inputText => {
                 let _id = id.replace("dsp_", "");
@@ -513,7 +514,8 @@ export default {
                         token: this.token, 
                         ids: ids,
                         action: "denied",
-                        reason: inputText || ""
+                        reason: inputText || "",
+                        m_version: m_version
                     },
                     result => {
                         func.showTips("alert-success", "已拒绝该组素材！");
@@ -527,7 +529,7 @@ export default {
                     });
             }, "请填写拒绝理由");
         },
-        delayAll:function(id) {
+        delayAll:function(id, m_version) {
             console.log("delayAll:" + id);
             func.showDialog("input", "该素材需要再议？", inputText => {
                 let _id = id.replace("dsp_", "");
@@ -539,7 +541,8 @@ export default {
                         token: this.token, 
                         ids: ids,
                         action: "tbd",
-                        reason: inputText || ""
+                        reason: inputText || "",
+                        m_version: m_version
                     },
                     result => {
                         func.showTips("alert-success", "已确定再议该素材！");
