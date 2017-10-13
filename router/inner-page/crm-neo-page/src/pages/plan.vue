@@ -1,5 +1,6 @@
 <template>
     <Row v-if="logged" type="flex" justify="center">
+        <Spin size="large" fix v-if="loading"></Spin>
         <Row type="flex" justify="start" align="middle" style="width:100%">
             <Col span="4">
                 <Dropdown style="margin-left: 20px">
@@ -121,6 +122,7 @@ export default {
             uploadData:{},
             UPLOAD_URL: requester.UPLOAD_URL,
             mailContent: {},
+            loading: false
         };
     },
     computed: {
@@ -138,7 +140,6 @@ export default {
             if (!Array.isArray(roleArr)) {
                 roleArr = Object.values(roleArr);
             }
-            console.log("roleArr:%s", JSON.stringify(roleArr));
             let role = roleArr.find(item => {
                 return item.module == "plan-order" && item.role_name === "admin";
             });
@@ -154,12 +155,21 @@ export default {
             this.query();
         }
     },
+    
+    updated: function() {
+         this.$nextTick(function () {
+             setTimeout(() => {
+                 this.loading = false;
+             }, 2000);
+        });
+    },
 
     methods: {
         gotoLogin: function() {
             this.$router.push("/login");
         },
         query: function() {
+            this.loading = true;
             requester.send("/crm-inner/plan-order/list", { token: this.token },
                 result => {
                     let arr = result.content.ret;

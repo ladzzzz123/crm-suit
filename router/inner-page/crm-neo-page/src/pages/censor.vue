@@ -188,9 +188,7 @@ export default {
         indexInfo() {
             let length = parseInt((this.list.length - 1) / this.LDP_PER_PAGE) + 1;
             let indexs = new Array(length).fill(0).map((item, index) => index);
-            return {
-                indexs: indexs
-            };
+            return { indexs: indexs };
         },
        
         statusInfo() {
@@ -220,8 +218,6 @@ export default {
                         break;
                 }
             });
-            console.log("tempCountContent:%s", JSON.stringify(tempCountContent));
-            
             return {
                 statusCount: tempCountContent,
                 dspCount: dspContent
@@ -266,10 +262,7 @@ export default {
                 });
         }
     },
-    
-    beforeUpdate: function() {
-        // this.loading = true;
-    },
+    beforeUpdate: function() {},
     updated: function() {
          this.$nextTick(function () {
              setTimeout(() => {
@@ -366,21 +359,21 @@ export default {
 
         typeChanged: function(statusType) {
             switch (statusType) {
-                    case "未审核":
-                        this.statusType = "NEW";
-                        break;
-                    case "已通过":
-                        this.statusType = "PASS";
-                        break;
-                    case "未通过":
-                        this.statusType = "REJECT";
-                        break;
-                    case "再议":
-                        this.statusType = "TBD";
-                        break;
-                    default:
-                        break;
-                }
+                case "未审核":
+                    this.statusType = "NEW";
+                    break;
+                case "已通过":
+                    this.statusType = "PASS";
+                    break;
+                case "未通过":
+                    this.statusType = "REJECT";
+                    break;
+                case "再议":
+                    this.statusType = "TBD";
+                    break;
+                default:
+                    break;
+            }
             this.localArr.length = 0;
             let tempArr = [];
             if (statusType === "全部") {
@@ -398,163 +391,92 @@ export default {
         pass: function(id, ldp, m_version) {
             console.log("pass:" + id);
             let _id = id.replace("material_", "");
-            requester.send("/crm-inner/censor/update", 
-                    {
-                        token: this.token, 
-                        ids: [_id],
-                        action: "pass",
-                        m_version: m_version
-                    },
-                    result => {
-                        func.showTips("alert-success", "更新成功！");
-                        let neoArr = this.curArray.find(item => {
-                            return ldp.indexOf(item[0]) > -1;
-                        });
-                        neoArr = neoArr || ["", []];
-                        let neoItem = neoArr[1].find(subItem => ("" + subItem._id) === _id);
-                        (neoItem) && (neoItem.m_status = "PASS") 
-                            && (neoItem.m_version = parseInt(neoItem.m_version) + 1) && (neoItem.opter = this.userInfo.mail);
-                    }, (status, msg) => {
-                        func.showTips("alert-error", "更新状态失败，该素材可能已被他人编辑，请刷新列表后再尝试！");
-                        processFailed(status);
-                    });
+            this.updateStatus(_id, ldp, "pass", inputText, m_version, "PASS");
         },
         denied: function(id, ldp, m_version) {
             console.log("denied:" + id);
             func.showDialog("input", "确认拒绝该素材？", inputText => {
                 let _id = id.replace("material_", "");
-                requester.send("/crm-inner/censor/update", 
-                    {
-                        token: this.token, 
-                        ids: [_id],
-                        action: "denied",
-                        reason: inputText || "",
-                        m_version: m_version
-                    },
-                    result => {
-                        func.showTips("alert-success", "已拒绝该素材！");
-                        let neoArr = this.curArray.find(item => {
-                            return ldp.indexOf(item[0]) > -1;
-                        });
-                        neoArr = neoArr || ["", []];
-                        let neoItem = neoArr[1].find(subItem => ("" + subItem._id) === _id);
-                        (neoItem) && (neoItem.m_status = "REJECT") 
-                            && (neoItem.reason = inputText) 
-                            && (neoItem.m_version = parseInt(neoItem.m_version) + 1)
-                            && (neoItem.opter = this.userInfo.mail);
-                        func.hideDialog();
-                    }, (status, msg) => {
-                        func.showTips("alert-error", "更新状态失败，该素材可能已被他人编辑，请刷新列表后再尝试！");
-                        processFailed(status);
-                    });
+                this.updateStatus(_id, ldp, "denied", inputText, m_version, "REJECT");
             }, "请填写拒绝理由");
         },
         delay:function(id, ldp, m_version) {
             console.log("delay:" + id);
             func.showDialog("input", "该素材需要再议？", inputText => {
                 let _id = id.replace("material_", "");
-                requester.send("/crm-inner/censor/update", 
-                    {
-                        token: this.token, 
-                        ids: [_id],
-                        action: "tbd",
-                        reason: inputText || "",
-                        m_version: m_version
-                    },
-                    result => {
-                        func.showTips("alert-success", "已确定再议该素材！");
-                        let neoArr = this.curArray.find(item => {
-                            return ldp.indexOf(item[0]) > -1;
-                        });
-                        neoArr = neoArr || ["", []];
-                        let neoItem = neoArr[1].find(subItem => ("" + subItem._id) === _id);
-                        (neoItem) && (neoItem.m_status = "TBD") 
-                            && (neoItem.reason = inputText)  
-                            && (neoItem.m_version = parseInt(neoItem.m_version) + 1)
-                            && (neoItem.opter = this.userInfo.mail);
-                        func.hideDialog();
-                    }, (status, msg) => {
-                        func.showTips("alert-error", "更新状态失败，该素材可能已被他人编辑，请刷新列表后再尝试！");
-                        processFailed(status);
-                    });
+                this.updateStatus(_id, ldp, "tbd", inputText, m_version, "TBD");
             }, "请填写理由");
         },
+
+        updateStatus: function(_id, ldp, action, inputText, m_version, n_status) {
+            requester.send("/crm-inner/censor/update", 
+                {
+                    token: this.token, 
+                    ids: [_id],
+                    action: action,
+                    reason: inputText || "",
+                    m_version: m_version
+                },
+                result => {
+                    func.showTips("alert-success", "操作成功");
+                    let neoArr = this.curArray.find(item => {
+                        return ldp.indexOf(item[0]) > -1;
+                    });
+                    neoArr = neoArr || ["", []];
+                    let neoItem = neoArr[1].find(subItem => ("" + subItem._id) === _id);
+                    (neoItem) && (neoItem.m_status = n_status) 
+                        && (neoItem.reason = inputText)  
+                        && (neoItem.m_version = parseInt(neoItem.m_version) + 1)
+                        && (neoItem.opter = this.userInfo.mail);
+                    func.hideDialog();
+                }, (status, msg) => {
+                    func.showTips("alert-error", "更新状态失败，该素材可能已被他人编辑，请刷新列表后再尝试！");
+                    processFailed(status);
+                });
+        },
+
         passAll: function(id, m_version) {
             console.log("passAll:" + id);
-            let _id = id.replace("dsp_", "");
-            let ids = this.curArray[_id][1].map(item => {
-                return item._id;
+            func.showDialog("confirm", "确认通过该组素材？", inputText => {
+                this.updateGroupStatus(id, "pass", inputText, m_version, "PASS");
             });
-            requester.send("/crm-inner/censor/update", 
-                    { 
-                        token: this.token, 
-                        ids: ids,
-                        action: "pass",
-                        m_version: m_version
-                    },
-                    result => {
-                        func.showTips("alert-success", "该组更新成功！");
-                        this.curArray[_id][1].forEach(item => {
-                            item.m_status = "PASS";
-                        });
-                    }, (status, msg) => {
-                        processFailed(status);
-                    });
-
         },
         deniedAll: function(id, m_version) {
             console.log("deniedAll:" + id);
             func.showDialog("input", "确认拒绝该组素材？", inputText => {
-                let _id = id.replace("dsp_", "");
-                let ids = this.curArray[_id][1].map(item => {
-                    return item._id;
-                });
-                requester.send("/crm-inner/censor/update", 
-                    {
-                        token: this.token, 
-                        ids: ids,
-                        action: "denied",
-                        reason: inputText || "",
-                        m_version: m_version
-                    },
-                    result => {
-                        func.showTips("alert-success", "已拒绝该组素材！");
-                        this.curArray[_id][1].forEach(item => {
-                            item.m_status = "REJECT";
-                            item.reason = inputText || "";
-                        });
-                        func.hideDialog();
-                    }, (status, msg) => {
-                        processFailed(status);
-                    });
+                this.updateGroupStatus(id, "denied", inputText, m_version, "REJECT");
             }, "请填写拒绝理由");
         },
         delayAll:function(id, m_version) {
             console.log("delayAll:" + id);
             func.showDialog("input", "该素材需要再议？", inputText => {
-                let _id = id.replace("dsp_", "");
-                let ids = this.curArray[_id][1].map(item => {
-                    return item._id;
-                });
-                requester.send("/crm-inner/censor/update", 
-                    {
-                        token: this.token, 
-                        ids: ids,
-                        action: "tbd",
-                        reason: inputText || "",
-                        m_version: m_version
-                    },
-                    result => {
-                        func.showTips("alert-success", "已确定再议该素材！");
-                        this.curArray[_id][1].forEach(item => {
-                            item.m_status = "TBD";
-                            item.reason = inputText || "";
-                        });
-                        func.hideDialog();
-                    }, (status, msg) => {
-                        processFailed(status);
-                    });
+                this.updateGroupStatus(id, "tbd", inputText, m_version, "TBD");
             }, "请填写理由");
+        },
+
+        updateGroupStatus: function(id, action, inputText, m_version, m_status) {
+            let _id = id.replace("dsp_", "");
+            let ids = this.curArray[_id][1].map(item => {
+                return item._id;
+            });
+            requester.send("/crm-inner/censor/update", 
+                {
+                    token: this.token, 
+                    ids: ids,
+                    action: action,
+                    reason: inputText || "",
+                    m_version: m_version
+                },
+                result => {
+                    func.showTips("alert-success", "更新组状态成功");
+                    this.curArray[_id][1].forEach(item => {
+                        item.m_status = m_status;
+                        item.reason = inputText || "";
+                    });
+                    func.hideDialog();
+                }, (status, msg) => {
+                    processFailed(status);
+                });
         },
 
     }
