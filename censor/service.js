@@ -6,15 +6,30 @@ const fs = require("fs");
 
 const CONFIG = require("./config.json");
 
+const QUERY_LIMIT = 500;
+
 let export_func = {
     name: "censor",
     asyncFetchMaterialFromDB: (...dates) => {
         return new Promise((resolve, reject) => {
-            let params = ["material", dates[0], dates[1] || dates[0]];
-            logger.info("[censor] params: %s", JSON.stringify(params));
-            let sql_opt = "SELECT * FROM ?? WHERE m_date >= ? AND m_date <= ?";
-            sql_opt = mysql.format(sql_opt, params);
-            courier.sendAsyncCall("dbopter", "asyncQuery", () => {}, "market_db", sql_opt)
+            let params_date = ["material", dates[0], dates[1] || dates[0]];
+            logger.info("[censor] params_date: %s", JSON.stringify(params_date));
+            let SQL_QUERY_DSP_COUNT = "SELECT dsp, COUNT(dsp) as count FROM ?? WHERE m_date >= ? AND m_date <= ? GROUP BY dsp";
+            SQL_QUERY_DSP_COUNT = mysql.format(SQL_QUERY_DSP_COUNT, params_date);
+            courier.sendAsyncCall("dbopter", "asyncQuery", () => {}, "market_db", SQL_QUERY_DSP_COUNT)
+                .then(ret => {
+                    let orgDspArr = ret.ret;
+                    let dspArr = [];
+                    orgDspArr.forEach(dsp => {
+                        if (parseInt(dsp.count) < QUERY_LIMIT) {
+                            dspArr.push("'" + dsp.dsp + "'");
+                        };
+                    });
+                    logger.info("[dspArr] dspArr:%s", dspArr.toString());
+                    let sql_opt = `SELECT * FROM material WHERE m_date >= '${dates[0]}' AND m_date <= '${dates[1] || dates[0]}'
+                     AND dsp IN (${dspArr.toString()})`;
+                    return courier.sendAsyncCall("dbopter", "asyncQuery", () => {}, "market_db", sql_opt);
+                })
                 .then(ret => {
                     resolve(ret);
                 })
