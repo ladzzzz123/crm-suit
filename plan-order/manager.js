@@ -39,6 +39,9 @@ module.exports = {
                             fs.writeFile(`${CONFIG.reportPath}${fileName}`, content, "utf8", writeRet => {
                                 return Promise.resolve(CONFIG.reportVisitPath + fileName);
                             });
+                        } else {
+                            logger.warn("[exportPlan] mailArr is not array!");
+                            resolve({ status: "failed", msg: "获取任务列表失败" });
                         }
                     } else {
                         resolve({ status: "failed", msg: "获取任务列表失败" });
