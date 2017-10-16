@@ -195,7 +195,7 @@ router
             try {
                 await courier.sendAsyncCall("plan-order", "asyncManagerPlan", ret => {
                     if (ret) {
-                        logger.info("[router] plan manager ret.status:%s", ret.status);
+                        logger.info("[router] plan manager ret:%s", JSON.stringify(ret));
                     } else {
                         logger.info("[router] plan manager ret is null");
                     }
