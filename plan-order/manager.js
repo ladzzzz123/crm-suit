@@ -23,16 +23,15 @@ module.exports = {
 
     exportPlan: (courier) => {
         return new Promise((resolve, reject) => {
-            let SQL_QUERY_PLAN = ` SELECT * FROM mail_info WHERE m_module = "plan-order" `;
-            // SQL_QUERY_DSP_COUNT = mysql.format(SQL_QUERY_DSP_COUNT, params_date);
+            let SQL_QUERY_PLAN = ` SELECT title,m_from,m_cc,m_date,m_opter FROM mail_info WHERE m_module = "plan-order" `;
             courier.sendAsyncCall("dbopter", "asyncQuery", () => {}, "market_db", SQL_QUERY_PLAN)
                 .then(ret => {
                     if (ret.status === "success") {
                         let mailArr = ret.ret;
                         if (Array.isArray(mailArr)) {
-                            let content = "任务名,发起者,抄送,日期,最后操作者,内容,当前状态\n";
+                            let content = "任务名,发起者,抄送,日期,最后操作者,当前状态\n";
                             mailArr.forEach(item => {
-                                content += `${item.title},${item.m_from},${item.m_cc},${item.m_date},${item.m_opter},${item.m_content},${m_status}\n`;
+                                content += `${item.title},${item.m_from},${item.m_cc},${item.m_date},${item.m_opter},${m_status}\n`;
                             });
                             const fileName = `report_${new Date().toLocaleDateString()}.csv`;
                             fs.writeFile(`${CONFIG.savePath}${fileName}`, content, "utf8", writeRet => {
