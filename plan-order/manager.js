@@ -41,7 +41,7 @@ module.exports = {
                             fs.writeFile(`${CONFIG.reportPath}${fileName}`, content, "utf8", writeRet => {
                                 let url = CONFIG.reportVisitPath + fileName;
                                 logger.warn("[exportPlan] url: %s", url);
-                                return Promise.resolve(url);
+                                resolve({ status: "success", url: url });
                             });
                         } else {
                             logger.warn("[exportPlan] mailArr is not array!");
@@ -50,10 +50,6 @@ module.exports = {
                     } else {
                         resolve({ status: "failed", msg: "获取任务列表失败" });
                     }
-                })
-                .then(visitUrl => {
-                    logger.warn("[exportPlan] visitUrl: %s", visitUrl);
-                    resolve({ status: "success", url: visitUrl });
                 })
                 .catch(err => {
                     logger.warn("[plan-order] db select err:" + JSON.stringify(err));
