@@ -194,11 +194,15 @@ router
             let opter = verify.info.u_name;
             try {
                 await courier.sendAsyncCall("plan-order", "asyncManagerPlan", ret => {
-                    logger.info("[router] plan manager ret.status:%s", ret.status);
+                    if (ret) {
+                        logger.info("[router] plan manager ret.status:%s", ret.status);
+                    } else {
+                        logger.info("[router] plan manager ret is null");
+                    }
                     if (ret && ret["url"]) {
                         ctx.body = { status: RESULT.SUCCESS, msg: "fetch success", url: ret.url };
                     } else {
-                        ctx.body = { status: RESULT.SUCCESS, msg: "add success" };
+                        ctx.body = { status: RESULT.SUCCESS, msg: "opt success" };
                     }
                 }, postData.action, postData.plan_id, opter);
             } catch (e) {
