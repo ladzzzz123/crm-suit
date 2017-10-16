@@ -39,7 +39,9 @@ module.exports = {
                             const fileName = `report_new.csv`;
                             logger.info("[exportPlan] export fileName:%s", fileName);
                             fs.writeFile(`${CONFIG.reportPath}${fileName}`, content, "utf8", writeRet => {
-                                return Promise.resolve(CONFIG.reportVisitPath + fileName);
+                                let url = CONFIG.reportVisitPath + fileName;
+                                logger.warn("[exportPlan] url: %s", url);
+                                return Promise.resolve(url);
                             });
                         } else {
                             logger.warn("[exportPlan] mailArr is not array!");
