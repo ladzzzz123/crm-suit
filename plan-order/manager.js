@@ -34,8 +34,9 @@ module.exports = {
                                 content += `${item.title},${item.m_from},${item.m_cc},${item.m_date},${item.m_opter},${m_status}\n`;
                             });
                             const fileName = `report_${new Date().toLocaleDateString()}.csv`;
-                            fs.writeFile(`${CONFIG.savePath}${fileName}`, content, "utf8", writeRet => {
-                                return Promise.resolve(CONFIG.visitPath + fileName);
+                            logger.info("[exportPlan] export fileName:%s", fileName);
+                            fs.writeFile(`${CONFIG.reportPath}${fileName}`, content, "utf8", writeRet => {
+                                return Promise.resolve(CONFIG.reportVisitPath + fileName);
                             });
                         }
                     } else {
