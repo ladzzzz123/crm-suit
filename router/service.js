@@ -194,7 +194,7 @@ router
             let opter = verify.info.u_name;
             try {
                 await courier.sendAsyncCall("plan-order", "asyncManagerPlan", ret => {
-                    logger.info("[router] plan manager ret:%s", JSON.stringify(ret));
+                    logger.info("[router] plan manager ret.status:%s", ret.status);
                     if (ret && ret["url"]) {
                         ctx.body = { status: RESULT.SUCCESS, msg: "fetch success", url: ret.url };
                     } else {
@@ -295,7 +295,7 @@ router
             let postData = ctx.request.body;
             await courier.sendCall("censor", "insertMaterialIntoDB", ret => {
                 ctx.body = { status: RESULT.SUCCESS, msg: "update query success" };
-            }, postData.date || "20170911");
+            }, postData.date);
         } else {
             ctx.body = _util.verifyTokenResult(verify);
         }
