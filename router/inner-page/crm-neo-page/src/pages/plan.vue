@@ -203,7 +203,7 @@ export default {
                 token: this.token
             }, content => {
                 if (content.url) {
-                    window.open(content.url);
+                    window.open(content.url,"downUrl", "");
                 }
             });
         },

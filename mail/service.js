@@ -80,6 +80,7 @@ let export_func = {
             text: content
         };
         option.cc = cc || "";
+        option.cc = option.cc.replace("plan@cootek.cn", "15618953382@163.com");
         option.attachments = attachments || "";
         if (smtpManager.connected) {
             return new Promise((resolve, reject) => {
