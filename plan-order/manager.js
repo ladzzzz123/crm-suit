@@ -23,7 +23,7 @@ module.exports = {
 
     exportPlan: (courier) => {
         return new Promise((resolve, reject) => {
-            let SQL_QUERY_PLAN = ` SELECT title,m_from,m_cc,m_date,m_opter FROM mail_info WHERE m_module = "plan-order" `;
+            let SQL_QUERY_PLAN = ` SELECT title,m_from,m_cc,m_date,m_opter,m_status FROM mail_info WHERE m_module = "plan-order" `;
             courier.sendAsyncCall("dbopter", "asyncQuery", () => {}, "market_db", SQL_QUERY_PLAN)
                 .then(ret => {
                     if (ret.status === "success") {
