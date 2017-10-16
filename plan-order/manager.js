@@ -33,7 +33,7 @@ module.exports = {
                             let content = "任务名,发起者,抄送,日期,最后操作者,当前状态\n";
                             logger.info("[exportPlan] content:%s", content);
                             mailArr.forEach(item => {
-                                content += `${item.title},${item.m_from},${item.m_cc},${item.m_date},${item.m_opter},${item.m_status}\n`;
+                                content += `${item.title},${item.m_from},${item.m_cc.replace(",", " ") || ""},${item.m_date},${item.m_opter || ""},${item.m_status}\n`;
                             });
                             const fileName = `report_new.csv`;
                             logger.info("[exportPlan] export fileName:%s", fileName);

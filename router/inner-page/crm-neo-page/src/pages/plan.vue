@@ -104,7 +104,9 @@
         </Card>
         <ButtonGroup style="margin-bottom: 0.6rem;">
             <Button type="info" icon="ios-loop-strong" @click="query">刷新任务列表</Button>
-            <Button type="success" v-if="isAdmin" icon="ios-paper" @click="exportReport">导出任务列表</Button>
+            <Button type="success" v-if="isAdmin" icon="ios-paper" @click="exportReport">
+                导出任务列表
+            </Button>
         </ButtonGroup>
     </Row>
     <div class="container" v-else>
@@ -125,7 +127,7 @@ export default {
             uploadData:{},
             UPLOAD_URL: requester.UPLOAD_URL,
             mailContent: {},
-            loading: false
+            loading: false,
         };
     },
     computed: {
@@ -203,7 +205,8 @@ export default {
                 token: this.token
             }, content => {
                 if (content.url) {
-                    window.open(content.url,"downUrl", "");
+                    // window.open(content.url,"downUrl", "");
+                    window.location.href = content.url;
                 }
             });
         },
