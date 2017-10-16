@@ -194,6 +194,7 @@ router
             let opter = verify.info.u_name;
             try {
                 await courier.sendAsyncCall("plan-order", "asyncManagerPlan", ret => {
+                    logger.info("[router] plan manager ret:%s", JSON.stringify(ret));
                     if (ret && ret["url"]) {
                         ctx.body = { status: RESULT.SUCCESS, msg: "fetch success", url: ret.url };
                     } else {
