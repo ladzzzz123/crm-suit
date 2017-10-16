@@ -102,7 +102,10 @@
                 </Steps>
             </Row>
         </Card>
-        <Button type="info" icon="ios-loop-strong" @click="query">刷新任务列表</Button>
+        <ButtonGroup style="margin-bottom: 0.6rem;">
+            <Button type="info" icon="ios-loop-strong" @click="query">刷新任务列表</Button>
+            <Button type="success" v-if="isAdmin" icon="ios-paper" @click="exportReport">导出任务列表</Button>
+        </ButtonGroup>
     </Row>
     <div class="container" v-else>
         您尚未登录，请点击<a @click="gotoLogin">此处</a>登录
@@ -191,6 +194,18 @@ export default {
                         this.gotoLogin();
                     }
                 });
+        },
+
+        exportReport: function() {
+            requester.send("/crm-inner/plan-order/manager", {
+                action: "export",
+                plan_id: 0,
+                token: this.token
+            }, content => {
+                if (content.url) {
+                    window.open(content.url);
+                }
+            });
         },
 
         showHtml: function(id) {

@@ -194,7 +194,11 @@ router
             let opter = verify.info.u_name;
             try {
                 await courier.sendAsyncCall("plan-order", "asyncManagerPlan", ret => {
-                    ctx.body = { status: RESULT.SUCCESS, msg: "add success" };
+                    if (ret && ret["url"]) {
+                        ctx.body = { status: RESULT.SUCCESS, msg: "fetch success", url: ret.url };
+                    } else {
+                        ctx.body = { status: RESULT.SUCCESS, msg: "add success" };
+                    }
                 }, postData.action, postData.plan_id, opter);
             } catch (e) {
                 ctx.body = { status: RESULT.REQ_ERROR, msg: "Internal Error" };

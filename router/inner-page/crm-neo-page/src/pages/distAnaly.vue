@@ -12,96 +12,21 @@
             成都 	216908
         "  required></textarea>
         <br/>
-        <button class="btn bnt-success" @click="calc">计算</button>
+        <Button @click="calc">计算</Button>
         <br/>
         <br/>
-        <div class="row">
-            <div class="col-lg-5">
-                <div class="panel panel-default">
-                    <div class="panel-heading">城市数据</div>
-                    <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>城市</th>
-                            <th>数量</th>
-                            <th>占比</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="data in parsedData" v-bind:key="data.city">
-                            <td>{{ data.city }}</td>
-                            <td>{{ data.value }}</td>
-                            <td>{{ data.percent }}</td>
-                        </tr>
-                    </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="split col-lg-1"></div> 
-            <div class="col-lg-5">
-                <div class="panel panel-default">
-                    <div class="panel-heading">按城市等级分布</div>
-                    <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>分布</th>
-                            <th>数量</th>
-                            <th>占比</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="data in cityLevelData" v-bind:key="data.level">
-                            <td>
-                                <abbr :title="data.citys">{{ data.level }}</abbr>
-                            </td>
-                            <td>{{ data.value }}</td>
-                            <td>{{ data.percent }}</td>
-                        </tr>
-                    </tbody>
-                    </table>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">按地区分布</div>
-                    <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>地区</th>
-                            <th>数量</th>
-                            <th>占比</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="data in distData" v-bind:key="data.dist">
-                            <td>{{ data.dist }}</td>
-                            <td>{{ data.value }}</td>
-                            <td>{{ data.percent }}</td>
-                        </tr>
-                    </tbody>
-                    </table>
-                </div>
-
-                <div class="panel panel-default">
-                    <div class="panel-heading">按省份分布</div>
-                    <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>省市</th>
-                            <th>数量</th>
-                            <th>占比</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="data in provData" v-bind:key="data.province">
-                            <td>{{ data.province }}</td>
-                            <td>{{ data.value }}</td>
-                            <td>{{ data.percent }}</td>
-                        </tr>
-                    </tbody>
-                    </table>
-                </div>
-
-            </div>
-        </div>    
+        <Row>
+            <Col span="10">
+                <Table border :columns="colParsed" :data="parsedData"></Table>
+                <br/>
+                <Table border :columns="colCity" :data="cityLevelData"></Table>
+            </Col>
+            <Col span="10" offset="2">
+                <Table border :columns="colDist" :data="distData"></Table>
+                <br/>
+                <Table border :columns="colProv" :data="provData"></Table>
+            </Col>
+        </Row>
     </div>
     <div class="container" v-else>
         您尚未登录，请点击<a @click="gotoLogin">此处</a>登录
@@ -118,10 +43,66 @@ export default {
     data: () => {
         return {
             input_data: "",
-            parsedData: {},
+            parsedData: [],
             cityLevelData: [],
             distData: [],
-            provData: []
+            provData: [],
+            colParsed: [
+                {
+                    title: "城市",
+                    key: "city"
+                },
+                {
+                    title: "数量",
+                    key: "value"
+                },
+                {
+                    title: "占比",
+                    key: "percent"
+                }
+            ],
+            colCity: [
+                {
+                    title: "分布",
+                    key: "level"
+                },
+                {
+                    title: "数量",
+                    key: "value"
+                },
+                {
+                    title: "占比",
+                    key: "percent"
+                }
+            ],
+            colDist: [
+                {
+                    title: "地区",
+                    key: "dist"
+                },
+                {
+                    title: "数量",
+                    key: "value"
+                },
+                {
+                    title: "占比",
+                    key: "percent"
+                }
+            ],
+            colProv: [
+                {
+                    title: "省市",
+                    key: "province"
+                },
+                {
+                    title: "数量",
+                    key: "value"
+                },
+                {
+                    title: "占比",
+                    key: "percent"
+                }
+            ],
         };
     },
     computed: {

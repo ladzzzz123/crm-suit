@@ -140,6 +140,9 @@ let export_func = {
             case "delete":
                 return manager.deletePlan(courier, plan_id, opter);
                 break;
+            case "export":
+                return manager.exportPlan(courier);
+                break;
             default:
                 break;
         }
