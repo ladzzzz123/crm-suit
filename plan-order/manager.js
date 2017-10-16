@@ -27,6 +27,7 @@ module.exports = {
             courier.sendAsyncCall("dbopter", "asyncQuery", () => {}, "market_db", SQL_QUERY_PLAN)
                 .then(ret => {
                     if (ret.status === "success") {
+                        logger.info("[exportPlan] fetch success ret.ret:%s", JSON.stringify(ret.ret));
                         let mailArr = ret.ret;
                         if (Array.isArray(mailArr)) {
                             let content = "任务名,发起者,抄送,日期,最后操作者,当前状态\n";
