@@ -50,6 +50,7 @@ module.exports = {
                     }
                 })
                 .then(visitUrl => {
+                    logger.warn("[exportPlan] visitUrl: %s", visitUrl);
                     resolve({ status: "success", url: visitUrl });
                 })
                 .catch(err => {
