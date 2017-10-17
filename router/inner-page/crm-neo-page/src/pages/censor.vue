@@ -50,7 +50,7 @@
                     未检索到任何信息！
                 </template>
                 <template v-else>
-                    <BackTop :height="50">
+                    <BackTop :height="50" @click.native="back2Top">
                         <div class="top">返回顶端</div>
                     </BackTop>
                     <Affix :offset-top="1">
@@ -282,6 +282,10 @@ export default {
             this.$router.push("/login");
         },
 
+        back2Top: function() {
+            document.querySelector(".panel-right").scrollTo(0, 0);
+        },
+
         processArr: function(orgArr) {
             this.orgArr.length = 0;
             this.localArr.length = 0;
@@ -325,22 +329,26 @@ export default {
         },
         reportRet: function() {
             if (this.m_date) {
-                func.showDialog("input", "请填写收件人", inputText => {
-                    requester.send("/crm-inner/censor/report", 
-                        {
-                            token: this.token, 
-                            m_date: this.m_date.toLocaleDateString(),
-                            to: inputText
-                        },
-                        result => {
-                            if (result.status === RESULT_CODE.SUCCESS) {
-                                func.showTips("alert-success", "发送成功");
-                            }
-                            func.hideDialog();
-                        }, (status, msg) => {
-                            processFailed(status);
-                        });
-                }, "请填写收件人，多个收件人用半角逗号分隔");
+                if (this.orgArr.every(item => { return item.m_status !== "NEW" })) {
+                    func.showDialog("input", "请填写收件人", inputText => {
+                        requester.send("/crm-inner/censor/report", 
+                            {
+                                token: this.token, 
+                                m_date: this.m_date.toLocaleDateString(),
+                                to: inputText
+                            },
+                            result => {
+                                if (result.status === RESULT_CODE.SUCCESS) {
+                                    func.showTips("alert-success", "发送成功");
+                                }
+                                func.hideDialog();
+                            }, (status, msg) => {
+                                processFailed(status);
+                            });
+                    }, "请填写收件人，多个收件人用半角逗号分隔");
+                } else {
+                    func.showTips("alert-danger", "尚有素材未审核!");
+                }
             } else {
                 func.showTips("alert-danger", "素材日期未选择!");
             }
@@ -348,6 +356,7 @@ export default {
 
         dspChanged: function(dsp) {
             console.log(dsp);
+            document.querySelector(".panel-right").scrollTo(0, 0);
             this.dsp = dsp;
             this.localArr.length = 0;
             let tempArr = [];
@@ -364,6 +373,7 @@ export default {
         },
 
         typeChanged: function(statusType) {
+            document.querySelector(".panel-right").scrollTo(0, 0);
             switch (statusType) {
                 case "未审核":
                     this.statusType = "NEW";
@@ -397,7 +407,7 @@ export default {
         pass: function(id, ldp, m_version) {
             console.log("pass:" + id);
             let _id = id.replace("material_", "");
-            this.updateStatus(_id, ldp, "pass", inputText, m_version, "PASS");
+            this.updateStatus(_id, ldp, "pass", "", m_version, "PASS");
         },
         denied: function(id, ldp, m_version) {
             console.log("denied:" + id);
