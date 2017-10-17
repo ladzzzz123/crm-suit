@@ -84,6 +84,11 @@
                                     </a>
                                     <br/>
                                     <a :href="material.ldp" target="_blank">落地页链接</a>
+                                    <div>
+                                        <Button @click="makeQrCode('qr_' + material._id, material.ldp)">点击生成二维码</Button>
+                                        <div :id="'qr_' + material._id" style="margin:0 auto;margin-top:0.2rem;width:128px"></div>
+                                    </div>
+                                    
                                     <br/>
                                     当前状态：
                                     <p>
@@ -169,7 +174,8 @@ export default {
                 "yellow",
                 "default"
             ],
-            loading: false
+            loading: false,
+            qrList: {}
         }
     },
     computed: {
@@ -478,7 +484,21 @@ export default {
                     processFailed(status);
                 });
         },
-
+        makeQrCode: function(id, url) {
+            if (this.qrList[id]) {
+                return;
+            }
+            this.qrList[id] = true;
+            console.log("id: %s, this.qrList.id: %s" , id, this.qrList[id]);
+            let qrcode = new QRCode(document.getElementById(id), {
+                text: url,
+                width: 128,
+                height: 128,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        }
     }
 }
 </script>
