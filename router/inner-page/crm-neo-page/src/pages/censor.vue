@@ -283,7 +283,9 @@ export default {
         },
 
         back2Top: function() {
-            document.querySelector(".panel-right").scrollTo(0, 0);
+            if (document.querySelector(".panel-right").scrollTo) {
+                document.querySelector(".panel-right").scrollTo(0, 0);
+            }
         },
 
         processArr: function(orgArr) {
@@ -356,7 +358,7 @@ export default {
 
         dspChanged: function(dsp) {
             console.log(dsp);
-            document.querySelector(".panel-right").scrollTo(0, 0);
+            this.back2Top();
             this.dsp = dsp;
             this.localArr.length = 0;
             let tempArr = [];
@@ -373,7 +375,7 @@ export default {
         },
 
         typeChanged: function(statusType) {
-            document.querySelector(".panel-right").scrollTo(0, 0);
+            this.back2Top();
             switch (statusType) {
                 case "未审核":
                     this.statusType = "NEW";
