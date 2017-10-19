@@ -1,17 +1,35 @@
-const server = require("http").createServer();
-const io = require('socket.io')(server);
-const logger = require("node-process-bearer").logger.getLogger();
-const DEFAULT_CHAT_PORT = 3006;
+var io = require('socket.io').listen(3006);
 
-server.listen(DEFAULT_CHAT_PORT);
+io.sockets.on('connection', function(socket) {
+    socket.on('set nickname', function(name) {
+        socket.set('nickname', name, function() {
+            socket.emit('ready');
+        });
+    });
 
-io.on("connection", function(socket) {
-    socket.emit("message", { msg: "hello world!", u_name: "service" });
-    socket.on("message", msg => {
-        logger.info(JSON.stringify(msg));
+    socket.on('message', function(msg) {
         socket.emit("message", msg);
+        socket.get('nickname', function(err, name) {
+            console.log('Chat message by ', name);
+        });
     });
 });
+
+
+// const server = require("http").createServer();
+// const io = require('socket.io')(server);
+// const logger = require("node-process-bearer").logger.getLogger();
+// const DEFAULT_CHAT_PORT = 3006;
+
+// server.listen(DEFAULT_CHAT_PORT);
+
+// io.on("connection", function(socket) {
+//     socket.emit("message", { msg: "hello world!", u_name: "service" });
+//     socket.on("message", msg => {
+//         logger.info(JSON.stringify(msg));
+//         socket.emit("message", msg);
+//     });
+// });
 
 
 // const io = require("socket.io");
