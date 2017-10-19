@@ -1,6 +1,6 @@
 <template>
-    <Row style="background:#eee;padding:20px;z-index:999;position:fixed;right:0;bottom:0;max-width:90%">
-        <Row>
+    <Row style="background:#eee;padding:20px;z-index:999;position:fixed;right:0;bottom:0;max-width:20%;max-height:90%">
+        <div class="chat-list">
             <Card style="min-width:0.3rem;" v-for="msg in msgs" v-bind:key="msg.msg">
                 <div style="text-align:right" v-if="msg.u_name === userInfo.u_name">
                     {{ msg.msg }}
@@ -11,7 +11,7 @@
                     {{ msg.msg }}
                 </div>
             </Card>
-        </Row>
+        </div>
         <Input v-model="curMsg">
             <Button slot="append" icon="ios-paperplane" @click="sendMsg">发送</Button>
         </Input>
@@ -64,4 +64,8 @@ export default {
 </script>
 
 <style>
+    .chat-list {
+        max-width: 8rem;
+        overflow: scroll;
+    }
 </style>
