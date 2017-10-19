@@ -1,5 +1,5 @@
 <template>
-    <Row style="background:#eee;padding:20px;position:fixed;right:0;bottom:0;">
+    <Row style="background:#eee;padding:20px;z-index:999;position:fixed;right:0;bottom:0;maxWidth:90%">
         <Row>
             <Card style="width:100px" v-for="msg in msgs" v-bind:key="msg.msg">
                 <div style="text-align:center">

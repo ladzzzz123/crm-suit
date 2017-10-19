@@ -24,7 +24,7 @@ const DEFAULT_CHAT_PORT = 3006;
 server.listen(DEFAULT_CHAT_PORT);
 
 io.on("connection", function(socket) {
-    socket.emit("message", { msg: "hello world!", u_name: "service" });
+    // socket.emit("message", { msg: "hello world!", u_name: "service" });
     socket.on("message", msg => {
         logger.info(JSON.stringify(msg));
         socket.emit("message", msg);
