@@ -27,7 +27,7 @@ io.on("connection", function(socket) {
     // socket.emit("message", { msg: "hello world!", u_name: "service" });
     socket.on("message", msg => {
         logger.info(JSON.stringify(msg));
-        socket.emit("message", msg);
+        io.emit("message", msg);
     });
 });
 
