@@ -349,7 +349,7 @@ export default {
                             });
                     }, "请填写收件人，多个收件人用半角逗号分隔");
                 } else {
-                    func.showTips("alert-danger", "尚有素材未审核!");
+                    func.showTips("alert-warning", "尚有素材未审核!");
                 }
             } else {
                 func.showTips("alert-danger", "素材日期未选择!");

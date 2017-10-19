@@ -2,8 +2,13 @@
     <Row style="background:#eee;padding:20px;z-index:999;position:fixed;right:0;bottom:0;max-width:90%">
         <Row>
             <Card style="min-width:0.3rem;" v-for="msg in msgs" v-bind:key="msg.msg">
-                <div style="text-align:center">
-                    {{ msg.u_name }}:{{ msg.msg }}
+                <div style="text-align:right" v-if="msg.u_name === userInfo.u_name">
+                    {{ msg.msg }}
+                    <Avatar style="background:#f56a00" size="large">{{ msg.u_name }}</Avatar>
+                </div>
+                <div style="text-align:left" v-else>
+                    <Avatar style="background:#7265e6" size="large">{{ msg.u_name }}</Avatar>
+                    {{ msg.msg }}
                 </div>
             </Card>
         </Row>
@@ -14,7 +19,7 @@
 </template>
 
 <script>
-// const io = require("socket.io-client/dist/socket.io.js");
+import func from "../main";
 let socket = {};
 
 export default {
@@ -46,8 +51,13 @@ export default {
 
     methods: {
         sendMsg: function() {
-            socket.emit("message", { msg: this.curMsg, u_name: this.userInfo.u_name });
-            this.curMsg = "";
+            if(this.curMsg) {
+                socket.emit("message", { msg: this.curMsg, u_name: this.userInfo.u_name });
+                this.curMsg = "";
+            } else {
+                func.showTips("alert-danger", "发送内容不能为空！");
+            }
+            
         }
     }
 }
