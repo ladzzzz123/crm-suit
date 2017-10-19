@@ -20,10 +20,6 @@ const logger = require("node-process-bearer").logger.getLogger();
 
 const _util = require("./util");
 // const io = require("socket.io")(DEFAULT_CHAT_PORT);
-const io = require("socket.io")(http, {
-    "path": "/crm-chat", //客户端和服务器端都指定连接的Url
-    "serveClient": false
-});
 
 app
     .use(koaBody({ multipart: true, formLimit: 1024 * 1024 * 5 }))
@@ -412,17 +408,6 @@ router
         ctx.body = _ret;
     });
 
-const chat = io
-    .of("/crm-chat")
-    .on("connection", socket => {
-        logger.warn("socket connection!");
-        socket.on("message", msg => {
-            //向所有客户端广播发布的消息
-            logger.warn("socket msg: %s", JSON.stringify(msg));
-            chat.emit("message", msg);
-            // console.log(msg.u_name + '说：' + msg.msg);
-        });
-    });
 
 // io.on("connection", (socket) => {
 //     console.log("a user connected");
@@ -437,3 +422,17 @@ const chat = io
 // });
 
 http.createServer(app.callback()).listen(DEFAULT_PORT);
+const io = require("socket.io")();
+io.listen(DEFAULT_CHAT_PORT);
+
+const chat = io
+    .of("/crm-chat")
+    .on("connection", socket => {
+        logger.warn("socket connection!");
+        socket.on("message", msg => {
+            //向所有客户端广播发布的消息
+            logger.warn("socket msg: %s", JSON.stringify(msg));
+            chat.emit("message", msg);
+            // console.log(msg.u_name + '说：' + msg.msg);
+        });
+    });
