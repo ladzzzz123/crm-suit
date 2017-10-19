@@ -409,7 +409,7 @@ router
     });
 
 const chat = io
-    .of("/crm-inner/chat")
+    .of("/crm-chat")
     .on("connection", socket => {
         socket.on("message", msg => {
             //向所有客户端广播发布的消息
