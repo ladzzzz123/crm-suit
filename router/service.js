@@ -422,17 +422,27 @@ router
 // });
 
 http.createServer(app.callback()).listen(DEFAULT_PORT);
-const io = require("socket.io")();
-io.listen(DEFAULT_CHAT_PORT);
-
-const chat = io
-    .of("/crm-chat")
-    .on("connection", socket => {
-        logger.warn("socket connection!");
-        socket.on("message", msg => {
-            //向所有客户端广播发布的消息
-            logger.warn("socket msg: %s", JSON.stringify(msg));
-            chat.emit("message", msg);
-            // console.log(msg.u_name + '说：' + msg.msg);
-        });
+const io = require("socket.io")(DEFAULT_CHAT_PORT);
+// io.listen(DEFAULT_CHAT_PORT);
+io.on("connection", function(socket) {
+    // socket.broadcast.emit("user connected");
+    logger.warn("[socket] socket connection!");
+    socket.on("message", msg => {
+        //向所有客户端广播发布的消息
+        logger.warn("socket msg: %s", JSON.stringify(msg));
+        io.emit("message", msg);
+        // console.log(msg.u_name + '说：' + msg.msg);
     });
+});
+
+// const chat = io
+//     .of("/crm-chat")
+//     .on("connection", socket => {
+//         logger.warn("[socket] socket connection!");
+//         socket.on("message", msg => {
+//             //向所有客户端广播发布的消息
+//             logger.warn("socket msg: %s", JSON.stringify(msg));
+//             chat.emit("message", msg);
+//             // console.log(msg.u_name + '说：' + msg.msg);
+//         });
+//     });
