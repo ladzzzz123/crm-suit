@@ -407,16 +407,26 @@ router
         ctx.body = _ret;
     });
 
-io.on("connection", (socket) => {
-    console.log("a user connected");
-    socket.on("disconnect", function() {
-        console.log("user disconnected");
+const chat = io
+    .of("/crm-inner/chat")
+    .on("connection", socket => {
+        socket.on("message", msg => {
+            //向所有客户端广播发布的消息
+            chat.emit("message", msg);
+            // console.log(msg.u_name + '说：' + msg.msg);
+        });
     });
-    socket.on("message", msg => {
-        //向所有客户端广播发布的消息
-        io.emit("message", msg);
-        // console.log(msg.u_name + '说：' + msg.msg);
-    });
-});
+
+// io.on("connection", (socket) => {
+//     console.log("a user connected");
+//     socket.on("disconnect", function() {
+//         console.log("user disconnected");
+//     });
+//     socket.on("message", msg => {
+//         //向所有客户端广播发布的消息
+//         io.emit("message", msg);
+//         // console.log(msg.u_name + '说：' + msg.msg);
+//     });
+// });
 
 http.createServer(app.callback()).listen(DEFAULT_PORT);
