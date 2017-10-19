@@ -13,7 +13,6 @@ const staticServer = require("koa-static");
 const RESULT = require("./codemap");
 const MSG = require("../config/msg");
 const DEFAULT_PORT = 3002;
-const DEFAULT_CHAT_PORT = 3006;
 const Courier = require("node-process-bearer").Courier;
 const logger_conf = require("../conf.json").log_conf || "";
 const logger = require("node-process-bearer").logger.getLogger();
@@ -422,28 +421,28 @@ router
 // });
 
 http.createServer(app.callback()).listen(DEFAULT_PORT);
-const io = require("socket.io");
-const chat = io.listen(http);
-// io.listen(DEFAULT_CHAT_PORT);
-// io.on("connection", function(socket) {
-//     // socket.broadcast.emit("user connected");
-//     logger.warn("[socket] socket connection!");
-//     socket.on("message", msg => {
-//         //向所有客户端广播发布的消息
-//         logger.warn("socket msg: %s", JSON.stringify(msg));
-//         io.emit("message", msg);
-//         // console.log(msg.u_name + '说：' + msg.msg);
-//     });
-// });
+// const io = require("socket.io");
+// const chat = io.listen(http);
+// // io.listen(DEFAULT_CHAT_PORT);
+// // io.on("connection", function(socket) {
+// //     // socket.broadcast.emit("user connected");
+// //     logger.warn("[socket] socket connection!");
+// //     socket.on("message", msg => {
+// //         //向所有客户端广播发布的消息
+// //         logger.warn("socket msg: %s", JSON.stringify(msg));
+// //         io.emit("message", msg);
+// //         // console.log(msg.u_name + '说：' + msg.msg);
+// //     });
+// // });
 
-chat
-    .of("/crm-inner/chat")
-    .on("connection", socket => {
-        logger.warn("[socket] socket connection!");
-        socket.on("message", msg => {
-            //向所有客户端广播发布的消息
-            logger.warn("socket msg: %s", JSON.stringify(msg));
-            chat.emit("message", msg);
-            // console.log(msg.u_name + '说：' + msg.msg);
-        });
-    });
+// chat
+//     .of("/crm-inner/chat")
+//     .on("connection", socket => {
+//         logger.warn("[socket] socket connection!");
+//         socket.on("message", msg => {
+//             //向所有客户端广播发布的消息
+//             logger.warn("socket msg: %s", JSON.stringify(msg));
+//             chat.emit("message", msg);
+//             // console.log(msg.u_name + '说：' + msg.msg);
+//         });
+//     });
