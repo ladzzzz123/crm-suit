@@ -31,7 +31,7 @@
 
     <div class="layout container">
         <cheader :logged="logged" />
-        <chat />
+        <!-- <chat /> -->
         <!-- <tips /> -->
         <!-- <idialog /> -->
         <Row type="flex">
@@ -51,7 +51,7 @@ import cheader from "../components/cheader.vue";
 // import tips from "../components/tips.vue";
 // import idialog from "../components/idialog.vue";
 import crouter from "../components/crouter.vue";
-import chat from "../components/chat.vue";
+// import chat from "../components/chat.vue";
 
 export default {
     data: function() {
