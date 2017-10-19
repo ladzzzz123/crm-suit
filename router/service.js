@@ -8,17 +8,18 @@ const Router = require("koa-router");
 const router = Router();
 const koaBody = require("koa-body");
 const staticServer = require("koa-static");
-const io = require("socket.io")(http);
 
 
 const RESULT = require("./codemap");
 const MSG = require("../config/msg");
 const DEFAULT_PORT = 3002;
+const DEFAULT_CHAT_PORT = 3006;
 const Courier = require("node-process-bearer").Courier;
 const logger_conf = require("../conf.json").log_conf || "";
 const logger = require("node-process-bearer").logger.getLogger();
 
 const _util = require("./util");
+const io = require("socket.io")(DEFAULT_CHAT_PORT);
 
 app
     .use(koaBody({ multipart: true, formLimit: 1024 * 1024 * 5 }))
