@@ -9,7 +9,6 @@ const router = Router();
 const koaBody = require("koa-body");
 const staticServer = require("koa-static");
 
-
 const RESULT = require("./codemap");
 const MSG = require("../config/msg");
 const DEFAULT_PORT = 3002;
@@ -18,7 +17,6 @@ const logger_conf = require("../conf.json").log_conf || "";
 const logger = require("node-process-bearer").logger.getLogger();
 
 const _util = require("./util");
-// const io = require("socket.io")(DEFAULT_CHAT_PORT);
 
 app
     .use(koaBody({ multipart: true, formLimit: 1024 * 1024 * 5 }))
@@ -407,42 +405,4 @@ router
         ctx.body = _ret;
     });
 
-
-// io.on("connection", (socket) => {
-//     console.log("a user connected");
-//     socket.on("disconnect", function() {
-//         console.log("user disconnected");
-//     });
-//     socket.on("message", msg => {
-//         //向所有客户端广播发布的消息
-//         io.emit("message", msg);
-//         // console.log(msg.u_name + '说：' + msg.msg);
-//     });
-// });
-
 http.createServer(app.callback()).listen(DEFAULT_PORT);
-// const io = require("socket.io");
-// const chat = io.listen(http);
-// // io.listen(DEFAULT_CHAT_PORT);
-// // io.on("connection", function(socket) {
-// //     // socket.broadcast.emit("user connected");
-// //     logger.warn("[socket] socket connection!");
-// //     socket.on("message", msg => {
-// //         //向所有客户端广播发布的消息
-// //         logger.warn("socket msg: %s", JSON.stringify(msg));
-// //         io.emit("message", msg);
-// //         // console.log(msg.u_name + '说：' + msg.msg);
-// //     });
-// // });
-
-// chat
-//     .of("/crm-inner/chat")
-//     .on("connection", socket => {
-//         logger.warn("[socket] socket connection!");
-//         socket.on("message", msg => {
-//             //向所有客户端广播发布的消息
-//             logger.warn("socket msg: %s", JSON.stringify(msg));
-//             chat.emit("message", msg);
-//             // console.log(msg.u_name + '说：' + msg.msg);
-//         });
-//     });

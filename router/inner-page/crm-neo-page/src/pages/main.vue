@@ -30,8 +30,8 @@
 <template>
 
     <div class="layout container">
-        <cheader :logged="logged" />
-        <!-- <chat /> -->
+        <cheader :logged="logged" v-on:showChat="showChat" />
+        <cchat v-if="flagChat"/>
         <!-- <tips /> -->
         <!-- <idialog /> -->
         <Row type="flex">
@@ -48,16 +48,17 @@
 
 <script>
 import cheader from "../components/cheader.vue";
+import cchat from "../components/cchat.vue";
 // import tips from "../components/tips.vue";
 // import idialog from "../components/idialog.vue";
 import crouter from "../components/crouter.vue";
-// import chat from "../components/chat.vue";
 
 export default {
     data: function() {
         return {
             spanLeft: 5,
-            spanRight: 19
+            spanRight: 19,
+            flagChat: false
         };
     },
     computed: {
@@ -73,9 +74,15 @@ export default {
             this.$router.push("/login");
         }
     },
+    methods: {
+        showChat: function() {
+            this.flagChat = !this.flagChat
+        }
+    },
     components: {
         // tips,
         // idialog,
+        cchat,
         crouter,
         cheader
     }
