@@ -1,5 +1,5 @@
 <template>
-    <Row style="background:#eee;padding:20px;z-index:999;position:fixed;right:0;bottom:0;">
+    <Row style="background:#eee;padding:20px;position:fixed;right:0;bottom:0;">
         <Row>
             <Card style="width:100px" v-for="msg in msgs" v-bind:key="msg.msg">
                 <div style="text-align:center">
@@ -38,15 +38,14 @@ export default {
     },
     
     mounted: function() {
-        
+        socket = io.connect();
+        socket.on("message", msg => {
+            this.msgs.push(msg);
+        });
     },
 
     methods: {
         sendMsg: function() {
-            socket = io.connect("http://121.52.235.231:40718/");
-            socket.on("message", msg => {
-                this.msgs.push(msg);
-            });
             socket.emit("message", { msg: this.curMsg, u_name: this.userInfo.u_name });
         }
     }
