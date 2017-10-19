@@ -422,7 +422,8 @@ router
 // });
 
 http.createServer(app.callback()).listen(DEFAULT_PORT);
-const io = require("socket.io")(http);
+const io = require("socket.io");
+const chat = io.listen(http);
 // io.listen(DEFAULT_CHAT_PORT);
 // io.on("connection", function(socket) {
 //     // socket.broadcast.emit("user connected");
@@ -435,7 +436,7 @@ const io = require("socket.io")(http);
 //     });
 // });
 
-const chat = io
+chat
     .of("/crm-inner/chat")
     .on("connection", socket => {
         logger.warn("[socket] socket connection!");
