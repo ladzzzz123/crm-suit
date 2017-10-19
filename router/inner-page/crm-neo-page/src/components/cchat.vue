@@ -1,7 +1,7 @@
 <template>
-    <Row style="background:#eee;padding:20px;z-index:999;position:fixed;right:0;bottom:0;maxWidth:90%">
+    <Row style="background:#eee;padding:20px;z-index:999;position:fixed;right:0;bottom:0;max-width:90%">
         <Row>
-            <Card style="width:100px" v-for="msg in msgs" v-bind:key="msg.msg">
+            <Card style="min-width:0.3rem;" v-for="msg in msgs" v-bind:key="msg.msg">
                 <div style="text-align:center">
                     {{ msg.u_name }}:{{ msg.msg }}
                 </div>
@@ -47,6 +47,7 @@ export default {
     methods: {
         sendMsg: function() {
             socket.emit("message", { msg: this.curMsg, u_name: this.userInfo.u_name });
+            this.curMsg = "";
         }
     }
 }
