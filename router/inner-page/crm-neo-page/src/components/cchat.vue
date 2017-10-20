@@ -1,6 +1,6 @@
 <template>
     <Row style="background:#eee;padding:20px;z-index:999;position:fixed;right:0;
-        bottom:0;max-width:20%;height:90%">
+        bottom:0;min-width:2rem;height:95%">
         <div class="chat-list">
             <Icon type="close" class="chat-close" @click="hideChat"></Icon>
             <Card style="min-width:0.3rem;" v-for="msg in msgs" v-bind:key="msg.msg">
@@ -61,7 +61,7 @@ export default {
             }
         },
         hideChat:function() {
-
+            this.$emit("hideChat");
         }
     }
 }
@@ -73,11 +73,11 @@ export default {
     }
     .chat-input {
         position: absolute;
-        bottom: 0;
+        top: 94%;
     }
     .chat-close {
+        left: 0.1rem;
         position: absolute;
-        top: 0;
-        right: 0;
+        top: 0.1rem;
     }
 </style>
