@@ -31,8 +31,10 @@
 
     <div class="layout container">
         <cheader :logged="logged" 
-            v-on:showChat="showChat" />
-        <cchat v-if="flagChat" v-show="chatShowFlag"
+            v-on:showChat="showChat"
+            v-on:hideChat="hideChat" />
+        <cchat v-if="flagChat"
+            v-show="chatShowFlag"
             v-on:hideChat="hideChat"/>
         <!-- <tips /> -->
         <!-- <idialog /> -->

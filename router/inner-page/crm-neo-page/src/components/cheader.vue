@@ -65,6 +65,7 @@ export default {
     methods: {
         quit: function() {
             this.$store.dispatch("asyncQuit");
+            this.$emit("hideChat");
             setTimeout(() => {
                 this.$router.push("/login");
             }, 500);
