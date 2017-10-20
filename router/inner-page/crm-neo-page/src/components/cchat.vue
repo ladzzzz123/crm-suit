@@ -6,8 +6,8 @@
                 :bordered="false" dis-hover>
                 <Row v-if="msg.u_name === userInfo.u_name">
                     <Col span="18">
-                        <Card shadow>
-                            <p>{{ msg.msg }}</p>
+                        <Card class="chat-msg" shadow>
+                            {{ msg.msg }}
                         </Card>
                     </Col>
                     <Col span="6" style="text-align:center">
@@ -19,8 +19,8 @@
                         <Avatar style="background:#f56a00" size="large">{{ msg.u_name }}</Avatar>
                     </Col>
                     <Col span="18">
-                        <Card shadow>
-                            <p>{{ msg.msg }}</p>
+                        <Card class="chat-msg" shadow>
+                            {{ msg.msg }}
                         </Card>
                     </Col>
                 </Row>
@@ -98,9 +98,15 @@ export default {
         height: 4.5rem;
         overflow-y: scroll;
     }
+    .chat-msg {
+        max-width: 2.8rem;
+        word-break:break-all;
+    }
     .chat-input {
+        left: 5%;
         position: absolute;
         top: 4.8rem;
+        width: 90%;
     }
     .chat-close {
         left: 0.05rem;
