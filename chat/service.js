@@ -25,7 +25,6 @@ const Courier = require("node-process-bearer").Courier;
 server.listen(DEFAULT_CHAT_PORT);
 
 io.on("connection", function(socket) {
-    // socket.emit("message", { msg: "hello world!", u_name: "service" });
     socket.on("message", async(msg) => {
         logger.info(JSON.stringify(msg));
         if (!msg["token"]) return;
