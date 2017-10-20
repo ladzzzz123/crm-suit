@@ -1,9 +1,8 @@
 <template>
     <Row class="chat-container layer-middle">
-        <Col span="2" class="chat-close">
-            <!-- <Icon type="close" class="chat-close" @click.native="hideChat"></Icon> -->
-            <Icon type="arrow-right-b" size="large" @click.native="hideChat" v-if="chatShowing"></Icon>
-            <Icon type="arrow-left-b" size="large" @click.native="showChat" v-else></Icon>
+        <Col span="2" class="chat-close" @click.native="switchChat">
+            <Icon type="arrow-right-b" size="large" v-if="chatShowing"></Icon>
+            <Icon type="arrow-left-b" size="large" v-else></Icon>
         </Col>
         <Col span="22">
             <div class="chat-list">
@@ -89,14 +88,13 @@ export default {
                 func.showTips("alert-danger", "发送内容不能为空！");
             }
         },
-        hideChat:function() {
-            this.chatShowing = false;
-            // this.$emit("hideChat");
-            this.el.style["right"] = "-2.3rem";
-        },
-        showChat: function() {
-            this.chatShowing = true;
-            this.el.style["right"] = 0;
+        switchChat: function() {
+            this.chatShowing = !this.chatShowing;
+            if (this.chatShowing) {
+                this.el.style["right"] = 0;
+            } else {
+                this.el.style["right"] = "-2.3rem";
+            }
         }
     }
 }
@@ -124,7 +122,7 @@ export default {
         height: 0.5rem;
         padding: 0.1rem;
         position: absolute;
-        top: 4.8rem;
+        top: 4.75rem;
         width: 100%;
     }
     .chat-input {
@@ -132,6 +130,7 @@ export default {
         width: 90%;
     }
     .chat-close {
+        background: #ddd;
         height: 100%;
         padding:100% 0.05rem;
     }
