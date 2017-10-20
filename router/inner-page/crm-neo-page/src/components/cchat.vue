@@ -69,7 +69,7 @@ export default {
                 socket.emit("message", { 
                     msg: this.curMsg, 
                     u_name: this.userInfo.u_name, 
-                    nick_name: this.nick_name || this.u_name,
+                    nick_name: this.userInfo.nick_name || this.userInfo.u_name,
                     token: this.token 
                 });
                 this.curMsg = "";

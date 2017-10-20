@@ -19,7 +19,7 @@
     }
     .navbar-subtitle {
         display: inline-block;
-        font-size: 0.08rem;
+        font-size: 0.16rem;
         margin-left: -0.1rem;
         margin-top: 0.2rem;
         vertical-align: bottom;
