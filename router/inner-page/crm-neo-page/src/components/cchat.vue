@@ -2,15 +2,15 @@
     <Row class="chat-container">
         <div class="chat-list">
             <Icon type="close" class="chat-close" @click.native="hideChat"></Icon>
-            <Card style="max-width:100%;" v-for="msg in msgs" v-bind:key="msg.msg"
+            <Card style="max-width:3rem;" v-for="msg in msgs" v-bind:key="msg.msg"
                 :bordered="false" dis-hover>
                 <Row v-if="msg.u_name === userInfo.u_name">
-                    <Col span="6">
+                    <Col span="18">
                         <Card>
                             {{ msg.msg }}
                         </Card>
                     </Col>
-                    <Col span="18">
+                    <Col span="6">
                         <Avatar style="background:#7265e6" size="large">{{ msg.u_name }}</Avatar>
                     </Col>
                 </Row>
