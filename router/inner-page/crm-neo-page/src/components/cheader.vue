@@ -33,7 +33,7 @@
         <Row>
             <Col span="12">
                 <a class="navbar-brand" href="http://www.cootek.com/index.html">
-                    <img src="/img/logo.png" height="100%">
+                    <img src="img/logo.png" height="100%">
                 </a>
                 <p class="navbar-subtitle">TouchPal Commercial Operation System</p>
             </Col>
