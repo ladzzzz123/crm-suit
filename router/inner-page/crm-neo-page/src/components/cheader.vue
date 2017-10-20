@@ -45,8 +45,14 @@
                             <Icon type="arrow-down-b"></Icon>
                         </a>
                         <DropdownMenu slot="list">
-                            <DropdownItem @click.native="quit">退出登陆</DropdownItem>
-                            <DropdownItem @click.native="showChat">聊天室(测试)</DropdownItem>
+                            <DropdownItem @click.native="showChat">
+                                <Icon type="chatbox"></Icon>
+                                <span style="margin-left:0.02rem">聊天室(测试)</span>
+                            </DropdownItem>
+                            <DropdownItem @click.native="quit" divided>
+                                <Icon type="android-exit"></Icon>
+                                <span style="margin-left:0.02rem">退出登陆</span>
+                            </DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
                 </div>

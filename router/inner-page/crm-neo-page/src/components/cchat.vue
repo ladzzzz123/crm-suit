@@ -1,36 +1,42 @@
 <template>
     <Row class="chat-container layer-middle">
-        <div class="chat-list">
-            <Icon type="close" class="chat-close" @click.native="hideChat"></Icon>
-            <Card style="max-width:3rem;background:none" v-for="msg in msgs" v-bind:key="msg.msg"
-                :bordered="false" dis-hover>
-                <Row v-if="msg.u_name === userInfo.u_name">
-                    <Col span="18">
-                        <Card class="chat-msg" shadow>
-                            {{ msg.msg }}
-                        </Card>
-                    </Col>
-                    <Col span="6" style="text-align:center">
-                        <Avatar style="background:#7265e6" size="large">{{ msg.nick_name }}</Avatar>
-                    </Col>
-                </Row>
-                <Row v-else>
-                    <Col span="6" style="text-align:center">
-                        <Avatar style="background:#f56a00" size="large">{{ msg.nick_name }}</Avatar>
-                    </Col>
-                    <Col span="18">
-                        <Card class="chat-msg" shadow>
-                            {{ msg.msg }}
-                        </Card>
-                    </Col>
-                </Row>
-            </Card>
-        </div>
-        <div class="chat-input-area">
-            <Input v-model="curMsg" class="chat-input">
-                <Button slot="append" icon="ios-paperplane" @click="sendMsg">发送</Button>
-            </Input>
-        </div>
+        <Col span="2" class="chat-close">
+            <!-- <Icon type="close" class="chat-close" @click.native="hideChat"></Icon> -->
+            <Icon type="arrow-right-b" size="large" @click.native="hideChat" v-if="chatShowing"></Icon>
+            <Icon type="arrow-left-b" size="large" @click.native="showChat" v-else></Icon>
+        </Col>
+        <Col span="22">
+            <div class="chat-list">
+                <Card style="max-width:3rem;background:none" v-for="msg in msgs" v-bind:key="msg.msg"
+                    :bordered="false" dis-hover>
+                    <Row v-if="msg.u_name === userInfo.u_name">
+                        <Col span="18">
+                            <Card class="chat-msg" shadow>
+                                {{ msg.msg }}
+                            </Card>
+                        </Col>
+                        <Col span="6" style="text-align:center">
+                            <Avatar style="background:#7265e6" size="large">{{ msg.nick_name }}</Avatar>
+                        </Col>
+                    </Row>
+                    <Row v-else>
+                        <Col span="6" style="text-align:center">
+                            <Avatar style="background:#f56a00" size="large">{{ msg.nick_name }}</Avatar>
+                        </Col>
+                        <Col span="18">
+                            <Card class="chat-msg" shadow>
+                                {{ msg.msg }}
+                            </Card>
+                        </Col>
+                    </Row>
+                </Card>
+            </div>
+            <div class="chat-input-area">
+                <Input v-model="curMsg" class="chat-input">
+                    <Button slot="append" icon="ios-paperplane" @click="sendMsg">发送</Button>
+                </Input>
+            </div>
+        </Col>
     </Row>
 </template>
 
@@ -42,7 +48,9 @@ export default {
     data: function() {
         return {
             msgs: [],
-            curMsg: ""
+            curMsg: "",
+            chatShowing: false,
+            el: {}
         };
     },
 
@@ -63,6 +71,8 @@ export default {
         socket.on("message", msg => {
             this.msgs.push(msg);
         });
+        this.chatShowing = true;
+        this.el = document.querySelector(".chat-container");
     },
 
     methods: {
@@ -80,7 +90,13 @@ export default {
             }
         },
         hideChat:function() {
-            this.$emit("hideChat");
+            this.chatShowing = false;
+            // this.$emit("hideChat");
+            this.el.style["right"] = "-2.3rem";
+        },
+        showChat: function() {
+            this.chatShowing = true;
+            this.el.style["right"] = 0;
         }
     }
 }
@@ -116,8 +132,7 @@ export default {
         width: 90%;
     }
     .chat-close {
-        left: 0.05rem;
-        position: absolute;
-        top: 0.05rem;
+        height: 100%;
+        padding:100% 0.05rem;
     }
 </style>
