@@ -6,8 +6,8 @@
                 :bordered="false" dis-hover>
                 <Row v-if="msg.u_name === userInfo.u_name">
                     <Col span="18">
-                        <Card>
-                            <div>{{ msg.msg }}</div>
+                        <Card shadow>
+                            <p>{{ msg.msg }}</p>
                         </Card>
                     </Col>
                     <Col span="6" style="text-align:center">
@@ -19,8 +19,8 @@
                         <Avatar style="background:#f56a00" size="large">{{ msg.u_name }}</Avatar>
                     </Col>
                     <Col span="18">
-                        <Card>
-                            <div>{{ msg.msg }}</div>
+                        <Card shadow>
+                            <p>{{ msg.msg }}</p>
                         </Card>
                     </Col>
                 </Row>
