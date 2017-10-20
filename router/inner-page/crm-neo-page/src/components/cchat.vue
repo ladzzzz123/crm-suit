@@ -3,14 +3,19 @@
         bottom:0;min-width:2rem;height:95%">
         <div class="chat-list">
             <Icon type="close" class="chat-close" @click="hideChat"></Icon>
-            <Card style="min-width:0.3rem;" v-for="msg in msgs" v-bind:key="msg.msg">
+            <Card style="max-width:80%;" v-for="msg in msgs" v-bind:key="msg.msg"
+                :bordered="false" dis-hover>
                 <div style="text-align:right" v-if="msg.u_name === userInfo.u_name">
-                    {{ msg.msg }}
+                    <Card>
+                        {{ msg.msg }}
+                    </Card>
                     <Avatar style="background:#f56a00" size="large">{{ msg.u_name }}</Avatar>
                 </div>
                 <div style="text-align:left" v-else>
                     <Avatar style="background:#7265e6" size="large">{{ msg.u_name }}</Avatar>
-                    {{ msg.msg }}
+                    <Card>
+                        {{ msg.msg }}
+                    </Card>
                 </div>
             </Card>
         </div>
