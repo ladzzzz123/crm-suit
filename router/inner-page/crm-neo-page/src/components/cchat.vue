@@ -7,7 +7,7 @@
                 <Row v-if="msg.u_name === userInfo.u_name">
                     <Col span="18">
                         <Card>
-                            {{ msg.msg }}
+                            <div>{{ msg.msg }}</div>
                         </Card>
                     </Col>
                     <Col span="6" style="text-align:center">
@@ -20,7 +20,7 @@
                     </Col>
                     <Col span="18">
                         <Card>
-                            {{ msg.msg }}
+                            <div>{{ msg.msg }}</div>
                         </Card>
                     </Col>
                 </Row>
