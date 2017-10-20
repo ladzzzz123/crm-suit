@@ -10,12 +10,12 @@
                             {{ msg.msg }}
                         </Card>
                     </Col>
-                    <Col span="6">
+                    <Col span="6" style="text-align:center">
                         <Avatar style="background:#7265e6" size="large">{{ msg.u_name }}</Avatar>
                     </Col>
                 </Row>
                 <Row v-else>
-                    <Col span="6">
+                    <Col span="6" style="text-align:center">
                         <Avatar style="background:#f56a00" size="large">{{ msg.u_name }}</Avatar>
                     </Col>
                     <Col span="18">

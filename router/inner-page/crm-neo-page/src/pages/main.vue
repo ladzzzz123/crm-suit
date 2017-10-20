@@ -32,7 +32,7 @@
     <div class="layout container">
         <cheader :logged="logged" 
             v-on:showChat="showChat" />
-        <cchat v-if="flagChat"
+        <cchat v-if="flagChat" v-show="chatShowFlag"
             v-on:hideChat="hideChat"/>
         <!-- <tips /> -->
         <!-- <idialog /> -->
@@ -60,7 +60,8 @@ export default {
         return {
             spanLeft: 5,
             spanRight: 19,
-            flagChat: false
+            flagChat: false,
+            chatShowFlag: false
         };
     },
     computed: {
@@ -78,10 +79,13 @@ export default {
     },
     methods: {
         showChat: function() {
-            this.flagChat = !this.flagChat;
+            if (!this.flagChat) {
+                this.flagChat = !this.flagChat;
+            }
+            this.chatShowFlag = true;
         },
         hideChat: function() {
-            this.flagChat = false;
+            this.chatShowFlag = false;
         }
     },
     components: {
