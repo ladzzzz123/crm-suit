@@ -2,21 +2,29 @@
     <Row style="background:#eee;padding:20px;z-index:999;position:absolute;right:0;
         bottom:0;min-width:2rem;height:94%">
         <div class="chat-list">
-            <Icon type="close" class="chat-close" @click="hideChat"></Icon>
-            <Card style="max-width:80%;" v-for="msg in msgs" v-bind:key="msg.msg"
+            <Icon type="close" class="chat-close" @click.native="hideChat"></Icon>
+            <Card style="max-width:100%;" v-for="msg in msgs" v-bind:key="msg.msg"
                 :bordered="false" dis-hover>
-                <div style="text-align:right" v-if="msg.u_name === userInfo.u_name">
-                    <Card>
-                        {{ msg.msg }}
-                    </Card>
-                    <Avatar style="background:#f56a00" size="large">{{ msg.u_name }}</Avatar>
-                </div>
-                <div style="text-align:left" v-else>
-                    <Avatar style="background:#7265e6" size="large">{{ msg.u_name }}</Avatar>
-                    <Card>
-                        {{ msg.msg }}
-                    </Card>
-                </div>
+                <Row style="text-align:right" v-if="msg.u_name === userInfo.u_name">
+                    <Col span="4">
+                        <Avatar style="background:#f56a00" size="large">{{ msg.u_name }}</Avatar>
+                    </Col>
+                    <Col span="20" offset="4">
+                        <Card>
+                            {{ msg.msg }}
+                        </Card>
+                    </Col>
+                </Row>
+                <Row style="text-align:left" v-else>
+                    <Col span="4">
+                        <Avatar style="background:#7265e6" size="large">{{ msg.u_name }}</Avatar>
+                    </Col>
+                    <Col span="20" offset="4">
+                        <Card>
+                            {{ msg.msg }}
+                        </Card>
+                    </Col>
+                </Row>
             </Card>
         </div>
         <Input v-model="curMsg" class="chat-input">
