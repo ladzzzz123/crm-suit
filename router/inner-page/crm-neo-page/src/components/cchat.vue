@@ -2,7 +2,7 @@
     <Row class="chat-container layer-middle">
         <div class="chat-list">
             <Icon type="close" class="chat-close" @click.native="hideChat"></Icon>
-            <Card style="max-width:3rem;" v-for="msg in msgs" v-bind:key="msg.msg"
+            <Card style="max-width:3rem;background:none" v-for="msg in msgs" v-bind:key="msg.msg"
                 :bordered="false" dis-hover>
                 <Row v-if="msg.u_name === userInfo.u_name">
                     <Col span="18">
@@ -11,12 +11,12 @@
                         </Card>
                     </Col>
                     <Col span="6" style="text-align:center">
-                        <Avatar style="background:#7265e6" size="large">{{ msg.u_name }}</Avatar>
+                        <Avatar style="background:#7265e6" size="large">{{ msg.nick_name }}</Avatar>
                     </Col>
                 </Row>
                 <Row v-else>
                     <Col span="6" style="text-align:center">
-                        <Avatar style="background:#f56a00" size="large">{{ msg.u_name }}</Avatar>
+                        <Avatar style="background:#f56a00" size="large">{{ msg.nick_name }}</Avatar>
                     </Col>
                     <Col span="18">
                         <Card class="chat-msg" shadow>
@@ -69,6 +69,7 @@ export default {
                 socket.emit("message", { 
                     msg: this.curMsg, 
                     u_name: this.userInfo.u_name, 
+                    nick_name: this.nick_name || this.u_name,
                     token: this.token 
                 });
                 this.curMsg = "";
