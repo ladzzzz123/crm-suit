@@ -30,8 +30,10 @@
 <template>
 
     <div class="layout container">
-        <cheader :logged="logged" v-on:showChat="showChat" />
-        <cchat v-if="flagChat"/>
+        <cheader :logged="logged" 
+            v-on:showChat="showChat" />
+        <cchat v-if="flagChat"
+            v-on:hideChat="hideChat"/>
         <!-- <tips /> -->
         <!-- <idialog /> -->
         <Row type="flex">
@@ -76,7 +78,10 @@ export default {
     },
     methods: {
         showChat: function() {
-            this.flagChat = !this.flagChat
+            this.flagChat = !this.flagChat;
+        },
+        hideChat: function() {
+            this.flagChat = false;
         }
     },
     components: {

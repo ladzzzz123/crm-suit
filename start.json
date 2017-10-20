@@ -10,18 +10,19 @@
             "node_args": [],
             "args": ["./modules.json", "conf.json"],
             "env": {}
-        },
-        {
-            "name": "market-crm-chat",
-            "script": "./chat/service.js",
-            "cwd": "./",
-            "interpreter": "/usr/local/n/versions/node/8.4.0/bin/node",
-            "exec_mode": "fork",
-            "max_memory_restart": "128M",
-            "autorestart": true,
-            "node_args": [],
-            "args": [],
-            "env": {}
         }
+        // ,
+        // {
+        //     "name": "market-crm-chat",
+        //     "script": "./chat/service.js",
+        //     "cwd": "./",
+        //     "interpreter": "/usr/local/n/versions/node/8.4.0/bin/node",
+        //     "exec_mode": "fork",
+        //     "max_memory_restart": "128M",
+        //     "autorestart": true,
+        //     "node_args": [],
+        //     "args": [],
+        //     "env": {}
+        // }
     ]
 }

@@ -20,16 +20,28 @@ const server = require("http").createServer();
 const io = require("socket.io")(server);
 const logger = require("node-process-bearer").logger.getLogger();
 const DEFAULT_CHAT_PORT = 3006;
+const Courier = require("node-process-bearer").Courier;
 
 server.listen(DEFAULT_CHAT_PORT);
 
 io.on("connection", function(socket) {
     // socket.emit("message", { msg: "hello world!", u_name: "service" });
-    socket.on("message", msg => {
+    socket.on("message", async(msg) => {
         logger.info(JSON.stringify(msg));
-        io.emit("message", msg);
+        if (!msg["token"]) return;
+        let token = msg.token;
+        let verify = await courier.sendAsyncCall("account", "asyncVerify", () => {},
+            token, "account", "opter");
+        if (verify) {
+            io.emit("message", msg);
+        }
     });
 });
+
+let export_func = {
+    name: "chat"
+};
+let courier = new Courier(export_func);
 
 
 // const io = require("socket.io");
