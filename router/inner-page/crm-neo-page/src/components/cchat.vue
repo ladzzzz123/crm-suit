@@ -26,9 +26,11 @@
                 </Row>
             </Card>
         </div>
-        <Input v-model="curMsg" class="chat-input">
-            <Button slot="append" icon="ios-paperplane" @click="sendMsg">发送</Button>
-        </Input>
+        <div class="chat-input-area">
+            <Input v-model="curMsg" class="chat-input">
+                <Button slot="append" icon="ios-paperplane" @click="sendMsg">发送</Button>
+            </Input>
+        </div>
     </Row>
 </template>
 
@@ -87,7 +89,6 @@ export default {
 <style>
     .chat-container {
         background:#eee;
-        padding:20px;
         position:absolute;
         right:0;
         bottom:0;
@@ -102,10 +103,16 @@ export default {
         max-width: 2.8rem;
         word-break:break-all;
     }
-    .chat-input {
-        left: 5%;
+    .chat-input-area {
+        background: grey;
+        height: 0.5rem;
+        padding: 0.1rem;
         position: absolute;
         top: 4.8rem;
+        width: 100%;
+    }
+    .chat-input {
+        margin: 0 auto;
         width: 90%;
     }
     .chat-close {

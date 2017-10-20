@@ -19,11 +19,12 @@
     }
     .navbar-subtitle {
         display: inline-block;
-        font-size: 0.16rem;
-        margin-left: -0.1rem;
-        margin-top: 0.2rem;
-        vertical-align: bottom;
-        -webkit-transform: scale(0.8);
+        font-size: 0.12rem;
+        height: 50px;
+        padding: 15px;
+        padding-left: 0;
+        line-height: 20px;
+        /* -webkit-transform: scale(0.8); */
     }
 </style>
 
@@ -32,9 +33,9 @@
         <Row>
             <Col span="12">
                 <a class="navbar-brand" href="http://www.cootek.com/index.html">
-                    <img src="http://www.cootek.com/images/logo.png" height="100%">
+                    <img src="/img/logo.png" height="100%">
                 </a>
-                <span class="navbar-subtitle">Commercial Operation System</span>
+                <p class="navbar-subtitle">TouchPal Commercial Operation System</p>
             </Col>
             <Col span="4" offset="8" v-if="logged" style="text-align:right" >
                 <div class="navbar-brand">

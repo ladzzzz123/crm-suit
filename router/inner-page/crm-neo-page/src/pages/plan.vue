@@ -190,6 +190,7 @@ export default {
                                 "/plan": newCount
                             }
                         });
+                        this.sortArray("r_time");
                     }
                 }, (status, msg) => {
                     if (status === RESULT_CODE.LOGIN_EXPIRE) {
