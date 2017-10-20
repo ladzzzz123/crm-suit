@@ -28,7 +28,7 @@
 </style>
 
 <template>
-    <nav role="navigation" class="navbar navbar-default">    
+    <nav role="navigation" class="navbar navbar-default layer-top">    
         <Row>
             <Col span="12">
                 <a class="navbar-brand" href="http://www.cootek.com/index.html">

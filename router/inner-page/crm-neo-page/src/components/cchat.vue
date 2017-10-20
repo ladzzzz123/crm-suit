@@ -1,5 +1,5 @@
 <template>
-    <Row class="chat-container">
+    <Row class="chat-container layer-middle">
         <div class="chat-list">
             <Icon type="close" class="chat-close" @click.native="hideChat"></Icon>
             <Card style="max-width:3rem;" v-for="msg in msgs" v-bind:key="msg.msg"
@@ -87,7 +87,6 @@ export default {
     .chat-container {
         background:#eee;
         padding:20px;
-        z-index:999;
         position:absolute;
         right:0;
         bottom:0;
