@@ -4,7 +4,17 @@
             <Icon type="close" class="chat-close" @click.native="hideChat"></Icon>
             <Card style="max-width:100%;" v-for="msg in msgs" v-bind:key="msg.msg"
                 :bordered="false" dis-hover>
-                <Row style="text-align:right" v-if="msg.u_name === userInfo.u_name">
+                <Row v-if="msg.u_name === userInfo.u_name">
+                    <Col span="6">
+                        <Card>
+                            {{ msg.msg }}
+                        </Card>
+                    </Col>
+                    <Col span="18">
+                        <Avatar style="background:#7265e6" size="large">{{ msg.u_name }}</Avatar>
+                    </Col>
+                </Row>
+                <Row v-else>
                     <Col span="6">
                         <Avatar style="background:#f56a00" size="large">{{ msg.u_name }}</Avatar>
                     </Col>
@@ -12,17 +22,6 @@
                         <Card>
                             {{ msg.msg }}
                         </Card>
-                    </Col>
-                </Row>
-                <Row style="text-align:left" v-else>
-                    <Col span="6">
-                        <Card>
-                            {{ msg.msg }}
-                        </Card>
-                    </Col>
-                    <Col span="18">
-                        
-                        <Avatar style="background:#7265e6" size="large">{{ msg.u_name }}</Avatar>
                     </Col>
                 </Row>
             </Card>
@@ -93,15 +92,15 @@ export default {
         right:0;
         bottom:0;
         min-width:2.4rem;
-        height:6rem;
+        height:5.25rem;
     }
     .chat-list {
-        height: 4.8rem;
+        height: 4.5rem;
         overflow-y: scroll;
     }
     .chat-input {
         position: absolute;
-        top: 5rem;
+        top: 4.8rem;
     }
     .chat-close {
         left: 0.05rem;
