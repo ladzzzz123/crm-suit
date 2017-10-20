@@ -1,6 +1,6 @@
 <template>
-    <Row style="background:#eee;padding:20px;z-index:999;position:fixed;right:0;
-        bottom:0;min-width:2rem;height:95%">
+    <Row style="background:#eee;padding:20px;z-index:999;position:absolute;right:0;
+        bottom:0;min-width:2rem;height:94%">
         <div class="chat-list">
             <Icon type="close" class="chat-close" @click="hideChat"></Icon>
             <Card style="max-width:80%;" v-for="msg in msgs" v-bind:key="msg.msg"
