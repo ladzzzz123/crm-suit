@@ -54,7 +54,11 @@ export default {
     methods: {
         sendMsg: function() {
             if(this.curMsg) {
-                socket.emit("message", { msg: this.curMsg, nick_name: this.userInfo.nick_name, token: this.token });
+                socket.emit("message", { 
+                    msg: this.curMsg, 
+                    u_name: this.userInfo.u_name, 
+                    token: this.token 
+                });
                 this.curMsg = "";
             } else {
                 func.showTips("alert-danger", "发送内容不能为空！");
@@ -76,8 +80,8 @@ export default {
         top: 94%;
     }
     .chat-close {
-        left: 0.1rem;
+        left: 0.05rem;
         position: absolute;
-        top: 0.1rem;
+        top: 0.05rem;
     }
 </style>
