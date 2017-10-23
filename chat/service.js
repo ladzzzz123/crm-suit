@@ -29,7 +29,8 @@ function init() {
                 io.emit("message", msg);
                 let today = new Date();
                 redisClient.hset(`${CHAT_LOG}_${today.toLocaleDateString()}`,
-                        JSON.stringify(msg), today.toLocaleTimeString())
+                        today.getTime(),
+                        `${today.toLocaleTimeString()}: ${JSON.stringify(msg)}`)
                     .then(ret => {
                         resolve("success");
                     })
