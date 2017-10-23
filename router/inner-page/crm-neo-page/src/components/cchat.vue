@@ -1,6 +1,6 @@
 <template>
-    <Row class="chat-container layer-middle">
-        <Col span="2" :class="(chatShowing ? 'chat-show' : 'chat-hide') + ' chat-close' " @click.native="switchChat">
+    <Row :class="(chatShowing ? 'chat-show' : 'chat-hide') + ' chat-container layer-middle' ">
+        <Col span="2" class="chat-close" @click.native="switchChat">
             <Icon type="arrow-right-b" size="large" v-if="chatShowing"></Icon>
             <Icon type="arrow-left-b" size="large" v-else></Icon>
         </Col>
