@@ -1,6 +1,6 @@
 <template>
     <Row class="chat-container layer-middle">
-        <Col span="2" class="chat-close" @click.native="switchChat">
+        <Col span="2" :class="chatShowing ? chat-show : chat-hide + ' chat-close' " @click.native="switchChat">
             <Icon type="arrow-right-b" size="large" v-if="chatShowing"></Icon>
             <Icon type="arrow-left-b" size="large" v-else></Icon>
         </Col>
@@ -49,7 +49,6 @@ export default {
             msgs: [],
             curMsg: "",
             chatShowing: false,
-            el: {}
         };
     },
 
@@ -71,7 +70,6 @@ export default {
             this.msgs.push(msg);
         });
         this.chatShowing = true;
-        this.el = document.querySelector(".chat-container");
     },
 
     methods: {
@@ -90,11 +88,6 @@ export default {
         },
         switchChat: function() {
             this.chatShowing = !this.chatShowing;
-            if (this.chatShowing) {
-                this.el.style["right"] = 0;
-            } else {
-                this.el.style["right"] = "-2.3rem";
-            }
         }
     }
 }
@@ -133,5 +126,12 @@ export default {
         background: #ddd;
         height: 100%;
         padding:100% 0.05rem;
+    }
+
+    .chat-hide {
+        right: -2.26rem;
+    }
+    .chat-show {
+        right: 0;
     }
 </style>
