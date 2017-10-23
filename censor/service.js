@@ -27,7 +27,8 @@ let export_func = {
                     });
                     logger.info("[dspArr] dspArr:%s", dspArr.toString());
                     if (dspArr.length < 1) {
-                        resolve({ status: "error", ret: `data not exist` });
+                        reject({ status: "error", msg: "data not exist" });
+                        // resolve([]);
                     } else {
                         let sql_opt = `SELECT * FROM material WHERE m_date >= '${dates[0]}' AND m_date <= '${dates[1] || dates[0]}'
                         AND dsp IN (${dspArr.toString()})`;

@@ -306,7 +306,6 @@ router
     })
     .post("/crm-inner/censor/fetch", async(ctx, next) => {
         let verify = await verifyToken(ctx, "censor", "opter");
-        logger.warn("[router] verify:%s", JSON.stringify(verify));
         if (!verify) {
             return;
         } else if (verify.pass) {
@@ -322,7 +321,6 @@ router
                 logger.warn("[router] fetch censor error");
                 ctx.body = { status: RESULT.FAILED, content: ret, msg: JSON.stringify(e) };
             }
-
         } else {
             ctx.body = _util.verifyTokenResult(verify);
         }
