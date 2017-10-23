@@ -27,7 +27,7 @@ let export_func = {
                     });
                     logger.info("[dspArr] dspArr:%s", dspArr.toString());
                     if (dspArr.length < 1) {
-                        reject({ status: "error", ret: `data not exist` });
+                        return Promise.reject({ status: "error", ret: `data not exist` });
                     } else {
                         let sql_opt = `SELECT * FROM material WHERE m_date >= '${dates[0]}' AND m_date <= '${dates[1] || dates[0]}'
                         AND dsp IN (${dspArr.toString()})`;
@@ -39,7 +39,11 @@ let export_func = {
                 })
                 .catch(err => {
                     logger.warn("[censor] db select err:" + JSON.stringify(err));
-                    reject(err);
+                    if (err) {
+                        reject(err);
+                    } else {
+                        reject();
+                    }
                 });
         });
     },
