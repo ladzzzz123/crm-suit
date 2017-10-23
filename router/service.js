@@ -315,6 +315,7 @@ router
                 ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
             }
             await courier.sendAsyncCall("censor", "asyncFetchMaterialFromDB", ret => {
+                logger.warn("[router] fetch censor end");
                 ctx.body = { status: RESULT.SUCCESS, content: ret, msg: "fetch list end" };
             }, postData.m_date);
         } else {
