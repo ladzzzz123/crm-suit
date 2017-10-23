@@ -26,6 +26,9 @@ let export_func = {
                         };
                     });
                     logger.info("[dspArr] dspArr:%s", dspArr.toString());
+                    if (dspArr.length < 1) {
+                        dspArr.push("notExist");
+                    }
                     let sql_opt = `SELECT * FROM material WHERE m_date >= '${dates[0]}' AND m_date <= '${dates[1] || dates[0]}'
                      AND dsp IN (${dspArr.toString()})`;
                     return courier.sendAsyncCall("dbopter", "asyncQuery", () => {}, "market_db", sql_opt);
