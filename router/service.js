@@ -314,10 +314,15 @@ router
             if (!_util.verifyParams(postData, "m_date")) {
                 ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
             }
-            await courier.sendAsyncCall("censor", "asyncFetchMaterialFromDB", ret => {
-                logger.warn("[router] fetch censor end");
+            try {
+                let ret = await courier.sendAsyncCall("censor", "asyncFetchMaterialFromDB", () => {}, postData.m_date);
+                logger.warn("[router] fetch censor end ret:%s", JSON.stringify(ret));
                 ctx.body = { status: RESULT.SUCCESS, content: ret, msg: "fetch list end" };
-            }, postData.m_date);
+            } catch (e) {
+                logger.warn("[router] fetch censor error");
+                ctx.body = { status: RESULT.FAILED, content: ret, msg: JSON.stringify(e) };
+            }
+
         } else {
             ctx.body = _util.verifyTokenResult(verify);
         }
