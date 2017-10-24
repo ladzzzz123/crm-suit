@@ -46,8 +46,10 @@ class RedisClient {
             this.client.hset(key, field, value, (err, ret) => {
                 logger.info("[RedisClient] hset key:%s, field: %s,  err: %s,  ret: %s", key, field, err || "", ret || "");
                 if (err) {
+                    logger.info("[RedisClient] hset key err: %s", err || "");
                     reject({ msg: "hset error" });
                 } else if (ret) {
+                    logger.info("[RedisClient] hset key success");
                     resolve(ret);
                 } else {
                     resolve(null);
@@ -85,10 +87,12 @@ class RedisClient {
     hdel(key, field) {
         return new Promise((resolve, reject) => {
             this.client.hdel(key, field, (err, ret) => {
-                logger.info("[RedisClient] del key:%s, err: %s,  ret: %s", key, err || "", ret || "");
+                logger.info("[RedisClient] hdel key:%s, err: %s,  ret: %s", key, err || "", ret || "");
                 if (err) {
+                    logger.info("[RedisClient] hdel key err: %s", err || "");
                     reject({ msg: "del error" });
                 } else {
+                    logger.info("[RedisClient] hdel key success");
                     resolve(ret || "");
                 }
             });

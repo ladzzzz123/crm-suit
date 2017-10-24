@@ -111,7 +111,7 @@ function processResult(status) {
             func.goToLogin();
             break;
         default:
-            msg = `请求失败，错误码:${result.code}, 请稍后尝试`;
+            msg = `请求失败，错误码:${status}, 请稍后尝试`;
             ret = { status: RESULT_CODE.REQ_ERROR, msg: msg, type: "alert-danger" };
             break;
     }
