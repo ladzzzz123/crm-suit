@@ -16,7 +16,7 @@ let export_func = {
             logger.info("[censor] params_date: %s", JSON.stringify(params_date));
             let SQL_QUERY_DSP_COUNT = "SELECT dsp, COUNT(dsp) as count FROM ?? WHERE m_date >= ? AND m_date <= ? GROUP BY dsp";
             SQL_QUERY_DSP_COUNT = mysql.format(SQL_QUERY_DSP_COUNT, params_date);
-            courier.sendAsyncCall("dbopter", "asyncQuery", () => {}, "market_db", SQL_QUERY_DSP_COUNT)
+            courier.sendAsyncCall("dbopter", "asyncQuery", "", "market_db", SQL_QUERY_DSP_COUNT)
                 .then(ret => {
                     let orgDspArr = ret.ret;
                     let dspArr = [];
@@ -32,7 +32,7 @@ let export_func = {
                     } else {
                         let sql_opt = `SELECT * FROM material WHERE m_date >= '${dates[0]}' AND m_date <= '${dates[1] || dates[0]}'
                         AND dsp IN (${dspArr.toString()})`;
-                        return courier.sendAsyncCall("dbopter", "asyncQuery", () => {}, "market_db", sql_opt);
+                        return courier.sendAsyncCall("dbopter", "asyncQuery", "", "market_db", sql_opt);
                     }
                 })
                 .then(ret => {
@@ -63,7 +63,7 @@ let export_func = {
                     });
                     let sql_opt = "INSERT INTO material (tu, dsp, m_date, ldp, material, pv) VALUES ?";
                     sql_opt = mysql.format(sql_opt, [neo_datas]);
-                    courier.sendAsyncCall("dbopter", "asyncQuery", () => {}, "market_db", sql_opt)
+                    courier.sendAsyncCall("dbopter", "asyncQuery", "", "market_db", sql_opt)
                         .then(ret => {
                             logger.info("[censor] insert material succeed");
                         })
@@ -108,7 +108,7 @@ let export_func = {
                 return;
             }
             let conditions = `_id IN (${ids.toString()}) AND m_version <= ${parseInt(m_version)}`;
-            courier.sendAsyncCall("dbopter", "asyncUpdate", () => {}, "market_db", "material", params, conditions)
+            courier.sendAsyncCall("dbopter", "asyncUpdate", "", "market_db", "material", params, conditions)
                 .then(ret => {
                     if (ret.status === "success") {
                         resolve({ status: "success", msg: "更新成功" });
@@ -133,7 +133,7 @@ let export_func = {
             sql_opt = mysql.format(sql_opt, [orgDateStr]);
             let fileName = `censor_${dateStr}.csv`;
             let tempCountContent = "";
-            courier.sendAsyncCall("dbopter", "asyncQuery", () => {}, "market_db", sql_query_count)
+            courier.sendAsyncCall("dbopter", "asyncQuery", "", "market_db", sql_query_count)
                 .then(query_count_ret => {
                     logger.info("query_count_ret: %s", JSON.stringify(query_count_ret));
                     let ret_array = query_count_ret.ret;
@@ -164,7 +164,7 @@ let export_func = {
                 })
                 .then(ret => {
                     logger.info("before asyncQuery");
-                    return courier.sendAsyncCall("dbopter", "asyncQuery", () => {}, "market_db", sql_opt);
+                    return courier.sendAsyncCall("dbopter", "asyncQuery", "", "market_db", sql_opt);
                 })
                 .then(query_ret => {
                     logger.info("before write file");
@@ -198,7 +198,7 @@ let export_func = {
                 })
                 .then(ret => {
                     logger.info("before send mail");
-                    courier.sendAsyncCall("mail", "asyncSendMail", () => {}, to,
+                    courier.sendAsyncCall("mail", "asyncSendMail", "", to,
                         `${dateStr}素材审核结果`,
                         `审核情况：\n
                          ${tempCountContent} \n

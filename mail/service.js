@@ -192,7 +192,7 @@ const REG_FETCH_MAIL_MODULE = /((\[|\【).*?(\]|\】))/gi;
 
 function insertIntoDB(neoMail) {
     return new Promise((resolve, reject) => {
-        courier.sendAsyncCall("dbopter", "asyncInsert", () => {}, "market_db", "mail_info", [neoMail])
+        courier.sendAsyncCall("dbopter", "asyncInsert", "", "market_db", "mail_info", [neoMail])
             .then(ret => {
                 logger.info("[mail] db insert ret:" + JSON.stringify(ret));
                 resolve(ret);

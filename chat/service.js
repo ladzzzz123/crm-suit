@@ -23,7 +23,7 @@ function init() {
             logger.info(JSON.stringify(msg));
             if (!msg["token"]) return;
             let token = msg.token;
-            let verify = await courier.sendAsyncCall("account", "asyncVerify", () => {},
+            let verify = await courier.sendAsyncCall("account", "asyncVerify", "",
                 token, "account", "opter");
             if (verify) {
                 io.emit("message", msg);

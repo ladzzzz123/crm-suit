@@ -15,7 +15,7 @@ let export_func = {
             let params = ["mail_info", "m_module", export_func.name];
             let sql_opt = "SELECT * FROM ?? WHERE ?? = ?";
             sql_opt = mysql.format(sql_opt, params);
-            courier.sendAsyncCall("dbopter", "asyncQuery", () => {}, "market_db", sql_opt)
+            courier.sendAsyncCall("dbopter", "asyncQuery", "", "market_db", sql_opt)
                 .then(ret => {
                     resolve(ret);
                 })
@@ -33,7 +33,7 @@ let export_func = {
                 m_opter: opter
             };
             let conditions = `_id = ${plan_id} AND (m_opter IS NULL OR m_opter = "${opter}") `;
-            courier.sendAsyncCall("dbopter", "asyncUpdate", () => {}, "market_db", "mail_info", params, conditions)
+            courier.sendAsyncCall("dbopter", "asyncUpdate", "", "market_db", "mail_info", params, conditions)
                 .then(ret => {
                     if (ret.status === "success") {
                         let info = {};
@@ -67,7 +67,7 @@ let export_func = {
                 m_opter: opter
             };
             let conditions = `_id = ${plan_id} AND m_opter = "${opter}" `;
-            courier.sendAsyncCall("dbopter", "asyncUpdate", () => {}, "market_db", "mail_info", params, conditions)
+            courier.sendAsyncCall("dbopter", "asyncUpdate", "", "market_db", "mail_info", params, conditions)
                 .then(ret => {
                     if (ret.status === "success") {
                         let info = {};
@@ -106,7 +106,7 @@ let export_func = {
                 m_opter: opter
             };
             let conditions = `_id = ${plan_id} AND m_opter = "${opter}" `;
-            courier.sendAsyncCall("dbopter", "asyncUpdate", () => {}, "market_db", "mail_info", params, conditions)
+            courier.sendAsyncCall("dbopter", "asyncUpdate", "", "market_db", "mail_info", params, conditions)
                 .then(ret => {
                     if (ret.status === "success") {
                         let info = {};
@@ -151,4 +151,4 @@ let export_func = {
 };
 
 let courier = new Courier(export_func);
-courier.listening(() => {}, 20 * 1000);
+courier.listening("", 20 * 1000);

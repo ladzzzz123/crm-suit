@@ -40,7 +40,7 @@ async function verifyToken(ctx, module_name, role) {
         return false;
     }
     logger.warn("before verify");
-    verify = await courier.sendAsyncCall("account", "asyncVerify", () => {},
+    verify = await courier.sendAsyncCall("account", "asyncVerify", "",
         postData.token, module_name, role);
     logger.warn("after verify");
     logger.warn("verify:%s", JSON.stringify(verify));
@@ -107,7 +107,7 @@ router
             return;
         }
 
-        verify = await courier.sendAsyncCall("account", "asyncVerify", () => {},
+        verify = await courier.sendAsyncCall("account", "asyncVerify", "",
             postData.token, "account", "opter");
         if (verify.pass) {
             let opter = verify.info.u_name;
@@ -136,7 +136,7 @@ router
             ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
             return;
         }
-        verify = await courier.sendAsyncCall("account", "asyncVerify", () => {},
+        verify = await courier.sendAsyncCall("account", "asyncVerify", "",
             postData.token, "plan-order", "opter");
         if (verify.pass) {
             await courier.sendAsyncCall("plan-order", "asyncFetchPlan", ret => {
@@ -220,7 +220,7 @@ router
             ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
             return;
         }
-        verify = await courier.sendAsyncCall("account", "asyncVerify", () => {}, postData.token, "plan-order", "opter");
+        verify = await courier.sendAsyncCall("account", "asyncVerify", "", postData.token, "plan-order", "opter");
         if (verify.pass) {
             let opter = verify.info.u_name;
             await courier.sendAsyncCall("plan-order", "asyncAcceptPlan", ret => {
@@ -240,7 +240,7 @@ router
             ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
             return;
         }
-        verify = await courier.sendAsyncCall("account", "asyncVerify", () => {}, postData.token, "plan-order", "opter");
+        verify = await courier.sendAsyncCall("account", "asyncVerify", "", postData.token, "plan-order", "opter");
         if (verify.pass) {
             let opter = verify.info.u_name;
             await courier.sendAsyncCall("plan-order", "asyncFinishPlan", ret => {
@@ -262,7 +262,7 @@ router
             ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
             return;
         }
-        verify = await courier.sendAsyncCall("account", "asyncVerify", () => {},
+        verify = await courier.sendAsyncCall("account", "asyncVerify", "",
             postData.fields.token, "plan-order", "opter");
         if (verify.pass) {
             let opter = verify.info.u_name;
@@ -314,7 +314,7 @@ router
                 ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
             }
             try {
-                let ret = await courier.sendAsyncCall("censor", "asyncFetchMaterialFromDB", () => {}, postData.m_date);
+                let ret = await courier.sendAsyncCall("censor", "asyncFetchMaterialFromDB", "", postData.m_date);
                 logger.warn("[router] fetch censor end ret:%s", JSON.stringify(ret));
                 ctx.body = { status: RESULT.SUCCESS, content: ret, msg: "fetch list end" };
             } catch (e) {
@@ -357,7 +357,7 @@ router
             if (!_util.verifyParams(postData, ["to", "m_date"])) {
                 ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
             }
-            let ret = await courier.sendAsyncCall("censor", "asyncReport", () => {}, postData.m_date, postData.to, opter);
+            let ret = await courier.sendAsyncCall("censor", "asyncReport", "", postData.m_date, postData.to, opter);
             if (ret.status === "success") {
                 ctx.body = { status: RESULT.SUCCESS, msg: ret.msg };
             } else {
@@ -380,7 +380,7 @@ router
             ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
             return;
         }
-        verify = await courier.sendAsyncCall("account", "asyncVerify", () => {}, postData.token, "account", "admin");
+        verify = await courier.sendAsyncCall("account", "asyncVerify", "", postData.token, "account", "admin");
         logger.info("[router] verify: %s", JSON.stringify(verify));
         if (verify.pass) {
             _ret = { status: RESULT.FAILED, msg: "add failed" };

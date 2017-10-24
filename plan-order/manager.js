@@ -6,7 +6,7 @@ module.exports = {
     deletePlan: (courier, plan_id, opter) => {
         return new Promise((resolve, reject) => {
             let conditions = `_id = ${plan_id}`;
-            courier.sendAsyncCall("dbopter", "asyncArchived", () => {}, "market_db", "mail_info", conditions)
+            courier.sendAsyncCall("dbopter", "asyncArchived", "", "market_db", "mail_info", conditions)
                 .then(ret => {
                     if (ret.status === "success") {
                         resolve({ status: "success", msg: "删除任务成功" });
@@ -24,7 +24,7 @@ module.exports = {
     exportPlan: (courier) => {
         return new Promise((resolve, reject) => {
             let SQL_QUERY_PLAN = ` SELECT title,m_from,m_cc,m_date,m_opter,m_status FROM mail_info WHERE m_module = "plan-order" `;
-            courier.sendAsyncCall("dbopter", "asyncQuery", () => {}, "market_db", SQL_QUERY_PLAN)
+            courier.sendAsyncCall("dbopter", "asyncQuery", "", "market_db", SQL_QUERY_PLAN)
                 .then(ret => {
                     if (ret.status === "success") {
                         logger.info("[exportPlan] fetch success ret.ret:%s", JSON.stringify(ret.ret));
