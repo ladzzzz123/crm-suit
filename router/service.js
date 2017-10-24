@@ -110,9 +110,13 @@ router
             let opter = verify.info.u_name;
             postData.info.old_passwd = postData.info.old_passwd;
             postData.info.passwd = postData.info.passwd;
-            await courier.sendAsyncCall("account", "asyncUpdateInfo", ret => {
-                _ret = { status: RESULT.SUCCESS, msg: "update info success" };
-            }, opter, postData.info);
+            await courier.sendAsyncCall("account", "asyncUpdateInfo", "", opter, postData.info)
+                .then(ret => {
+                    _ret = { status: RESULT.SUCCESS, msg: "update info success" };
+                })
+                .catch(err => {
+                    _ret = { status: RESULT.REQ_ERROR, msg: "unknown error" };
+                });
         } else {
             _ret = _util.verifyTokenResult(verify);
         }
@@ -316,7 +320,7 @@ router
                 ctx.body = { status: RESULT.SUCCESS, content: ret, msg: "fetch list end" };
             } catch (e) {
                 logger.warn("[router] fetch censor error");
-                ctx.body = { status: RESULT.FAILED, content: ret, msg: JSON.stringify(e) };
+                ctx.body = { status: RESULT.FAILED, content: [], msg: JSON.stringify(e) };
             }
         } else {
             ctx.body = _util.verifyTokenResult(verify);
