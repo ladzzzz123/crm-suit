@@ -126,7 +126,6 @@ router
 // account module end
 
 
-
 // plan-order module start
 router
     .post("/crm-inner/plan-order/list", async(ctx, next) => {
@@ -140,9 +139,13 @@ router
         verify = await courier.sendAsyncCall("account", "asyncVerify", "",
             postData.token, "plan-order", "opter");
         if (verify.pass) {
-            await courier.sendAsyncCall("plan-order", "asyncFetchPlan", ret => {
-                _ret = { status: RESULT.SUCCESS, content: ret, msg: "fetch list end" };
-            });
+            await courier.sendAsyncCall("plan-order", "asyncFetchPlan")
+                .then(ret => {
+                    _ret = { status: RESULT.SUCCESS, content: ret, msg: "fetch list end" };
+                })
+                .catch(err => {
+                    _ret = { status: RESULT.REQ_ERROR, msg: "unknown error" };
+                });
         } else {
             _ret = _util.verifyTokenResult(verify);
         }
@@ -153,14 +156,14 @@ router
         if (!verify) {
             return;
         } else if (verify.pass) {
-            try {
-                await courier.sendAsyncCall("mail", "asyncAddToNoticeArray", ret => {
+            await courier.sendAsyncCall("mail", "asyncAddToNoticeArray", "", verify.info.mail)
+                .then(() => {
                     ctx.body = { status: RESULT.SUCCESS, msg: "add success" };
-                }, verify.info.mail);
-            } catch (e) {
-                ctx.body = { status: RESULT.REQ_ERROR, msg: "Internal Error" };
-            }
+                })
+                .catch(e => {
+                    ctx.body = { status: RESULT.REQ_ERROR, msg: "Internal Error" };
 
+                });
         } else {
             ctx.body = _util.verifyTokenResult(verify);
         }
@@ -170,13 +173,13 @@ router
         if (!verify) {
             return;
         } else if (verify.pass) {
-            try {
-                await courier.sendAsyncCall("mail", "asyncRemoveFromNoticeArray", ret => {
+            await courier.sendAsyncCall("mail", "asyncRemoveFromNoticeArray", "", verify.info.mail)
+                .then(() => {
                     ctx.body = { status: RESULT.SUCCESS, msg: "add success" };
-                }, verify.info.mail);
-            } catch (e) {
-                ctx.body = { status: RESULT.REQ_ERROR, msg: "Internal Error" };
-            }
+                })
+                .catch(e => {
+                    ctx.body = { status: RESULT.REQ_ERROR, msg: "Internal Error" };
+                });
 
         } else {
             ctx.body = _util.verifyTokenResult(verify);
@@ -194,18 +197,18 @@ router
             }
             let opter = verify.info.u_name;
             try {
-                await courier.sendAsyncCall("plan-order", "asyncManagerPlan", ret => {
-                    if (ret) {
-                        logger.info("[router] plan manager ret:%s", JSON.stringify(ret));
-                    } else {
-                        logger.info("[router] plan manager ret is null");
-                    }
-                    if (ret && ret["url"]) {
-                        ctx.body = { status: RESULT.SUCCESS, msg: "fetch success", url: ret.url };
-                    } else {
-                        ctx.body = { status: RESULT.SUCCESS, msg: "opt success" };
-                    }
-                }, postData.action, postData.plan_id, opter);
+                let ret = await courier.sendAsyncCall("plan-order", "asyncManagerPlan", "",
+                    postData.action, postData.plan_id, opter);
+                if (ret) {
+                    logger.info("[router] plan manager ret:%s", JSON.stringify(ret));
+                } else {
+                    logger.info("[router] plan manager ret is null");
+                }
+                if (ret && ret["url"]) {
+                    ctx.body = { status: RESULT.SUCCESS, msg: "fetch success", url: ret.url };
+                } else {
+                    ctx.body = { status: RESULT.SUCCESS, msg: "opt success" };
+                }
             } catch (e) {
                 ctx.body = { status: RESULT.REQ_ERROR, msg: "Internal Error" };
             }
@@ -224,10 +227,9 @@ router
         verify = await courier.sendAsyncCall("account", "asyncVerify", "", postData.token, "plan-order", "opter");
         if (verify.pass) {
             let opter = verify.info.u_name;
-            await courier.sendAsyncCall("plan-order", "asyncAcceptPlan", ret => {
-                logger.info("[router] accept:" + JSON.stringify(ret));
-                _ret = { status: RESULT.SUCCESS, content: ret };
-            }, postData.plan_id, opter);
+            let ret = await courier.sendAsyncCall("plan-order", "asyncAcceptPlan", "", postData.plan_id, opter);
+            logger.info("[router] accept:" + JSON.stringify(ret));
+            _ret = { status: RESULT.SUCCESS, content: ret };
         } else {
             _ret = _util.verifyTokenResult(verify);
         }
@@ -244,9 +246,8 @@ router
         verify = await courier.sendAsyncCall("account", "asyncVerify", "", postData.token, "plan-order", "opter");
         if (verify.pass) {
             let opter = verify.info.u_name;
-            await courier.sendAsyncCall("plan-order", "asyncFinishPlan", ret => {
-                _ret = { status: RESULT.SUCCESS, content: ret };
-            }, postData.plan_id, opter);
+            let ret = await courier.sendAsyncCall("plan-order", "asyncFinishPlan", "", postData.plan_id, opter);
+            _ret = { status: RESULT.SUCCESS, content: ret };
         } else {
             _ret = _util.verifyTokenResult(verify);
         }
@@ -269,10 +270,9 @@ router
             let opter = verify.info.u_name;
             let plan_id = postData.fields.plan_id;
             let file = postData.files.file;
-            await courier.sendAsyncCall("plan-order", "asyncUploadFile", ret => {
-                logger.info("[router] upload ret:" + JSON.stringify(ret));
-                _ret = { status: RESULT.SUCCESS, content: ret };
-            }, file, plan_id, opter);
+            let ret = await courier.sendAsyncCall("plan-order", "asyncUploadFile", "", file, plan_id, opter);
+            logger.info("[router] upload ret:" + JSON.stringify(ret));
+            _ret = { status: RESULT.SUCCESS, content: ret };
         } else {
             _ret = _util.verifyTokenResult(verify);
         }
@@ -298,9 +298,13 @@ router
             return;
         } else if (verify.pass) {
             let postData = ctx.request.body;
-            await courier.sendCall("censor", "insertMaterialIntoDB", ret => {
-                ctx.body = { status: RESULT.SUCCESS, msg: "update query success" };
-            }, postData.date);
+            await courier.sendCall("censor", "insertMaterialIntoDB", "", postData.date)
+                .then(ret => {
+                    ctx.body = { status: RESULT.SUCCESS, msg: "update query success" };
+                })
+                .catch(err => {
+                    ctx.body = { status: RESULT.REQ_ERROR, msg: "Internal Error" };
+                });
         } else {
             ctx.body = _util.verifyTokenResult(verify);
         }
@@ -316,11 +320,9 @@ router
             }
             try {
                 let ret = await courier.sendAsyncCall("censor", "asyncFetchMaterialFromDB", "", postData.m_date);
-                logger.warn("[router] fetch censor end ret:%s", JSON.stringify(ret));
                 ctx.body = { status: RESULT.SUCCESS, content: ret, msg: "fetch list end" };
             } catch (e) {
-                logger.warn("[router] fetch censor error");
-                ctx.body = { status: RESULT.FAILED, content: [], msg: JSON.stringify(e) };
+                ctx.body = { status: RESULT.SUCCESS, content: [], msg: JSON.stringify(e) };
             }
         } else {
             ctx.body = _util.verifyTokenResult(verify);
@@ -337,13 +339,18 @@ router
                 ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
             }
             let reason = postData.reason || "";
-            await courier.sendAsyncCall("censor", "asyncUpdateStatus", ret => {
-                if (ret.status === "success") {
-                    ctx.body = { status: RESULT.SUCCESS, msg: ret.msg };
-                } else {
-                    ctx.body = { status: RESULT.FAILED, msg: ret.msg };
-                }
-            }, postData.ids, postData.action, reason, postData.m_version, opter);
+            await courier.sendAsyncCall("censor", "asyncUpdateStatus", "",
+                    postData.ids, postData.action, reason, postData.m_version, opter)
+                .then(ret => {
+                    if (ret.status === "success") {
+                        ctx.body = { status: RESULT.SUCCESS, msg: ret.msg };
+                    } else {
+                        ctx.body = { status: RESULT.FAILED, msg: ret.msg };
+                    }
+                })
+                .catch(e => {
+                    ctx.body = { status: RESULT.REQ_ERROR, msg: "Internal Error" };
+                });
         } else {
             ctx.body = _util.verifyTokenResult(verify);
         }
@@ -391,9 +398,9 @@ router
 
             if (insert_ret.status === "success") {
                 let info = insert_ret.ret;
-                await courier.sendAsyncCall("mail", "asyncSendMail", ret => {
-                    logger.info("[router] get New Mail:" + JSON.stringify(ret));
-                }, info.mail, "您的账号已经创建成功", `点击此处登录：${MSG["add-user-mail"]["address"]}  \n 用户名：${info.u_name} \n 密码：${info.passwd}`);
+                let ret = await courier.sendAsyncCall("mail", "asyncSendMail", "", info.mail,
+                    "您的账号已经创建成功", `点击此处登录：${MSG["add-user-mail"]["address"]}  \n 用户名：${info.u_name} \n 密码：${info.passwd}`);
+                logger.info("[router] get New Mail:" + JSON.stringify(ret));
                 _ret = { status: RESULT.SUCCESS, msg: "create user success" };
             }
         } else {
@@ -402,11 +409,7 @@ router
         ctx.body = _ret;
     })
     .get("/crm-inner/fetch-mail", async(ctx, next) => {
-        let _ret = {};
-        await courier.sendAsyncCall("mail", "asyncGetNewMail", ret => {
-            logger.info("[router] get New Mail:" + JSON.stringify(ret));
-            _ret = ret;
-        });
+        let _ret = await courier.sendAsyncCall("mail", "asyncGetNewMail");
         ctx.body = _ret;
     });
 
