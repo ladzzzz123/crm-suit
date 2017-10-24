@@ -58,10 +58,7 @@ router
         let _ret = "";
         let postData = ctx.request.body;
         try {
-            await courier.sendAsyncCall("account", "asyncLogin", ret => {
-                logger.info("[router] call account asyncLogin:%s", JSON.stringify(ret));
-                _ret = ret;
-            }, postData.u_name, postData.passwd);
+            _ret = await courier.sendAsyncCall("account", "asyncLogin", "", postData.u_name, postData.passwd);
         } catch (e) {
             logger.warn("[router] call account asyncLogin err:%s", JSON.stringify(ret));
         }
