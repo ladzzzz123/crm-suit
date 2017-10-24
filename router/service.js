@@ -10,7 +10,7 @@ const koaBody = require("koa-body");
 const staticServer = require("koa-static");
 
 const RESULT = require("./codemap");
-const MSG = require("../config/msg");
+const MSG = require("../config/mail").msg;
 const DEFAULT_PORT = 3002;
 const Courier = require("node-process-bearer").Courier;
 const logger_conf = require("../conf.json").log_conf || "";
