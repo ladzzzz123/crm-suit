@@ -156,14 +156,16 @@ router
         if (!verify) {
             return;
         } else if (verify.pass) {
+            let _ret = {};
             await courier.sendAsyncCall("mail", "asyncAddToNoticeArray", "", verify.info.mail)
-                .then(() => {
-                    ctx.body = { status: RESULT.SUCCESS, msg: "add success" };
+                .then(ret => {
+                    _ret = { status: RESULT.SUCCESS, msg: "add success" };
                 })
                 .catch(e => {
-                    ctx.body = { status: RESULT.REQ_ERROR, msg: "Internal Error" };
+                    _ret = { status: RESULT.REQ_ERROR, msg: "Internal Error" };
 
                 });
+            ctx.body = _ret;
         } else {
             ctx.body = _util.verifyTokenResult(verify);
         }
@@ -173,14 +175,15 @@ router
         if (!verify) {
             return;
         } else if (verify.pass) {
+            let _ret = {};
             await courier.sendAsyncCall("mail", "asyncRemoveFromNoticeArray", "", verify.info.mail)
-                .then(() => {
-                    ctx.body = { status: RESULT.SUCCESS, msg: "add success" };
+                .then(ret => {
+                    _ret = { status: RESULT.SUCCESS, msg: "add success" };
                 })
                 .catch(e => {
-                    ctx.body = { status: RESULT.REQ_ERROR, msg: "Internal Error" };
+                    _ret = { status: RESULT.REQ_ERROR, msg: "Internal Error" };
                 });
-
+            ctx.body = _ret;
         } else {
             ctx.body = _util.verifyTokenResult(verify);
         }
@@ -298,13 +301,15 @@ router
             return;
         } else if (verify.pass) {
             let postData = ctx.request.body;
+            let _ret = {};
             await courier.sendCall("censor", "insertMaterialIntoDB", "", postData.date)
                 .then(ret => {
-                    ctx.body = { status: RESULT.SUCCESS, msg: "update query success" };
+                    _ret = { status: RESULT.SUCCESS, msg: "update query success" };
                 })
                 .catch(err => {
-                    ctx.body = { status: RESULT.REQ_ERROR, msg: "Internal Error" };
+                    _ret = { status: RESULT.REQ_ERROR, msg: "Internal Error" };
                 });
+            ctx.body = _ret;
         } else {
             ctx.body = _util.verifyTokenResult(verify);
         }
