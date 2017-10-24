@@ -11,13 +11,11 @@ function execOpt(target, sql_opt, params) {
         logger.info("[dbopt] execOpt target: %s", target);
         let opt = dbMap.get(target);
         if (opt) {
-            logger.info("[dbopt] execOpt opt exist: %s query type: %s", opt.dbName, typeof(opt.query));
             opt.query(sql_opt, params, (err, result) => {
                 if (err) {
                     logger.error("[dbopt] execOpt error: %s", err);
                     reject({ status: "error", ret: err });
                 } else {
-                    logger.info("[dbopt] execOpt result: %s", JSON.stringify(result));
                     resolve({ status: "success", ret: result });
                 }
             });
