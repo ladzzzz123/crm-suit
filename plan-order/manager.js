@@ -1,6 +1,6 @@
 const logger = require("node-process-bearer").logger.getLogger();
 const fs = require("fs");
-const CONFIG = require("./config.json");
+const CONFIG = require("../config/plan-order.json");
 
 module.exports = {
     deletePlan: (courier, plan_id, opter) => {

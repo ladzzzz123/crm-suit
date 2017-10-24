@@ -3,8 +3,8 @@ const logger = require("node-process-bearer").logger.getLogger();
 const ImapManager = require("./ImapManager");
 const nodemailer = require("nodemailer");
 const SMTPConnection = require("nodemailer/lib/smtp-connection");
-const MAIL_MODULE = require("./mail_module");
-const MSG = require("../config/msg");
+const MAIL_MODULE = require("../config/mail");
+const MSG = MAIL_MODULE.msg;
 
 const mysql = require("mysql");
 
@@ -249,7 +249,7 @@ function asyncMail(mailArr) {
 }
 
 
-const mailConfig = require("../config/mail");
+const mailConfig = MAIL_MODULE.connect;
 
 function init() {
     logger.info("[mail] init:" + JSON.stringify(mailConfig.imap));

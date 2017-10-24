@@ -1,5 +1,5 @@
 const mysql = require("mysql");
-const selfConfig = require("./config/db");
+const selfConfig = require("../config/account");
 const RedisClient = require("../utils/RedisClient");
 
 const dbConfig = selfConfig.account;

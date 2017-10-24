@@ -2,5 +2,6 @@
     "materialUrl": "http://bigdata-view.cootekservice.com:50091/arbiter/getdspmaterial",
     "db_name": "material",
     "savePath": "router/static/censor/",
-    "visitPath": "router/static/censor/"
+    "visitPath": "router/static/censor/",
+    "QUERY_LIMIT": 500
 }

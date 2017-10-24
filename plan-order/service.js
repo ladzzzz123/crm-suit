@@ -3,8 +3,8 @@ const logger = require("node-process-bearer").logger.getLogger();
 const mysql = require("mysql");
 const fs = require("fs");
 
-const CONFIG = require("./config.json");
-const msg = require("./msg-template");
+const CONFIG = require("../config/plan-order.json");
+const msg = CONFIG.msg_template;
 
 const manager = require("./manager");
 

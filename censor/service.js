@@ -4,9 +4,9 @@ const mysql = require("mysql");
 let request = require("request");
 const fs = require("fs");
 
-const CONFIG = require("./config.json");
+const CONFIG = require("../config/censor.json");
 
-const QUERY_LIMIT = 500;
+const QUERY_LIMIT = CONFIG.QUERY_LIMIT;
 
 let export_func = {
     name: "censor",

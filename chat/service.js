@@ -4,7 +4,7 @@ const logger = require("node-process-bearer").logger.getLogger();
 const DEFAULT_CHAT_PORT = 3006;
 const Courier = require("node-process-bearer").Courier;
 const RedisClient = require("../utils/RedisClient");
-const REDIS_CONFIG = require("./config.json");
+const REDIS_CONFIG = require("../config/chat.json");
 
 const CHAT_LOG = "chat_log";
 server.listen(DEFAULT_CHAT_PORT);
