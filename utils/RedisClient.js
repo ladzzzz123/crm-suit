@@ -47,7 +47,7 @@ class RedisClient {
                 logger.info("[RedisClient] hset key:%s, field: %s,  err: %s,  ret: %s", key, field, err || "", ret || "");
                 if (err) {
                     logger.info("[RedisClient] hset key err: %s", err || "");
-                    reject({ msg: "hset error" });
+                    reject(err);
                 } else if (ret) {
                     logger.info("[RedisClient] hset key success");
                     resolve(ret);
@@ -78,7 +78,7 @@ class RedisClient {
                 if (err) {
                     reject({ msg: "del error" });
                 } else {
-                    resolve(ret || "");
+                    resolve(ret || { msg: "success" });
                 }
             });
         });
@@ -93,7 +93,7 @@ class RedisClient {
                     reject({ msg: "del error" });
                 } else {
                     logger.info("[RedisClient] hdel key success");
-                    resolve(ret || "");
+                    resolve(ret || { msg: "success" });
                 }
             });
         });
@@ -109,7 +109,7 @@ class RedisClient {
             }
             this.client.expire(key, _duration, (err, ret) => {
                 logger.info("[RedisClient] expire key:%s, _duration: %s, err: %s,  ret: %s", key, _duration || 0, err || "", ret || "");
-                if (err) { resolve(""); } else { resolve(ret || "") };
+                if (err) { resolve(""); } else { resolve(ret || { msg: "success" }) };
             });
         });
     }

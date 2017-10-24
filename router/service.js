@@ -159,9 +159,11 @@ router
             let _ret = {};
             await courier.sendAsyncCall("mail", "asyncAddToNoticeArray", "", verify.info.mail)
                 .then(ret => {
+                    logger.info("[router] notice-add success");
                     _ret = { status: RESULT.SUCCESS, msg: "add success" };
                 })
                 .catch(e => {
+                    logger.info("[router] notice-add error");
                     _ret = { status: RESULT.REQ_ERROR, msg: "Internal Error" };
 
                 });
@@ -178,9 +180,11 @@ router
             let _ret = {};
             await courier.sendAsyncCall("mail", "asyncRemoveFromNoticeArray", "", verify.info.mail)
                 .then(ret => {
-                    _ret = { status: RESULT.SUCCESS, msg: "add success" };
+                    logger.info("[router] notice-remove success");
+                    _ret = { status: RESULT.SUCCESS, msg: "remove success" };
                 })
                 .catch(e => {
+                    logger.info("[router] notice-remove error");
                     _ret = { status: RESULT.REQ_ERROR, msg: "Internal Error" };
                 });
             ctx.body = _ret;
