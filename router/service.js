@@ -157,7 +157,7 @@ router
             return;
         } else if (verify.pass) {
             let _ret = await courier.sendAsyncCall("mail", "asyncAddToNoticeArray", "", verify.info.mail);
-            logger.warn("[router] notice-add ret: %s", ret);
+            logger.warn("[router] notice-add ret: %s", _ret);
             if (_ret) {
                 ctx.body = { status: RESULT.SUCCESS, msg: "add success" };
             } else {
@@ -173,7 +173,7 @@ router
             return;
         } else if (verify.pass) {
             let _ret = await courier.sendAsyncCall("mail", "asyncRemoveFromNoticeArray", "", verify.info.mail)
-            logger.warn("[router] notice-remove ret: %s", ret);
+            logger.warn("[router] notice-remove ret: %s", _ret);
             if (_ret) {
                 ctx.body = { status: RESULT.SUCCESS, msg: "add success" };
             } else {
