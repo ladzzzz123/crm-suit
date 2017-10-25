@@ -30,7 +30,7 @@
                     </Row>
                 </Card>
             </div>
-            <div class="chat-input-area">
+            <div class="chat-input-area" v-show="chatShowing">
                 <Input v-model="curMsg" class="chat-input">
                     <Button slot="append" icon="ios-paperplane" @click="sendMsg">发送</Button>
                 </Input>
