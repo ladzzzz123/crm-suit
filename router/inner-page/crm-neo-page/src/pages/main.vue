@@ -33,16 +33,16 @@
 
     <div class="layout container">
         <cheader :logged="logged"
-            height="0.3rem" 
+            height="0.4rem" 
             v-on:showChat="showChat"
             v-on:hideChat="hideChat" />
         <cchat v-if="flagChat"
-            style="padding-top:0.4rem"
+            style="padding-top:0.46rem"
             v-show="chatShowFlag"
             v-on:hideChat="hideChat"/>
         <!-- <tips /> -->
         <!-- <idialog /> -->
-        <Row type="flex" style="margin-top:0.4rem;">
+        <Row type="flex" style="margin-top:0.46rem;">
             <Col :span="spanLeft" class="layout-menu-left panel-left">
                 <crouter v-if="logged" />
             </Col>
