@@ -125,11 +125,27 @@ let export_func = {
     },
 
     asyncAddToNoticeArray: (mail) => {
-        return redisClient.hset(MAIL_NOTICE_KEY, mail, mail)
+        return new Promise((resolve, reject) => {
+            redisClient.hset(MAIL_NOTICE_KEY, mail, mail)
+                .then(ret => {
+                    resolve({ status: "success", ret: ret });
+                })
+                .catch(e => {
+                    reject({ status: "failed", ret: e });
+                });
+        })
     },
 
     asyncRemoveFromNoticeArray: (mail) => {
-        return redisClient.hdel(MAIL_NOTICE_KEY, mail);
+        return new Promise((resolve, reject) => {
+            redisClient.hdel(MAIL_NOTICE_KEY, mail)
+                .then(ret => {
+                    resolve({ status: "success", ret: ret });
+                })
+                .catch(e => {
+                    reject({ status: "failed", ret: e });
+                });
+        })
     }
 
 };

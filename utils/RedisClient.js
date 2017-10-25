@@ -52,7 +52,7 @@ class RedisClient {
                     logger.info("[RedisClient] hset key success");
                     resolve(ret);
                 } else {
-                    resolve(null);
+                    resolve("");
                 }
             });
         });
