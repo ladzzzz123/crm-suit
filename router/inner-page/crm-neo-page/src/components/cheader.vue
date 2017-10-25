@@ -6,10 +6,11 @@
         font-size: 0.1rem;
     }
     .navbar {
-        position: relative;
+        position: fixed;
         min-height: 50px;
         margin-bottom: 20px;
         border: 1px solid transparent;
+        width: 100%;
     }
     .navbar-brand {
         float: left;

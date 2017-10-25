@@ -10,3 +10,4 @@ require("./video/bg.ogg");
 // import "iview/dist/styles/fonts/ionicons.woff";
 
 require("./img/logo.png");
+require("./img/bg.jpg");

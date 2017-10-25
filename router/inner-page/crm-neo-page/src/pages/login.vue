@@ -1,23 +1,45 @@
-<style>
+<style scoped>
+    .login {
+        height: 100%;
+        left: 0;
+        position: fixed;
+        top: 0;
+        width: 100%;
+    }
+
+    .bg {
+        background: url(/img/bg.jpg) no-repeat center center;
+        background-size: 100% 100%;
+    }
+
+    .input-area {
+        box-sizing: border-box;
+        background: #f8f8f8;
+        position: absolute;
+        right: 20%;
+        top: 45%;
+    }
 </style>
 
 <template>
-    <Row type="flex" justify="center">
-        <Form ref="formData" :model="formData" :rules="ruleData" span="6">
-            <FormItem prop="u_name">
-                <Input type="text" v-model="formData.u_name" placeholder="用户名(邮箱)">
-                    <Icon type="ios-person-outline" slot="prepend"></Icon>
-                </Input>
-            </FormItem>
-            <FormItem prop="passwd">
-                <Input type="password" v-model="formData.passwd" placeholder="密码">
-                    <Icon type="ios-locked-outline" slot="prepend"></Icon>
-                </Input>
-            </FormItem>
-            <FormItem>
-                <Button type="primary" @click="login('formData')">登录</Button>
-            </FormItem>
-        </Form>
+    <Row class="login bg">
+        <Card type="flex" justify="center" class="input-area">
+            <Form ref="formData" :model="formData" :rules="ruleData">
+                <FormItem prop="u_name">
+                    <Input type="text" v-model="formData.u_name" placeholder="用户名(邮箱)">
+                        <Icon type="ios-person-outline" slot="prepend"></Icon>
+                    </Input>
+                </FormItem>
+                <FormItem prop="passwd">
+                    <Input type="password" v-model="formData.passwd" placeholder="密码">
+                        <Icon type="ios-locked-outline" slot="prepend"></Icon>
+                    </Input>
+                </FormItem>
+                <FormItem>
+                    <Button type="primary" @click="login('formData')">登录</Button>
+                </FormItem>
+            </Form>
+        </Card>
     </Row>
 </template>
 

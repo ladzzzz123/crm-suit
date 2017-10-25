@@ -8,7 +8,8 @@
     .panel-left {
         height: 100%;
         left: 0;
-        position: absolute;
+        overflow-y: scroll;
+        position: fixed;
         width: 20%;
     }
 
