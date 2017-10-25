@@ -7,10 +7,10 @@
         width: 100%;
     }
 
-    .bg {
-        background: url(/img/bg.jpg) no-repeat center center;
+    /* .bg {
+        background: url(img/bg.jpg) no-repeat center center;
         background-size: 100% 100%;
-    }
+    } */
 
     .input-area {
         box-sizing: border-box;
@@ -22,7 +22,7 @@
 </style>
 
 <template>
-    <Row class="login bg">
+    <Row class="login" style="background: url(img/bg.jpg) no-repeat center center;background-size: 100% 100%;">
         <Card type="flex" justify="center" class="input-area">
             <Form ref="formData" :model="formData" :rules="ruleData">
                 <FormItem prop="u_name">
