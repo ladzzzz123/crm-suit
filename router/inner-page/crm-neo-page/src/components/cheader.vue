@@ -7,24 +7,24 @@
     }
     .navbar {
         position: fixed;
-        margin-bottom: 20px;
+        margin-bottom: 0.2rem;
         border: 1px solid transparent;
         white-space: nowrap;
         width: 100%;
     }
     .navbar-brand {
         float: left;
-        height: 50px;
-        padding: 15px 15px;
-        line-height: 20px;
+        height: 0.5rem;
+        padding: 0.15rem 0.15rem;
+        line-height: 0.2rem;
     }
     .navbar-subtitle {
         display: inline-block;
         font-size: 0.12rem;
-        height: 50px;
-        padding: 15px;
+        height: 0.5rem;
+        padding: 0.15rem;
         padding-left: 0;
-        line-height: 20px;
+        line-height: 0.2rem;
         /* -webkit-transform: scale(0.8); */
     }
 </style>
