@@ -1,5 +1,5 @@
 <template>
-    <Row :class="(chatShowing ? 'chat-show' : 'chat-hide') + ' chat-container layer-middle' " :style="style">
+    <Row :class="(chatShowing ? 'chat-show' : 'chat-hide') + ' chat-container layer-middle' " :style="cstyle">
         <Col span="2" class="chat-close" @click.native="switchChat">
             <Icon type="arrow-right-b" size="large" v-if="chatShowing"></Icon>
             <Icon type="arrow-left-b" size="large" v-else></Icon>
@@ -44,7 +44,7 @@ import func from "../main";
 let socket = {};
 
 export default {
-    props:["style"],
+    props:["cstyle"],
     data: function() {
         return {
             msgs: [],

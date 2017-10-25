@@ -37,7 +37,7 @@
             v-on:showChat="showChat"
             v-on:hideChat="hideChat" />
         <cchat v-if="flagChat"
-            style="padding-top:0.46rem"
+            cstyle="padding-top:0.46rem"
             v-show="chatShowFlag"
             v-on:hideChat="hideChat"/>
         <!-- <tips /> -->
