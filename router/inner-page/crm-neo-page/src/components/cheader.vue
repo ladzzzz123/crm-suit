@@ -49,7 +49,7 @@
                                 <Icon type="chatbox"></Icon>
                                 <span style="margin-left:0.02rem">聊天室(测试)</span>
                             </DropdownItem>
-                            <DropdownItem @click.native="quit" divided>
+                            <DropdownItem @click.native="quit">
                                 <Icon type="ios-trash-outline"></Icon>
                                 <span style="margin-left:0.02rem">清除缓存</span>
                             </DropdownItem>
