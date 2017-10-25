@@ -450,7 +450,9 @@ export default {
                     }
                     func.hideDialog();
                 }, (status, msg) => {
-                    func.showTips("alert-error", "更新状态失败，该素材可能已被他人编辑，请刷新列表后再尝试！");
+                    setTimeout(() => {
+                        func.showTips("alert-error", "更新状态失败，该素材可能已被他人编辑，请刷新列表后再尝试！");
+                    }, 2000);
                     processFailed(status);
                 });
         },
