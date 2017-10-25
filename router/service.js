@@ -157,16 +157,19 @@ router
             return;
         } else if (verify.pass) {
             let _ret = {};
-            await courier.sendAsyncCall("mail", "asyncAddToNoticeArray", "", verify.info.mail)
-                .then(ret => {
-                    logger.info("[router] notice-add success");
-                    _ret = { status: RESULT.SUCCESS, msg: "add success" };
-                })
-                .catch(e => {
-                    logger.info("[router] notice-add error");
-                    _ret = { status: RESULT.REQ_ERROR, msg: "Internal Error" };
+            await courier.sendAsyncCall("mail", "asyncAddToNoticeArray", ret => {
+                logger.info("[router] notice-add ret:%s", ret);
+                _ret = { status: RESULT.SUCCESS, msg: "add success" };
+            }, verify.info.mail);
+            // .then(ret => {
+            //     logger.info("[router] notice-add success");
+            //     _ret = { status: RESULT.SUCCESS, msg: "add success" };
+            // })
+            // .catch(e => {
+            //     logger.info("[router] notice-add error");
+            //     _ret = { status: RESULT.REQ_ERROR, msg: "Internal Error" };
 
-                });
+            // });
             ctx.body = _ret;
         } else {
             ctx.body = _util.verifyTokenResult(verify);
