@@ -1,5 +1,6 @@
 <style scoped>
     .container {
+        border: solid 0.1px;
         height: 100%;
         width: 100%;
         padding: 0;
@@ -31,7 +32,8 @@
 <template>
 
     <div class="layout container">
-        <cheader :logged="logged" 
+        <cheader :logged="logged"
+            height="0.3rem" 
             v-on:showChat="showChat"
             v-on:hideChat="hideChat" />
         <cchat v-if="flagChat"
@@ -39,7 +41,7 @@
             v-on:hideChat="hideChat"/>
         <!-- <tips /> -->
         <!-- <idialog /> -->
-        <Row type="flex">
+        <Row type="flex" style="margin-top:0.3rem;">
             <Col :span="spanLeft" class="layout-menu-left panel-left">
                 <crouter v-if="logged" />
             </Col>

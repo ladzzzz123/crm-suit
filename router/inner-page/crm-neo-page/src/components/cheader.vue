@@ -7,9 +7,9 @@
     }
     .navbar {
         position: fixed;
-        min-height: 50px;
         margin-bottom: 20px;
         border: 1px solid transparent;
+        white-space: nowrap;
         width: 100%;
     }
     .navbar-brand {
@@ -30,7 +30,7 @@
 </style>
 
 <template>
-    <nav role="navigation" class="navbar navbar-default layer-top">    
+    <nav role="navigation" class="navbar navbar-default layer-top" :style="'height:' + height">    
         <Row>
             <Col span="12">
                 <a class="navbar-brand" href="http://www.cootek.com/index.html">
@@ -68,7 +68,7 @@
 
 <script>
 export default {
-    props: ["logged"],
+    props: ["logged", "height"],
     computed: {
         userInfo() {
             return this.$store.state.userInfo;
