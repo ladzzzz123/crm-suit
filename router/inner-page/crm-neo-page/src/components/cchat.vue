@@ -1,5 +1,5 @@
 <template>
-    <Row :class="(chatShowing ? 'chat-show' : 'chat-hide') + ' chat-container layer-middle' ">
+    <Row :class="(chatShowing ? 'chat-show' : 'chat-hide') + ' chat-container layer-middle' " :style="style">
         <Col span="2" class="chat-close" @click.native="switchChat">
             <Icon type="arrow-right-b" size="large" v-if="chatShowing"></Icon>
             <Icon type="arrow-left-b" size="large" v-else></Icon>
@@ -44,6 +44,7 @@ import func from "../main";
 let socket = {};
 
 export default {
+    props:["style"],
     data: function() {
         return {
             msgs: [],
@@ -96,15 +97,15 @@ export default {
 <style>
     .chat-container {
         background:#eee;
-        position:absolute;
+        position: fixed;
         right:0;
         bottom:0;
         min-width:2.4rem;
-        height:5.25rem;
+        height:100%;
     }
     .chat-list {
-        height: 4.5rem;
-        overflow-y: scroll;
+        height: 80%;
+        overflow-y: auto;
     }
     .chat-msg {
         max-width: 2.8rem;
@@ -112,11 +113,11 @@ export default {
     }
     .chat-input-area {
         background: grey;
-        height: 0.5rem;
-        padding: 0.1rem;
-        position: absolute;
-        top: 4.75rem;
-        width: 100%;
+        height: .5rem;
+        padding: .1rem;
+        position: fixed;
+        width: 2.2rem;
+        bottom: 0.02rem;
     }
     .chat-input {
         margin: 0 auto;

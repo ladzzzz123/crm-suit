@@ -1,6 +1,6 @@
 <style scoped>
     .container {
-        border: solid 0.1px;
+        border: solid 0.1px transparent;
         height: 100%;
         width: 100%;
         padding: 0;
@@ -9,7 +9,7 @@
     .panel-left {
         height: 100%;
         left: 0;
-        overflow-y: scroll;
+        overflow-y: auto;
         position: fixed;
         width: 20%;
     }
@@ -22,7 +22,7 @@
     .panel-right {
         height: 100%;
         right: 0;
-        overflow-y: scroll;
+        overflow-y: auto;
         position: absolute;
         text-align: center;
         width: 80%;
@@ -37,11 +37,12 @@
             v-on:showChat="showChat"
             v-on:hideChat="hideChat" />
         <cchat v-if="flagChat"
+            style="padding-top:0.35rem"
             v-show="chatShowFlag"
             v-on:hideChat="hideChat"/>
         <!-- <tips /> -->
         <!-- <idialog /> -->
-        <Row type="flex" style="margin-top:0.3rem;">
+        <Row type="flex" style="margin-top:0.35rem;">
             <Col :span="spanLeft" class="layout-menu-left panel-left">
                 <crouter v-if="logged" />
             </Col>
