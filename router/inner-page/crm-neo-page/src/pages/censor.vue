@@ -442,10 +442,12 @@ export default {
                     });
                     neoArr = neoArr || ["", []];
                     let neoItem = neoArr[1].find(subItem => ("" + subItem._id) === _id);
-                    (neoItem) && (neoItem.m_status = n_status) 
-                        && (neoItem.reason = inputText)  
-                        && (neoItem.m_version = parseInt(neoItem.m_version) + 1)
-                        && (neoItem.opter = this.userInfo.mail);
+                    if(neoItem) {
+                        neoItem.m_status = n_status;
+                        neoItem.m_version = parseInt(neoItem.m_version) + 1;
+                        neoItem.reason = inputText;
+                        neoItem.opter = this.userInfo.mail;
+                    }
                     func.hideDialog();
                 }, (status, msg) => {
                     func.showTips("alert-error", "更新状态失败，该素材可能已被他人编辑，请刷新列表后再尝试！");
