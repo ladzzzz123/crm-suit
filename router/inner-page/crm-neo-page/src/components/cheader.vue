@@ -35,7 +35,7 @@
                 <a class="navbar-brand" href="http://www.cootek.com/index.html">
                     <img src="http://www.cootek.com/images/logo.png" height="100%">
                 </a>
-                <p class="navbar-subtitle">TouchPal Commercial Operation System</p>
+                <p class="navbar-subtitle">Commercial Operation System</p>
             </Col>
             <Col span="4" offset="8" v-if="logged" style="text-align:right" >
                 <div class="navbar-brand">
