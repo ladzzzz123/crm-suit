@@ -133,7 +133,7 @@ let export_func = {
                 .catch(e => {
                     reject({ status: "failed", ret: e });
                 });
-        })
+        });
     },
 
     asyncRemoveFromNoticeArray: (mail) => {
@@ -145,7 +145,7 @@ let export_func = {
                 .catch(e => {
                     reject({ status: "failed", ret: e });
                 });
-        })
+        });
     }
 
 };

@@ -413,4 +413,22 @@ router
         ctx.body = _ret;
     });
 
+router
+    .post("/crm-inner/earnings/query", async(ctx, next) => {
+        let verify = await verifyToken(ctx, "earnings", "opter");
+        if (!verify) {
+            return;
+        } else if (verify.pass) {
+
+        }
+    })
+    .post("/crm-inner/earnings/edit", async(ctx, next) => {
+        let verify = await verifyToken(ctx, "admin", "opter");
+        if (!verify) {
+            return;
+        } else if (verify.pass) {
+
+        }
+    });
+
 http.createServer(app.callback()).listen(DEFAULT_PORT);

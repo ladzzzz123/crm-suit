@@ -29,8 +29,10 @@ INSERT INTO role_map (role_pos, role_name, module) VALUES
 ("010000", "admin", "mail"),
 ("100000", "opter", "mail"),
 ("01000000", "admin", "censor"),
-("10000000", "opter", "censor");
-
+("10000000", "opter", "censor"),
+("0100000000", "admin", "earning"),
+("1000000000", "opter", "earning")
+;
 
 
 
