@@ -424,7 +424,7 @@ router
                 ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
             }
             try {
-                let ret = await courier.sendAsyncCall("earnings", "asyncQuery", "", postData.m_date);
+                let ret = await courier.sendAsyncCall("earnings", "asyncQuery", "", postData.action, postData.m_date);
                 ctx.body = { status: RESULT.SUCCESS, content: ret, msg: "fetch list end" };
             } catch (e) {
                 ctx.body = { status: RESULT.SUCCESS, content: [], msg: JSON.stringify(e) };
