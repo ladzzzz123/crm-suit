@@ -91,8 +91,9 @@ class ImapManager {
                     }
                     let m_to = mail.to.value[0].address || "";
                     let m_date = new Date(mail.date) || new Date();
+
                     let $ = cheerio.load(mail.html);
-                    let m_content = $("div").text() || "";
+                    let m_content = $("body").text() || "";
                     logger.warn(`[ImapManager] mail m_content:${m_content}`);
 
                     let neoMail = {
@@ -101,7 +102,7 @@ class ImapManager {
                         m_to: m_to,
                         m_cc: m_cc.toString(),
                         m_date: m_date,
-                        m_content: mail.html,
+                        m_content: m_content,
                     };
                     neoMail.m_attachments = "";
                     if (mail.attachments) {
