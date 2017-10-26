@@ -419,7 +419,18 @@ router
         if (!verify) {
             return;
         } else if (verify.pass) {
-
+            let postData = ctx.request.body;
+            if (!_util.verifyParams(postData, "m_date", "action")) {
+                ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
+            }
+            try {
+                let ret = await courier.sendAsyncCall("earnings", "asyncQuery", "", postData.m_date);
+                ctx.body = { status: RESULT.SUCCESS, content: ret, msg: "fetch list end" };
+            } catch (e) {
+                ctx.body = { status: RESULT.SUCCESS, content: [], msg: JSON.stringify(e) };
+            }
+        } else {
+            ctx.body = _util.verifyTokenResult(verify);
         }
     })
     .post("/crm-inner/earnings/edit", async(ctx, next) => {
