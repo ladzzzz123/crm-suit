@@ -256,8 +256,8 @@ export default {
                     token: this.token
                 }, content => {
                     func.showTips("alert-success", "已删除任务！");
-                    this.planList.remove(mailMsg);
-                    // this.query();
+                    // this.planList.remove(mailMsg);
+                    this.query();
                 });
             });
         },
