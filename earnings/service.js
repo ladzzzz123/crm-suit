@@ -43,7 +43,7 @@ function insertEarningsDataIntoDB(dateS) {
         let dateStr = [dateS.replace(/(\/|\-)/gi, "")];
         const SQL_QUERY_DATA_FROM_MAIL = `SELECT m_content FROM mail_info WHERE m_module = "${export_func.name}" AND m_date = ?`;
         const SQL_QUERY_FORMAT = mysql.format(SQL_QUERY_DATA_FROM_MAIL, dateStr);
-        courier.sendAsyncCall("dbopter", "asyncQuery", "", "earn_data", SQL_QUERY_FORMAT)
+        courier.sendAsyncCall("dbopter", "asyncQuery", "", "market_db", SQL_QUERY_FORMAT)
             .then(ret => {
                 let orgDataArr = ret.ret;
                 let insertArr = [];
