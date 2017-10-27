@@ -3,15 +3,15 @@
         position: relative;
     }
     .bg {
-        height: 804px;
-        width: 400px;
+        height: 836px;
+        width: 408px;
     }
     .content {
         height: 640px;
         left: 50%;
         margin-left: -180px;
         position: absolute;
-        top: 72px;
+        top: 98px;
         width: 360px;
     }
 </style>
