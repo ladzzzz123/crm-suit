@@ -36,7 +36,7 @@ let export_func = {
     },
 
     asyncQueryInsert: (target, sql_opt, params) => {
-        logger.info(`[dbopter] asyncQuery called: ${target}, ${sql_opt}`);
+        logger.info(`[dbopter] asyncQueryInsert called: ${target}, ${sql_opt}`);
         return execOpt(target, sql_opt, params);
     },
 
