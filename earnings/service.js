@@ -50,11 +50,13 @@ function insertEarningsDataIntoDB(dateS) {
                 if (orgDataArr.length < 1) {
                     resolve("sync success but no data");
                 } else {
-                    orgDataArr.forEach(content => {
+                    Array.forEach.call(orgDataArr, (content) => {
                         let neo_content =
                             content.replace(/(\n)+/gi, ";")
                             .replace(/\ /gi, ",");
+                        logger.info("[earnings] neo_content: %s", neo_content);
                         neo_content.split(";").forEach(sub => {
+                            logger.info("[earnings] sub: %s", sub);
                             // channel, ad_pos, e_date, e_exposure, e_click
                             sub.split(",").forEach(item => {
                                 insertArr.push({
