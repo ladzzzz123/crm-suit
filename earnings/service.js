@@ -47,36 +47,40 @@ function insertEarningsDataIntoDB(dateS) {
             .then(ret => {
                 let orgDataArr = ret.ret;
                 let insertArr = [];
-                orgDataArr.forEach(content => {
-                    let neo_content =
-                        content.replace(/(\n)+/gi, ";")
-                        .replace(/\ /gi, ",");
-                    neo_content.split(";").forEach(sub => {
-                        // channel, ad_pos, e_date, e_exposure, e_click
-                        sub.split(",").forEach(item => {
-                            insertArr.push({
-                                channel: item[0],
-                                ad_pos: item[1],
-                                e_date: item[2],
-                                e_exposure: item[3],
-                                e_click: item[4]
+                if (orgDataArr.length < 1) {
+                    resolve("sync success but no data");
+                } else {
+                    orgDataArr.forEach(content => {
+                        let neo_content =
+                            content.replace(/(\n)+/gi, ";")
+                            .replace(/\ /gi, ",");
+                        neo_content.split(";").forEach(sub => {
+                            // channel, ad_pos, e_date, e_exposure, e_click
+                            sub.split(",").forEach(item => {
+                                insertArr.push({
+                                    channel: item[0],
+                                    ad_pos: item[1],
+                                    e_date: item[2],
+                                    e_exposure: item[3],
+                                    e_click: item[4]
+                                });
                             });
                         });
-                    });
 
-                    const SQL_INSERT_DATA = `
-                    INSERT INTO earn_daily_journal (channel, ad_place, e_date, e_exposure, e_click) VALUES ?`;
-                    const SQL_QUERY_FORMAT_INSERT = mysql.format(SQL_INSERT_DATA, [insertAr]);
-                    courier.sendAsyncCall("dbopter", "asyncQuery", "", "earn_data", SQL_QUERY_FORMAT_INSERT)
-                        .then(ret => {
-                            logger.info("[earnings] insert succeed");
-                            resolve("sync success");
-                        })
-                        .catch(e => {
-                            logger.info("[earnings] insert error");
-                            resolve("sync error");
-                        });
-                });
+                        const SQL_INSERT_DATA = `
+                        INSERT INTO earn_daily_journal (channel, ad_place, e_date, e_exposure, e_click) VALUES ?`;
+                        const SQL_QUERY_FORMAT_INSERT = mysql.format(SQL_INSERT_DATA, [insertAr]);
+                        courier.sendAsyncCall("dbopter", "asyncQuery", "", "earn_data", SQL_QUERY_FORMAT_INSERT)
+                            .then(ret => {
+                                logger.info("[earnings] insert succeed");
+                                resolve("sync success");
+                            })
+                            .catch(e => {
+                                logger.info("[earnings] insert error");
+                                resolve("sync error");
+                            });
+                    });
+                }
             })
             .catch(e => {
                 reject(e);
