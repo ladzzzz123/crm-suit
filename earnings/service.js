@@ -65,6 +65,7 @@ function insertEarningsDataIntoDB(dateS) {
                             if (sub.length > 5) {
                                 // channel, ad_pos, e_date, e_exposure, e_click
                                 sub.split(",").forEach(item => {
+                                    logger.info("[earnings] item: %s", item);
                                     insertArr.push({
                                         channel: item[0],
                                         ad_pos: item[1],
