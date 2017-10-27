@@ -75,15 +75,12 @@ function insertEarningsDataIntoDB(dateS) {
                             }
                         });
                         logger.info("[earnings] insertArr: %s", JSON.stringify(insertArr));
-                        const SQL_INSERT_DATA = "INSERT INTO earn_daily_journal SET ??";
-                        // try {
-                        //     const SQL_QUERY_FORMAT_INSERT = mysql.format(SQL_INSERT_DATA, [insertArr]);
-                        // } catch (e) {
-                        //     logger.warn("err: %s", JSON.stringify(e));
-                        // }
-                        // logger.info("[earnings] SQL_QUERY_FORMAT_INSERT: %s", SQL_QUERY_FORMAT_INSERT);
+                        const SQL_INSERT_DATA = "INSERT INTO earn_daily_journal SET ?";
+                        const SQL_QUERY_FORMAT_INSERT = mysql.format(SQL_INSERT_DATA, [...insertArr]);
 
-                        courier.sendAsyncCall("dbopter", "asyncQueryInsert", "", "earn_data", SQL_INSERT_DATA, insertArr)
+                        logger.info("[earnings] SQL_QUERY_FORMAT_INSERT: %s", SQL_QUERY_FORMAT_INSERT);
+
+                        courier.sendAsyncCall("dbopter", "asyncQuery", "", "earn_data", SQL_QUERY_FORMAT_INSERT)
                             .then(ret => {
                                 logger.info("[earnings] insert succeed: %s", JSON.stringify(ret));
                                 resolve("sync success");
