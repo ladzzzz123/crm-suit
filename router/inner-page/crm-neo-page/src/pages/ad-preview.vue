@@ -3,14 +3,15 @@
         position: relative;
     }
     .bg {
-        height: 758px;
-        width: 392px;
+        height: 804px;
+        width: 400px;
     }
     .content {
         height: 640px;
-        left: 16px;
+        left: 50%;
+        margin-left: -180px;
         position: absolute;
-        top: 56px;
+        top: 72px;
         width: 360px;
     }
 </style>
@@ -21,7 +22,7 @@
                 <img class="bg" src="img/preview-iphone.jpg">
                 <div class="content">
                     <img :src="adImgs[adPos] || '/crm-inner/static/ad/' + adPos + '.jpg' " height="100%" />
-                    <img src="img/preview-mask.jpg" height="100%"/>
+                    <img src="img/preview-mask.png" height="100%"/>
                 </div>
             </Row>
             <Upload
