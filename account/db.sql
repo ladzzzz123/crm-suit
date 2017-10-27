@@ -31,6 +31,11 @@ INSERT INTO role_map (role_pos, role_name, module) VALUES
 ("01000000", "admin", "censor"),
 ("10000000", "opter", "censor");
 
+-- add module ad-preview
+INSERT INTO role_map (role_pos, role_name, module) VALUES 
+("010001000000", "admin", "ad-preview"),
+("100010000000", "opter", "ad-preview");
+
 
 
 

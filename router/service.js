@@ -413,4 +413,29 @@ router
         ctx.body = _ret;
     });
 
+
+router
+    .post("/crm-inner/ad-preview/upload", async(ctx, next) => {
+        let verify = await verifyToken(ctx, "ad-preview", "opter");
+        if (!verify) {
+            return;
+        } else if (verify.pass) {
+            let postData = ctx.request.body;
+            if (!_util.verifyParams(postData.fields, "ad_pos")) {
+                logger.info("[router] upload: missing params");
+                ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
+                return;
+            }
+            let opter = verify.info.u_name;
+            let ad_pos = postData.fields.ad_pos;
+            let file = postData.files.file;
+
+            let ret = await courier.sendAsyncCall("ad-preview", "asyncUploadFile", "", file, ad_pos, opter);
+            logger.info("[router] upload ret:" + JSON.stringify(ret));
+            ctx.body = { status: RESULT.SUCCESS, content: ret };
+        } else {
+            ctx.body = _util.verifyTokenResult(verify);
+        }
+    });
+
 http.createServer(app.callback()).listen(DEFAULT_PORT);
