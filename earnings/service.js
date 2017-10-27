@@ -76,7 +76,7 @@ function insertEarningsDataIntoDB(dateS) {
                         });
                         logger.info("[earnings] insertArr: %s", JSON.stringify(insertArr));
                         const SQL_INSERT_DATA = "INSERT INTO earn_daily_journal SET ?";
-                        const SQL_QUERY_FORMAT_INSERT = mysql.format(SQL_INSERT_DATA, ...insertArr);
+                        const SQL_QUERY_FORMAT_INSERT = mysql.format(SQL_INSERT_DATA, insertArr);
 
                         logger.info("[earnings] SQL_QUERY_FORMAT_INSERT: %s", SQL_QUERY_FORMAT_INSERT);
 
