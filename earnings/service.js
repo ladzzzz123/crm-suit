@@ -53,7 +53,7 @@ function insertEarningsDataIntoDB(dateS) {
                     resolve("sync success but no data");
                 } else {
                     logger.info("[earnings] Array.isArray(orgDataArr): %s", Array.isArray(orgDataArr));
-                    Array.forEach.call(orgDataArr, (content) => {
+                    orgDataArr.forEach((content) => {
                         logger.info("[earnings] content: %s", JSON.stringify(content));
                         let neo_content =
                             content.m_content.replace(/(\n)+/gi, ";")
