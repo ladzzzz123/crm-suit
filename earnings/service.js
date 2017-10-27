@@ -12,6 +12,8 @@ let export_func = {
         switch (action) {
             case "query-journal":
                 return queryJournalData(...dates);
+            case "sync":
+                return insertEarningsDataIntoDB(...dates);
             default:
                 break;
         }
@@ -35,8 +37,55 @@ function queryJournalData(...dates) {
     });
 }
 
+
+function insertEarningsDataIntoDB(dateS) {
+    return new Promise((resolve, reject) => {
+        let dateStr = [dateS.replace(/(\/|\-)/gi, "")];
+        const SQL_QUERY_DATA_FROM_MAIL = `SELECT m_content FROM mail_info WHERE m_module = ${export_func.name} AND m_date = ?`;
+        const SQL_QUERY_FORMAT = mysql.format(SQL_QUERY_DATA_FROM_MAIL, dateStr);
+        courier.sendAsyncCall("dbopter", "asyncQuery", "", "earn_data", SQL_QUERY_FORMAT)
+            .then(ret => {
+                let orgDataArr = ret.ret;
+                let insertArr = [];
+                orgDataArr.forEach(content => {
+                    let neo_content =
+                        content.replace(/(\n)+/gi, ";")
+                        .replace(/\ /gi, ",");
+                    neo_content.split(";").forEach(sub => {
+                        // channel, ad_pos, e_date, e_exposure, e_click
+                        sub.split(",").forEach(item => {
+                            insertArr.push({
+                                channel: item[0],
+                                ad_pos: item[1],
+                                e_date: item[2],
+                                e_exposure: item[3],
+                                e_click: item[4]
+                            });
+                        });
+                    });
+
+                    const SQL_INSERT_DATA = `
+                    INSERT INTO earn_daily_journal (channel, ad_place, e_date, e_exposure, e_click) VALUES ?`;
+                    const SQL_QUERY_FORMAT_INSERT = mysql.format(SQL_INSERT_DATA, [insertAr]);
+                    courier.sendAsyncCall("dbopter", "asyncQuery", "", "earn_data", SQL_QUERY_FORMAT_INSERT)
+                        .then(ret => {
+                            logger.info("[earnings] insert succeed");
+                            resolve("sync success");
+                        })
+                        .catch(e => {
+                            logger.info("[earnings] insert error");
+                            resolve("sync error");
+                        });
+                });
+            })
+            .catch(e => {
+                reject(e);
+            });
+    });
+}
+
 let courier = new Courier(export_func);
 courier.listening(() => {
-    // let today = new Date().toLocaleDateString();
-    // export_func.insertMaterialIntoDB(today);
+    let today = new Date().toLocaleDateString();
+    insertEarningsDataIntoDB(today);
 }, 86400 * 1000);
