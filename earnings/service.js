@@ -83,7 +83,7 @@ function insertEarningsDataIntoDB(dateS) {
                         // }
                         // logger.info("[earnings] SQL_QUERY_FORMAT_INSERT: %s", SQL_QUERY_FORMAT_INSERT);
 
-                        courier.sendAsyncCall("dbopter", "asyncQueryInsert", "", "earn_data", SQL_INSERT_DATA, [{ "channel": "网行", "ad_place": "红包", "e_date": "20171024", "e_exposure": "565487", "e_click": "45519" }, { "channel": "网行", "ad_place": "挂机", "e_date": "20171024", "e_exposure": "970195", "e_click": "83227" }, { "channel": "网行", "ad_place": "信息流", "e_date": "20171024", "e_exposure": "327996", "e_click": "15714" }, { "channel": "网行", "ad_place": "Tips", "e_date": "20171024", "e_exposure": "42225", "e_click": "11793" }]
+                        courier.sendAsyncCall("dbopter", "asyncQueryInsert", "", "earn_data", SQL_INSERT_DATA, [{ "channel": "网行", "ad_place": "挂机", "e_date": "20171024", "e_exposure": "970195", "e_click": "83227" }, { "channel": "网行", "ad_place": "红包", "e_date": "20171024", "e_exposure": "565487", "e_click": "45519" }, { "channel": "网行", "ad_place": "信息流", "e_date": "20171024", "e_exposure": "327996", "e_click": "15714" }, { "channel": "网行", "ad_place": "Tips", "e_date": "20171024", "e_exposure": "42225", "e_click": "11793" }]
                                 // insertArr
                             )
                             .then(ret => {
