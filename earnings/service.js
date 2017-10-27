@@ -45,12 +45,15 @@ function insertEarningsDataIntoDB(dateS) {
         const SQL_QUERY_FORMAT = mysql.format(SQL_QUERY_DATA_FROM_MAIL, dateStr);
         courier.sendAsyncCall("dbopter", "asyncQuery", "", "market_db", SQL_QUERY_FORMAT)
             .then(ret => {
+                logger.info("[earnings] ret: %s", JSON.stringify(ret));
                 let orgDataArr = ret.ret;
+                logger.info("[earnings] orgDataArr: %s", JSON.stringify(orgDataArr));
                 let insertArr = [];
                 if (orgDataArr.length < 1) {
                     resolve("sync success but no data");
                 } else {
                     Array.forEach.call(orgDataArr, (content) => {
+                        logger.info("[earnings] content: %s", JSON.stringify(content));
                         let neo_content =
                             content.m_content.replace(/(\n)+/gi, ";")
                             .replace(/\ /gi, ",");
