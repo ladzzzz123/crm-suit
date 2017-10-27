@@ -18,6 +18,17 @@ let export_func = {
                 break;
         }
     },
+
+    asyncUpdate: (action, params) => {
+        switch (action) {
+            case "update-journal":
+                return updateJournalData(params);
+            case "update-channel":
+                return updateChannelData(params);
+            default:
+                break;
+        }
+    },
 };
 
 
@@ -34,6 +45,18 @@ function queryJournalData(...dates) {
             .catch(e => {
                 reject(e);
             });
+    });
+}
+
+function updateJournalData(params) {
+    return new Promise((resolve, reject) => {
+
+    });
+}
+
+function updateChannelData(params) {
+    return new Promise((resolve, reject) => {
+
     });
 }
 
@@ -87,11 +110,11 @@ function insertEarningsDataIntoDB(dateS) {
                         courier.sendAsyncCall("dbopter", "asyncQueryInsert", "", "earn_data", SQL_INSERT_DATA, [insertArr])
                             .then(ret => {
                                 logger.info("[earnings] insert succeed: %s", JSON.stringify(ret));
-                                resolve("sync success");
+                                resolve("sync success: %s", JSON.stringify(ret));
                             })
                             .catch(e => {
                                 logger.info("[earnings] insert error: %s", JSON.stringify(e));
-                                resolve("sync error");
+                                resolve(e);
                             });
                     });
                 }

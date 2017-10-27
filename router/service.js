@@ -425,7 +425,7 @@ router
             }
             try {
                 let ret = await courier.sendAsyncCall("earnings", "asyncQuery", "", postData.action, postData.m_date);
-                ctx.body = { status: RESULT.SUCCESS, content: ret, msg: "fetch list end" };
+                ctx.body = { status: RESULT.SUCCESS, content: ret, msg: "query end" };
             } catch (e) {
                 ctx.body = { status: RESULT.SUCCESS, content: [], msg: JSON.stringify(e) };
             }
@@ -433,12 +433,21 @@ router
             ctx.body = _util.verifyTokenResult(verify);
         }
     })
-    .post("/crm-inner/earnings/edit", async(ctx, next) => {
+    .post("/crm-inner/earnings/update", async(ctx, next) => {
         let verify = await verifyToken(ctx, "admin", "opter");
         if (!verify) {
             return;
         } else if (verify.pass) {
-
+            let postData = ctx.request.body;
+            if (!_util.verifyParams(postData, "params", "action")) {
+                ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
+            }
+            try {
+                let ret = await courier.sendAsyncCall("earnings", "asyncUpdate", "", postData.action, postData.params);
+                ctx.body = { status: RESULT.SUCCESS, content: ret, msg: "update end" };
+            } catch (e) {
+                ctx.body = { status: RESULT.SUCCESS, content: [], msg: JSON.stringify(e) };
+            }
         }
     });
 
