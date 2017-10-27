@@ -1,10 +1,11 @@
 <style>
     .container {
         height: 683px;
+        position: relative;
         width: 384px;
     }
     .bg {
-       height: 683px;
+        height: 683px;
         width: 384px;
     }
     .content {
@@ -22,7 +23,7 @@
                 <img class="bg" src="img/preview-iphone.jpg">
                 <div class="content">
                     <img :src="adImgs[adPos] || '/crm-inner/static/ad/' + adPos + '.jpg' " height="100%" />
-                    <img src="img/preview-mask.jpeg" height="100%"/>
+                    <img src="img/preview-mask.jpg" height="100%"/>
                 </div>
             </Row>
             <Upload

@@ -421,7 +421,7 @@ router
             return;
         } else if (verify.pass) {
             let postData = ctx.request.body;
-            if (!_util.verifyParams(postData.fields, "ad_pos")) {
+            if (!_util.verifyParams(postData.fields, ["ad_pos"])) {
                 logger.info("[router] upload: missing params");
                 ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
                 return;
