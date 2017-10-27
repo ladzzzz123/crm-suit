@@ -65,22 +65,26 @@ function insertEarningsDataIntoDB(dateS) {
                             if (sub.length > 5) {
                                 // channel, ad_place, e_date, e_exposure, e_click
                                 let items = sub.split(",");
-                                insertArr.push({
-                                    channel: items[0],
-                                    ad_place: items[1],
-                                    e_date: items[2],
-                                    e_exposure: items[3],
-                                    e_click: items[4]
-                                });
+                                insertArr.push(items);
+                                // insertArr.push({
+                                //     channel: items[0],
+                                //     ad_place: items[1],
+                                //     e_date: items[2],
+                                //     e_exposure: items[3],
+                                //     e_click: items[4]
+                                // });
                             }
                         });
                         logger.info("[earnings] insertArr: %s", JSON.stringify(insertArr));
-                        const SQL_INSERT_DATA = "INSERT INTO earn_daily_journal SETS ?";
-                        const SQL_QUERY_FORMAT_INSERT = mysql.format(SQL_INSERT_DATA, insertArr);
+                        const SQL_INSERT_DATA = "INSERT INTO earn_daily_journal (channel, ad_place, e_date, e_exposure, e_click) VALUES ?";
+                        // try {
+                        //     const SQL_QUERY_FORMAT_INSERT = mysql.format(SQL_INSERT_DATA, [insertArr]);
+                        // } catch (e) {
+                        //     logger.warn("err: %s", JSON.stringify(e));
+                        // }
+                        // logger.info("[earnings] SQL_QUERY_FORMAT_INSERT: %s", SQL_QUERY_FORMAT_INSERT);
 
-                        logger.info("[earnings] SQL_QUERY_FORMAT_INSERT: %s", SQL_QUERY_FORMAT_INSERT);
-
-                        courier.sendAsyncCall("dbopter", "asyncQuery", "", "earn_data", SQL_QUERY_FORMAT_INSERT)
+                        courier.sendAsyncCall("dbopter", "asyncQueryInsert", "", "earn_data", SQL_INSERT_DATA, insertArr)
                             .then(ret => {
                                 logger.info("[earnings] insert succeed: %s", JSON.stringify(ret));
                                 resolve("sync success");
