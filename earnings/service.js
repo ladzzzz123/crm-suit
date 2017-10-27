@@ -41,7 +41,7 @@ function queryJournalData(...dates) {
 function insertEarningsDataIntoDB(dateS) {
     return new Promise((resolve, reject) => {
         let dateStr = [dateS.replace(/(\/|\-)/gi, "")];
-        const SQL_QUERY_DATA_FROM_MAIL = `SELECT m_content FROM mail_info WHERE m_module = ${export_func.name} AND m_date = ?`;
+        const SQL_QUERY_DATA_FROM_MAIL = `SELECT m_content FROM mail_info WHERE m_module = "${export_func.name}" AND m_date = ?`;
         const SQL_QUERY_FORMAT = mysql.format(SQL_QUERY_DATA_FROM_MAIL, dateStr);
         courier.sendAsyncCall("dbopter", "asyncQuery", "", "earn_data", SQL_QUERY_FORMAT)
             .then(ret => {
