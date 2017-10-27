@@ -57,20 +57,23 @@ function insertEarningsDataIntoDB(dateS) {
                         logger.info("[earnings] content: %s", JSON.stringify(content));
                         let neo_content =
                             content.m_content.replace(/(\n)+/gi, ";")
-                            .replace(/\ /gi, ",");
+                            .replace(/\ /gi, ",")
+                            .replace(/\,\;/gi, ",");
                         logger.info("[earnings] neo_content: %s", neo_content);
                         neo_content.split(";").forEach(sub => {
                             logger.info("[earnings] sub: %s", sub);
-                            // channel, ad_pos, e_date, e_exposure, e_click
-                            sub.split(",").forEach(item => {
-                                insertArr.push({
-                                    channel: item[0],
-                                    ad_pos: item[1],
-                                    e_date: item[2],
-                                    e_exposure: item[3],
-                                    e_click: item[4]
+                            if (sub.length > 5) {
+                                // channel, ad_pos, e_date, e_exposure, e_click
+                                sub.split(",").forEach(item => {
+                                    insertArr.push({
+                                        channel: item[0],
+                                        ad_pos: item[1],
+                                        e_date: item[2],
+                                        e_exposure: item[3],
+                                        e_click: item[4]
+                                    });
                                 });
-                            });
+                            }
                         });
 
                         const SQL_INSERT_DATA = `
