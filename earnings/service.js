@@ -58,7 +58,7 @@ function insertEarningsDataIntoDB(dateS) {
                         let neo_content =
                             content.m_content.replace(/(\n)+/gi, ";")
                             .replace(/\ /gi, ",")
-                            .replace(/\,\;/gi, ",");
+                            .replace(/(\,\;|\;\,)/gi, ",");
                         logger.info("[earnings] neo_content: %s", neo_content);
                         neo_content.split(";").forEach(sub => {
                             logger.info("[earnings] sub: %s", sub);
