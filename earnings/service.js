@@ -52,7 +52,7 @@ function insertEarningsDataIntoDB(dateS) {
                 } else {
                     Array.forEach.call(orgDataArr, (content) => {
                         let neo_content =
-                            content.replace(/(\n)+/gi, ";")
+                            content.m_content.replace(/(\n)+/gi, ";")
                             .replace(/\ /gi, ",");
                         logger.info("[earnings] neo_content: %s", neo_content);
                         neo_content.split(";").forEach(sub => {
