@@ -8,7 +8,7 @@ let dbMap = new Map();
 
 function execOpt(target, sql_opt, params) {
     return new Promise((resolve, reject) => {
-        logger.info("[dbopt] execOpt target: %s, params: %s", target, JSON.stringify(params));
+        logger.info("[dbopt] execOpt target: %s", target);
         let opt = dbMap.get(target);
         if (opt) {
             opt.query(sql_opt, params, (err, result) => {

@@ -85,11 +85,11 @@ function insertEarningsDataIntoDB(dateS) {
 
                         courier.sendAsyncCall("dbopter", "asyncQueryInsert", "", "earn_data", SQL_INSERT_DATA, insertArr)
                             .then(ret => {
-                                logger.info("[earnings] insert succeed");
+                                logger.info("[earnings] insert succeed: %s", JSON.stringify(ret));
                                 resolve("sync success");
                             })
                             .catch(e => {
-                                logger.info("[earnings] insert error");
+                                logger.info("[earnings] insert error: %s", JSON.stringify(e));
                                 resolve("sync error");
                             });
                     });
