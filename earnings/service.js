@@ -84,7 +84,7 @@ function insertEarningsDataIntoDB(dateS) {
                         // }
                         // logger.info("[earnings] SQL_QUERY_FORMAT_INSERT: %s", SQL_QUERY_FORMAT_INSERT);
 
-                        courier.sendAsyncCall("dbopter", "asyncQueryInsert", "", "earn_data", SQL_INSERT_DATA, insertArr)
+                        courier.sendAsyncCall("dbopter", "asyncQueryInsert", "", "earn_data", SQL_INSERT_DATA, [insertArr])
                             .then(ret => {
                                 logger.info("[earnings] insert succeed: %s", JSON.stringify(ret));
                                 resolve("sync success");
