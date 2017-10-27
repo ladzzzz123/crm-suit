@@ -1,22 +1,22 @@
 <style>
     .container {
-        height: 1366px;
-        width: 768px;
+        height: 683px;
+        width: 384px;
     }
     .bg {
-        height: 1366px;
-        width: 768px;
+       height: 683px;
+        width: 384px;
     }
-    .container {
-        height: 1280px;
-        left: 24px;
+    .content {
+        height: 640px;
+        left: 12px;
         position: absolute;
-        top: 43px;
-        width: 720px;
+        top: 21.5px;
+        width: 360px;
     }
 </style>
 <template>
-    <Row v-if="logged" type="flex" justify="center">
+    <Row v-if="logged">
         <Card v-for="adPos in Object.keys(adImgs)" v-bind:key="adPos" class="container">
             <Row>
                 <img class="bg" src="img/preview-iphone.jpg">
@@ -75,9 +75,7 @@ export default {
     },
 
     mounted: function() {
-        if (this.token) {
-            this.query();
-        }
+
     },
     
     updated: function() {
