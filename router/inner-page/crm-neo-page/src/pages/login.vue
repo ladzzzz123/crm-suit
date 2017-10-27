@@ -108,6 +108,8 @@ export default {
                                     }
                                 }
                             });
+                            console.log("neoRouterInfos:%s", JSON.stringify(neoRouterInfos));
+                            
                             
                             
                             this.$store.dispatch({
