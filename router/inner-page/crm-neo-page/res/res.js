@@ -12,4 +12,4 @@ require("./video/bg.ogg");
 require("./img/logo.png");
 require("./img/bg.jpg");
 require("./img/preview-iphone.jpg");
-require("./img/preview-mask.jpeg");
+require("./img/preview-mask.jpg");

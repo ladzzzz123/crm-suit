@@ -1,18 +1,16 @@
 <style>
     .container {
-        height: 683px;
         position: relative;
-        width: 384px;
     }
     .bg {
-        height: 683px;
-        width: 384px;
+        height: 758px;
+        width: 392px;
     }
     .content {
         height: 640px;
-        left: 12px;
+        left: 16px;
         position: absolute;
-        top: 21.5px;
+        top: 56px;
         width: 360px;
     }
 </style>
