@@ -434,7 +434,7 @@ router
         }
     })
     .post("/crm-inner/earnings/update", async(ctx, next) => {
-        let verify = await verifyToken(ctx, "admin", "opter");
+        let verify = await verifyToken(ctx, "earnings", "admin");
         if (!verify) {
             return;
         } else if (verify.pass) {
