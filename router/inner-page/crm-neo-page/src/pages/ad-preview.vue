@@ -104,11 +104,11 @@
             <Row>
                 <img class="bg" src="img/preview-iphone.jpg" />
                 <div class="content">
-                    <div :class="adInfo.pos + '-tips' + ' layer-top' ">广告</div>
                     <img :class="adInfo.pos + '-img' + ' layer-middle' " :src="adInfo.img" />
                     <img v-if="adInfo.bg" :class="adInfo.pos + '-bg' + ' layer-bottom' " :src="adInfo.bg"/>
-                    <img v-if="adInfo.mask" :class="adInfo.pos + '-bg' + ' layer-middle' " :src="adInfo.mask"/>
+                    <img v-if="adInfo.mask" :class="adInfo.pos + '-mask' + ' layer-top' " :src="adInfo.mask"/>
                     <img v-if="adInfo.close" :class="adInfo.pos + '-close' + ' layer-top' " :src="adInfo.close"/>
+                    <div :class="adInfo.pos + '-tips' + ' layer-top' ">广告</div>
                 </div>
             </Row>
             <Upload
