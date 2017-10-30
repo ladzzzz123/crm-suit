@@ -14,6 +14,14 @@
         top: 98px;
         width: 360px;
     }
+
+    .content img {
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+    }
 </style>
 <template>
     <Row v-if="logged">
