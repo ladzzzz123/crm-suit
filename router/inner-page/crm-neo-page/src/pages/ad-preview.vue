@@ -21,7 +21,7 @@
             <Row>
                 <img class="bg" src="img/preview-iphone.jpg">
                 <div class="content">
-                    <img :src="adImgs[adPos] || '/crm-inner/static/ad/' + adPos + '.jpg' " height="100%" />
+                    <img :src=" '/crm-inner/static/ad/' + userInfo.u_name + '_' + adPos + '.jpg' " height="100%" />
                     <img src="img/preview-mask.png" height="100%"/>
                 </div>
             </Row>
