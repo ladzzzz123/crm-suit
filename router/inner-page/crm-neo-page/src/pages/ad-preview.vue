@@ -22,21 +22,70 @@
         top: 0;
         width: 100%;
     }
+
+    .openning-img {
+        height: 74%;
+        left: 0;
+        position: absolute;
+        top: 0;
+    }
+
+    .openning-bg {
+        bottom: 0;
+        left: 0;
+        position: absolute;
+        width: 100%;
+    }
+
+    .openning-tips {
+        background: rgba(155, 170,0, 0.6);
+        border-radius: 3px;
+        color: white;
+        font-size: 0.12rem;
+        left: 0;
+        top: 70%;
+        padding: 0.02rem;
+        position: absolute;
+        width: 0.14rem;
+    }
+
+    .dial-img {
+
+    }
+
+    .hangup-img {
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+    }
+
+    .banner-img {
+
+    }
+
+
+
 </style>
 <template>
     <Row v-if="logged">
-        <Card v-for="adPos in Object.keys(adImgs)" v-bind:key="adPos" class="container">
+        <Card v-for="adInfo in adImgs" v-bind:key="adInfo" class="container">
+            <p slot="title">
+                adInfo.title
+            </p>
             <Row>
-                <img class="bg" src="img/preview-iphone.jpg">
+                <img class="bg" src="img/preview-iphone.jpg" />
                 <div class="content">
-                    <img :src=" '/crm-inner/files/static/ad/' + userInfo.u_name + '_' + adPos + '.jpg' " height="100%" />
-                    <img src="img/preview-mask.png" height="100%"/>
+                    <div :class="adInfo.pos + '-tips' ">广告</div>
+                    <img :class="adInfo.pos + '-img' " :src="adInfo.img" />
+                    <img :class="adInfo.pos + '-bg' " :src="adInfo.bg"/>
                 </div>
             </Row>
             <Upload
                 :on-error="onUploadError"
                 :on-success="handleUploadSuccess"
-                :data="{ token: token, ad_pos: adPos}"
+                :data="{ token: token, ad_pos: adInfo.pos }"
                 :action="UPLOAD_URL"
                 type="drag">
                 <div style="padding: 20px 0">
@@ -60,12 +109,12 @@ export default {
     // props: ["userInfo"],
     data: () => {
         return { 
-            adImgs: {
-               openning:"",
-               dial: "",
-               hangup:"",
-               banner:""
-            },
+            adImgs: [
+               { pos: "openning", title: "开屏",img: "", bg: "img/openning-bg.jpg" },
+               { pos: "dial", title: "拨号前", img: "", bg: "" },
+               { pos: "hangup", title: "挂机",img: "img/preview-mask.png" },
+               { pos: "banner", title: "Banner",img: "" }
+            ],
             uploadData:{},
             UPLOAD_URL: "/crm-inner/ad-preview/upload",
         };
@@ -83,7 +132,9 @@ export default {
     },
 
     mounted: function() {
-
+        adImgs.forEach(item => {
+            item.img = `/crm-inner/files/static/ad/${userInfo.u_name}_${item.pos}.jpg`;
+        });
     },
     
     updated: function() {
@@ -106,6 +157,9 @@ export default {
             console.log(JSON.stringify(file));
             if(res.status === 2000) {
                 func.showTips("alert-success", "文件上传成功！！");
+                adImgs.forEach(item => {
+                    item.img = `/crm-inner/files/static/ad/${userInfo.u_name}_${item.pos}.jpg?v=${parseInt(Math.random() * 1000)}`;
+                });
             } else {
                 func.showTips("alert-danger", "文件上传失败！！");
             }
