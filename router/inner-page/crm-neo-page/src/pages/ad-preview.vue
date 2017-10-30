@@ -11,6 +11,7 @@
         height: 640px;
         left: 50%;
         margin-left: -178px;
+        overflow: hidden;
         position: absolute;
         text-align: left;
         top: 98px;
@@ -69,11 +70,11 @@
         position: absolute;
         width: 100%;
         bottom: 0;
-        margin-bottom: 480px;
+        margin-bottom: 1.43rem;
     }
     .calling-img {
         margin-top: 0.26rem;
-        position: absolute;
+        position: relative;
         width: 100%;
     }
     .calling-tips {
