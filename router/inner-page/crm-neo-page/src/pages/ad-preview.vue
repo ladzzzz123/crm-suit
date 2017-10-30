@@ -73,19 +73,21 @@
         margin-bottom: 1.3rem;
     }
     .calling-img {
-        position: relative;
+        margin-top: 0.26rem;
+        position: absolute;
         width: 100%;
     }
     .calling-tips {
         display: inline-block;
         left: 0;
-        position: relative;
+        position: absolute;
         top: 0;
+        -webkit-transform: scale(0.8);
     }
     .calling-close {
         display: inline-block;
-        right: 0.1rem;
-        position: relative;
+        right: 0.05rem;
+        position: absolute;
         top: 0;
         width: 0.12rem;
     }
@@ -138,7 +140,7 @@
         width: 100%;
     }
     .banner-tips {
-        left: 0;
+        left: -1%;
         top: 50%;
         -webkit-transform: scale(0.5);
     }
