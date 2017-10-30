@@ -22,7 +22,7 @@
         border-radius: 2px;
         color: white;
         font-size: 0.06rem;
-        left: 0;
+        left: -1%;
         padding: 0.02rem;
         position: absolute;
         width: 0.14rem;
@@ -55,7 +55,6 @@
         width: 100%;
     }
     .openning-tips {
-        left: 0;
         bottom: 2%;
     }
 
@@ -70,7 +69,7 @@
         position: absolute;
         width: 100%;
         bottom: 0;
-        margin-bottom: 1.3rem;
+        margin-bottom: 3rem;
     }
     .calling-img {
         margin-top: 0.26rem;
@@ -79,7 +78,6 @@
     }
     .calling-tips {
         display: inline-block;
-        left: 0;
         position: absolute;
         top: 0;
         -webkit-transform: scale(0.8);
@@ -116,7 +114,6 @@
         width: 100%;
     }
     .hangup-tips {
-        left: 0;
         top: 84%;
     }
 
@@ -130,7 +127,7 @@
     }
 
     .banner-container{
-        border: 0.03rem;
+        border-radius: 3px;
         left: 5%;
         position: absolute;
         top: 33%;
@@ -140,7 +137,6 @@
         width: 100%;
     }
     .banner-tips {
-        left: -1%;
         top: 50%;
         -webkit-transform: scale(0.5);
     }
