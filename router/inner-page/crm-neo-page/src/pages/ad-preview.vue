@@ -127,13 +127,13 @@
     }
 
     .banner-container{
-        border-radius: 3px;
         left: 5%;
         position: absolute;
         top: 33%;
         width: 90%;
     }
     .banner-img {
+        border-radius: 5px;
         width: 100%;
     }
     .banner-tips {
