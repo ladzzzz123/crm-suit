@@ -87,7 +87,7 @@
 </style>
 <template>
     <Row v-if="logged">
-        <Card v-for="adInfo in adImgs" v-bind:key="adInfo" class="container">
+        <Card v-for="adInfo in adImgs" v-bind:key="adInfo.pos" class="container">
             <p slot="title">
                 {{ adInfo.title }}
             </p>
@@ -130,7 +130,7 @@ export default {
             adImgs: [
                { pos: "openning", title: "开屏",img: "", bg: "img/openning-bg.jpg" },
                { pos: "calling", title: "拨号前", img: "", bg: "img/calling-bg.jpg", close: "http://121.52.235.231:40718/upload_img/static/img/close.png" },
-               { pos: "hangup", title: "挂机",img: "img/preview-mask.png" },
+               { pos: "hangup", title: "挂机",img: "", bg:"img/preview-mask.png" },
                { pos: "banner", title: "Banner",img: "" }
             ],
             uploadData:{},

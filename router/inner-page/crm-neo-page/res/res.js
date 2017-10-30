@@ -14,3 +14,4 @@ require("./img/bg.jpg");
 require("./img/preview-iphone.jpg");
 require("./img/preview-mask.png");
 require("./img/openning-bg.jpg");
+require("./img/calling-bg.jpg");
