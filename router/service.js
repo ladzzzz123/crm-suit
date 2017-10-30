@@ -35,13 +35,14 @@ async function verifyToken(ctx, module_name, role) {
     let postData = ctx.request.body;
     logger.warn("verifyToken postData: %s", JSON.stringify(postData));
 
-    if (!_util.verifyParams(postData, "token")) {
-        ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
+    let verifyData = postData["fields"] || postData;
+    if (!_util.verifyParams(verifyData, "token")) {
+        ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing token!" };
         return false;
     }
     logger.warn("before verify");
     verify = await courier.sendAsyncCall("account", "asyncVerify", "",
-        postData.token, module_name, role);
+        verifyData.token, module_name, role);
     logger.warn("after verify");
     logger.warn("verify:%s", JSON.stringify(verify));
     return verify;
