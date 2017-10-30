@@ -21,12 +21,12 @@
         background: rgba(55, 55, 55, 0.6);
         border-radius: 2px;
         color: white;
-        font-size: 0.06rem;
-        left: -1%;
+        font-size: 0.12rem;
+        left: -1.5%;
         padding: 0.02rem;
         position: absolute;
         width: 0.14rem;
-        -webkit-transform: scale(0.8);
+        -webkit-transform: scale(0.6);
     }
 
     .img-container{
@@ -69,7 +69,7 @@
         position: absolute;
         width: 100%;
         bottom: 0;
-        margin-bottom: 3rem;
+        margin-bottom: 480px;
     }
     .calling-img {
         margin-top: 0.26rem;
@@ -80,7 +80,6 @@
         display: inline-block;
         position: absolute;
         top: 0;
-        -webkit-transform: scale(0.8);
     }
     .calling-close {
         display: inline-block;
@@ -138,7 +137,6 @@
     }
     .banner-tips {
         top: 50%;
-        -webkit-transform: scale(0.5);
     }
 
 
