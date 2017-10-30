@@ -26,7 +26,7 @@
         padding: 0.02rem;
         position: absolute;
         width: 0.14rem;
-        -webkit-transform: scale(0.6);
+        -webkit-transform: scale(0.5);
     }
 
     .img-container{
