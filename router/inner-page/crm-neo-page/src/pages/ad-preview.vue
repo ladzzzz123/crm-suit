@@ -7,6 +7,7 @@
         width: 408px;
     }
     .content {
+        font-size: 0;
         height: 640px;
         left: 50%;
         margin-left: -178px;
@@ -86,7 +87,7 @@
         right: 0.1rem;
         position: relative;
         top: 0;
-        width: 0.2rem;
+        width: 0.12rem;
     }
 
 
@@ -156,10 +157,10 @@
                 <div class="content">
                     <img v-if="adInfo.bg" :class="adInfo.pos + '-bg' + ' layer-bottom' " :src="adInfo.bg"/>
                     <div :class="adInfo.pos + '-container img-container layer-middle' ">
-                        <img v-if="adInfo.mask" :class="adInfo.pos + '-mask' + ' layer-middle' " :src="adInfo.mask"/>
-                        <img v-if="adInfo.close" :class="adInfo.pos + '-close' + ' layer-middle' " :src="adInfo.close"/>
                         <div :class="adInfo.pos + '-tips' + ' tips layer-top' ">广告</div>
+                        <img v-if="adInfo.close" :class="adInfo.pos + '-close' + ' layer-middle' " :src="adInfo.close"/>
                         <img :class="adInfo.pos + '-img' + ' layer-middle' " :src="adInfo.img" />
+                        <img v-if="adInfo.mask" :class="adInfo.pos + '-mask' + ' layer-middle' " :src="adInfo.mask"/>
                     </div>
                 </div>
             </Row>
