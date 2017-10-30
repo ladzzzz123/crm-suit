@@ -9,15 +9,10 @@
     .content {
         height: 640px;
         left: 50%;
-        margin-left: -180px;
+        margin-left: -178px;
         position: absolute;
         top: 98px;
-        width: 360px;
-    }
-
-    .content img {
-        left: 0;
-        position: absolute;
+        width: 356px;
     }
 
     .openning-img {
@@ -38,7 +33,7 @@
         background: rgba(55, 55, 55, 0.6);
         border-radius: 3px;
         color: white;
-        font-size: 0.12rem;
+        font-size: 0.08rem;
         left: 0;
         top: 70%;
         padding: 0.02rem;
@@ -69,7 +64,7 @@
         -webkit-transform: scale(0.8);
     }
     .calling-close {
-        right: 0;
+        right: 0.1rem;
         top: 38%;
         position: absolute;
         width: 0.2rem;
@@ -155,7 +150,7 @@ export default {
     },
 
     mounted: function() {
-        adImgs.forEach(item => {
+        this.adImgs.forEach(item => {
             item.img = `/crm-inner/files/static/ad/${userInfo.u_name}_${item.pos}.jpg`;
         });
     },
@@ -180,7 +175,7 @@ export default {
             console.log(JSON.stringify(file));
             if(res.status === 2000) {
                 func.showTips("alert-success", "文件上传成功！！");
-                adImgs.forEach(item => {
+                this.adImgs.forEach(item => {
                     item.img = `/crm-inner/files/static/ad/${userInfo.u_name}_${item.pos}.jpg?v=${parseInt(Math.random() * 1000)}`;
                 });
             } else {
