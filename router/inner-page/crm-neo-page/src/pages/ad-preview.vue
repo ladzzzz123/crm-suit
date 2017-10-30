@@ -47,6 +47,7 @@
         width: 100%;
     }
     .openning-img {
+        height: 100%;
         left: 0;
         position: absolute;
         top: 0;
@@ -54,7 +55,7 @@
     }
     .openning-tips {
         left: 0;
-        bottom: 5%;
+        bottom: 2%;
     }
 
 
@@ -65,23 +66,26 @@
     }
 
     .calling-container {
-        bottom: 37%;
-        left: 0;
         position: absolute;
         width: 100%;
+        bottom: 0;
+        margin-bottom: 1.3rem;
     }
     .calling-img {
-        position: absolute;
+        position: relative;
         width: 100%;
     }
     .calling-tips {
+        display: inline-block;
         left: 0;
+        position: relative;
         top: 0;
     }
     .calling-close {
+        display: inline-block;
         right: 0.1rem;
+        position: relative;
         top: 0;
-        position: absolute;
         width: 0.2rem;
     }
 
@@ -121,7 +125,7 @@
         top: 0;
         width: 100%;
     }
-    
+
     .banner-container{
         border: 0.03rem;
         left: 5%;
@@ -152,10 +156,10 @@
                 <div class="content">
                     <img v-if="adInfo.bg" :class="adInfo.pos + '-bg' + ' layer-bottom' " :src="adInfo.bg"/>
                     <div :class="adInfo.pos + '-container img-container layer-middle' ">
-                        <img :class="adInfo.pos + '-img' + ' layer-middle' " :src="adInfo.img" />
                         <img v-if="adInfo.mask" :class="adInfo.pos + '-mask' + ' layer-middle' " :src="adInfo.mask"/>
                         <img v-if="adInfo.close" :class="adInfo.pos + '-close' + ' layer-middle' " :src="adInfo.close"/>
                         <div :class="adInfo.pos + '-tips' + ' tips layer-top' ">广告</div>
+                        <img :class="adInfo.pos + '-img' + ' layer-middle' " :src="adInfo.img" />
                     </div>
                 </div>
             </Row>
