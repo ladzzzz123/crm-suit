@@ -18,15 +18,14 @@
 
     .tips {
         background: rgba(55, 55, 55, 0.6);
-        border-radius: 3px;
+        border-radius: 2px;
         color: white;
-        font-size: 0.08rem;
-        height: 0.26rem;
+        font-size: 0.06rem;
         left: 0;
         padding: 0.02rem;
         position: absolute;
         width: 0.14rem;
-        -webkit-transform: scale(0.96);
+        -webkit-transform: scale(0.8);
     }
 
     .openning-img {
@@ -62,7 +61,6 @@
     .calling-tips {
         left: 0;
         top: 38%;
-        -webkit-transform: scale(0.6);
     }
     .calling-close {
         right: 0.1rem;
@@ -99,7 +97,15 @@
     }
     .banner-tips {
         left: 5%;
-        top: 38%;
+        top: 36%;
+        -webkit-transform: scale(0.5);
+    }
+    .banner-bg {
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
     }
 
 
