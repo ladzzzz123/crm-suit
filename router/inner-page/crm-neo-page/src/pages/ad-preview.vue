@@ -21,7 +21,7 @@
         background: rgba(55, 55, 55, 0.6);
         border-radius: 2px;
         color: white;
-        font-size: 0.12rem;
+        font-size: 0.10rem;
         left: -1.5%;
         padding: 0.02rem;
         position: absolute;
@@ -136,7 +136,9 @@
         width: 100%;
     }
     .banner-tips {
+        left: -2%;
         top: 50%;
+        -webkit-transform: scale(.4);
     }
 
 
