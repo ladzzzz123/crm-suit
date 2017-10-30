@@ -28,12 +28,8 @@
         -webkit-transform: scale(0.8);
     }
 
-    .openning-img {
-        height: 540px;
-        left: 0;
+    .img-container{
         position: absolute;
-        top: 0;
-        width: 100%;
     }
 
     .openning-bg {
@@ -43,30 +39,59 @@
         width: 100%;
     }
 
-    .openning-tips {
+    .openning-container {
+        height: 540px;
         left: 0;
-        top: 75%;
-    }
-
-    .calling-img {
-        bottom: 37%;
         position: absolute;
+        top: 0;
         width: 100%;
     }
+    .openning-img {
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+    }
+    .openning-tips {
+        left: 0;
+        bottom: 5%;
+    }
+
+
     .calling-bg {
         bottom: 0;
         position: absolute;
         width: 100%;
     }
+
+    .calling-container {
+        bottom: 37%;
+        left: 0;
+        position: absolute;
+        width: 100%;
+    }
+    .calling-img {
+        position: absolute;
+        width: 100%;
+    }
     .calling-tips {
         left: 0;
-        top: 38%;
+        top: 0;
     }
     .calling-close {
         right: 0.1rem;
-        top: 38%;
+        top: 0;
         position: absolute;
         width: 0.2rem;
+    }
+
+
+    .hangup-container {
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
     }
 
     .hangup-img {
@@ -83,23 +108,12 @@
         top: 0;
         width: 100%;
     }
-
     .hangup-tips {
         left: 0;
-        top: 85%;
+        top: 84%;
     }
 
-    .banner-img {
-        left: 5%;
-        position: absolute;
-        top: 33%;
-        width: 90%;
-    }
-    .banner-tips {
-        left: 5%;
-        top: 36%;
-        -webkit-transform: scale(0.5);
-    }
+
     .banner-bg {
         height: 100%;
         left: 0;
@@ -107,7 +121,22 @@
         top: 0;
         width: 100%;
     }
-
+    
+    .banner-container{
+        border: 0.03rem;
+        left: 5%;
+        position: absolute;
+        top: 33%;
+        width: 90%;
+    }
+    .banner-img {
+        width: 100%;
+    }
+    .banner-tips {
+        left: 0;
+        top: 50%;
+        -webkit-transform: scale(0.5);
+    }
 
 
 
@@ -121,11 +150,13 @@
             <Row>
                 <img class="bg" src="img/preview-iphone.jpg" />
                 <div class="content">
-                    <img :class="adInfo.pos + '-img' + ' layer-middle' " :src="adInfo.img" />
                     <img v-if="adInfo.bg" :class="adInfo.pos + '-bg' + ' layer-bottom' " :src="adInfo.bg"/>
-                    <img v-if="adInfo.mask" :class="adInfo.pos + '-mask' + ' layer-middle' " :src="adInfo.mask"/>
-                    <img v-if="adInfo.close" :class="adInfo.pos + '-close' + ' layer-middle' " :src="adInfo.close"/>
-                    <div :class="adInfo.pos + '-tips' + ' tips layer-top' ">广告</div>
+                    <div :class="adInfo.pos + '-container img-container layer-middle' ">
+                        <img :class="adInfo.pos + '-img' + ' layer-middle' " :src="adInfo.img" />
+                        <img v-if="adInfo.mask" :class="adInfo.pos + '-mask' + ' layer-middle' " :src="adInfo.mask"/>
+                        <img v-if="adInfo.close" :class="adInfo.pos + '-close' + ' layer-middle' " :src="adInfo.close"/>
+                        <div :class="adInfo.pos + '-tips' + ' tips layer-top' ">广告</div>
+                    </div>
                 </div>
             </Row>
             <Upload
