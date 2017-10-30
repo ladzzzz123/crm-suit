@@ -16,6 +16,19 @@
         width: 356px;
     }
 
+    .tips {
+        background: rgba(55, 55, 55, 0.6);
+        border-radius: 3px;
+        color: white;
+        font-size: 0.08rem;
+        height: 0.26rem;
+        left: 0;
+        padding: 0.02rem;
+        position: absolute;
+        width: 0.14rem;
+        -webkit-transform: scale(0.96);
+    }
+
     .openning-img {
         height: 540px;
         left: 0;
@@ -32,16 +45,8 @@
     }
 
     .openning-tips {
-        background: rgba(55, 55, 55, 0.6);
-        border-radius: 3px;
-        color: white;
-        font-size: 0.08rem;
         left: 0;
         top: 75%;
-        padding: 0.02rem;
-        position: absolute;
-        width: 0.14rem;
-        -webkit-transform: scale(0.8);
     }
 
     .calling-img {
@@ -55,15 +60,8 @@
         width: 100%;
     }
     .calling-tips {
-        background: rgba(55, 55, 55, 0.8);
-        border-radius: 2px;
-        color: white;
-        font-size: 0.08rem;
         left: 0;
         top: 38%;
-        padding: 0.02rem;
-        position: absolute;
-        width: 0.14rem;
         -webkit-transform: scale(0.6);
     }
     .calling-close {
@@ -88,9 +86,22 @@
         width: 100%;
     }
 
-    .banner-img {
-
+    .hangup-tips {
+        left: 0;
+        top: 85%;
     }
+
+    .banner-img {
+        left: 5%;
+        position: absolute;
+        top: 33%;
+        width: 90%;
+    }
+    .banner-tips {
+        left: 5%;
+        top: 38%;
+    }
+
 
 
 
@@ -106,9 +117,9 @@
                 <div class="content">
                     <img :class="adInfo.pos + '-img' + ' layer-middle' " :src="adInfo.img" />
                     <img v-if="adInfo.bg" :class="adInfo.pos + '-bg' + ' layer-bottom' " :src="adInfo.bg"/>
-                    <img v-if="adInfo.mask" :class="adInfo.pos + '-mask' + ' layer-top' " :src="adInfo.mask"/>
-                    <img v-if="adInfo.close" :class="adInfo.pos + '-close' + ' layer-top' " :src="adInfo.close"/>
-                    <div :class="adInfo.pos + '-tips' + ' layer-top' ">广告</div>
+                    <img v-if="adInfo.mask" :class="adInfo.pos + '-mask' + ' layer-middle' " :src="adInfo.mask"/>
+                    <img v-if="adInfo.close" :class="adInfo.pos + '-close' + ' layer-middle' " :src="adInfo.close"/>
+                    <div :class="adInfo.pos + '-tips' + ' tips layer-top' ">广告</div>
                 </div>
             </Row>
             <Upload
@@ -142,7 +153,7 @@ export default {
                { pos: "openning", title: "开屏",img: "", bg: "img/openning-bg.jpg" },
                { pos: "calling", title: "拨号前", img: "", bg: "img/calling-bg.jpg", close: "http://121.52.235.231:40718/upload_img/static/img/close.png" },
                { pos: "hangup", title: "挂机",img: "", mask:"img/preview-mask.png" },
-               { pos: "banner", title: "Banner",img: "" }
+               { pos: "banner", title: "Banner",img: "", bg: "img/banner-bg.jpg" }
             ],
             uploadData:{},
             UPLOAD_URL: "/crm-inner/ad-preview/upload",
