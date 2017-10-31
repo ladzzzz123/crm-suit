@@ -46,6 +46,10 @@
                             <Icon type="arrow-down-b"></Icon>
                         </a>
                         <DropdownMenu slot="list">
+                            <DropdownItem @click.native="showProfile">
+                                <Icon type="ios-person"></Icon>
+                                <span style="margin-left:0.02rem">个人信息</span>
+                            </DropdownItem>
                             <DropdownItem @click.native="showChat">
                                 <Icon type="chatbox"></Icon>
                                 <span style="margin-left:0.02rem">聊天室(测试)</span>
@@ -84,6 +88,9 @@ export default {
         },
         showChat: function() {
             this.$emit("showChat");
+        },
+        showProfile: function() {
+            this.$router.push("/profile");
         }
     },
 }

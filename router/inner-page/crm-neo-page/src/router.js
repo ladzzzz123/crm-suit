@@ -10,9 +10,9 @@ export default [
     // { path: "/", component: cmptLogin, content: "根" },
     { path: "/login", component: cmptLogin, content: "登录", hide: true, based: true },
     { path: "/enterance", component: cmptEnterance, content: "主页", hide: true, based: true },
-    { path: "/manager", component: cmptManager, content: "个人信息", based: true },
+    { path: "/profile", component: cmptManager, content: "个人信息", hide: true, based: true },
     { path: "/plan-order", component: cmptPlan, content: "策划任务工具" },
-    { path: "/ad-preview", component: cmptAdPreview, content: "广告投放预览" },
     { path: "/dist-analy", component: cmptDistAnaly, content: "用户分析工具", based: true },
     { path: "/censor", component: cmptCensor, content: "PAD素材管理" },
+    { path: "/ad-preview", component: cmptAdPreview, content: "AD素材投放预览" },
 ];
