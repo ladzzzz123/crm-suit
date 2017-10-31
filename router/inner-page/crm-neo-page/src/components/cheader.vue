@@ -47,7 +47,7 @@
                         </a>
                         <DropdownMenu slot="list">
                             <DropdownItem @click.native="showProfile">
-                                <Icon type="ios-person"></Icon>
+                                <Icon type="person"></Icon>
                                 <span style="margin-left:0.02rem">个人信息</span>
                             </DropdownItem>
                             <DropdownItem @click.native="showChat">

@@ -8,7 +8,7 @@
         <MenuItem v-for="(info, index) in routerInfos" :name="index" :key="info.path" 
             v-show="info && !info.hide">
             <router-link v-if="info" v-bind:to="info.path">
-                <Icon type="ios-navigate" />
+                <Icon :type=" info.icon || 'ios-navigate' " />
                 <span class="layout-text">{{ info.content }}</span>
             </router-link>
         </MenuItem>
