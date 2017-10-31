@@ -47,20 +47,20 @@
                         </a>
                         <DropdownMenu slot="list">
                             <DropdownItem @click.native="showProfile">
-                                <Icon type="person"></Icon>
                                 <span style="margin-left:0.02rem">个人信息</span>
+                                <Icon type="person"></Icon>
                             </DropdownItem>
                             <DropdownItem @click.native="showChat">
-                                <Icon type="chatbox"></Icon>
                                 <span style="margin-left:0.02rem">聊天室(测试)</span>
+                                <Icon type="chatbox"></Icon>
                             </DropdownItem>
                             <DropdownItem @click.native="quit">
-                                <Icon type="ios-trash-outline"></Icon>
                                 <span style="margin-left:0.02rem">清除缓存</span>
+                                <Icon type="ios-trash-outline"></Icon>
                             </DropdownItem>
                             <DropdownItem @click.native="quit" divided>
-                                <Icon type="android-exit"></Icon>
                                 <span style="margin-left:0.02rem">退出登陆</span>
+                                <Icon type="android-exit"></Icon>
                             </DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
