@@ -43,7 +43,7 @@ function querySum(...dates) {
     return new Promise((resolve, reject) => {
         let params_date = [dates[0], dates[1] || dates[0]];
         const SQL_QUERY = `SELECT COUNT(e_earn) as earns, channel FROM earn_daily_journal
-                            WHERE e_date >= ? AND e_date =< ?
+                            WHERE e_date >= ? AND e_date <= ?
                             GROUP BY channel;`
         const SQL_QUERY_FORMAT = mysql.format(SQL_QUERY, params_date);
         courier.sendAsyncCall("dbopter", "asyncQuery", "", "earn_data", SQL_QUERY_FORMAT)
