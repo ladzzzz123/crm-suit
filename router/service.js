@@ -414,6 +414,16 @@ router
     });
 
 router
+    .post("/crm-inner/earnings", async(ctx, next) => {
+        let verify = await verifyToken(ctx, "earnings", "opter");
+        if (!verify) {
+            return;
+        } else if (verify.pass) {
+            ctx.body = { status: RESULT.SUCCESS, msg: "verify pass" };
+        } else {
+            ctx.body = _util.verifyTokenResult(verify);
+        }
+    })
     .post("/crm-inner/earnings/opt", async(ctx, next) => {
         let verify = await verifyToken(ctx, "earnings", "opter");
         if (!verify) {
