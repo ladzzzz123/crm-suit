@@ -414,7 +414,7 @@ router
     });
 
 router
-    .post("/crm-inner/earnings/query", async(ctx, next) => {
+    .post("/crm-inner/earnings/opt", async(ctx, next) => {
         let verify = await verifyToken(ctx, "earnings", "opter");
         if (!verify) {
             return;
@@ -424,7 +424,7 @@ router
                 ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
             }
             try {
-                let ret = await courier.sendAsyncCall("earnings", "asyncQuery", "", postData.action, postData.m_date);
+                let ret = await courier.sendAsyncCall("earnings", "asyncOpt", "", postData.action, postData.m_date);
                 ctx.body = { status: RESULT.SUCCESS, content: ret, msg: "query end" };
             } catch (e) {
                 ctx.body = { status: RESULT.SUCCESS, content: [], msg: JSON.stringify(e) };
@@ -433,7 +433,7 @@ router
             ctx.body = _util.verifyTokenResult(verify);
         }
     })
-    .post("/crm-inner/earnings/update", async(ctx, next) => {
+    .post("/crm-inner/earnings/admin-opt", async(ctx, next) => {
         let verify = await verifyToken(ctx, "earnings", "admin");
         if (!verify) {
             return;
@@ -443,7 +443,7 @@ router
                 ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
             }
             try {
-                let ret = await courier.sendAsyncCall("earnings", "asyncUpdate", "", postData.action, postData.params);
+                let ret = await courier.sendAsyncCall("earnings", "asyncAdminOpt", "", postData.action, postData.params);
                 ctx.body = { status: RESULT.SUCCESS, content: ret, msg: "update end" };
             } catch (e) {
                 ctx.body = { status: RESULT.SUCCESS, content: [], msg: JSON.stringify(e) };

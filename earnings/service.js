@@ -8,19 +8,23 @@ const CONFIG = require("../config/earnings.json");
 
 let export_func = {
     name: "earnings",
-    asyncQuery: (action, ...dates) => {
+    asyncOpt: (action, ...dates) => {
         switch (action) {
             case "query-journal":
                 return queryJournalData(...dates);
-            case "sync":
-                return insertEarningsDataIntoDB(...dates);
             default:
                 break;
         }
     },
 
-    asyncUpdate: (action, params) => {
+    asyncAdminOpt: (action, params) => {
         switch (action) {
+            case "query-channel":
+                return queryChannelData();
+            case "sync":
+                return insertEarningsDataIntoDB(params.e_date);
+            case "insert-channel":
+                return insertChannelData(params);
             case "update-journal":
                 return updateJournalData(params);
             case "update-channel":
@@ -50,7 +54,8 @@ function queryJournalData(...dates) {
 
 function updateJournalData(params) {
     return new Promise((resolve, reject) => {
-        const SQL_UPDATE = `UPDATE earn_daily_journal d, earn_channel_info i SET d.e_count = ?, d.e_earn = IF(i.ecpm > 0, d.e_count / i.ecpm * 1000, ?) 
+        const SQL_UPDATE = `UPDATE earn_daily_journal d, earn_channel_info i 
+        SET d.e_count = ?, d.e_earn = IF(i.ecpm > 0, d.e_count / i.ecpm * 1000, ?) 
         WHERE d.channel = i.channel AND d.ad_place = i.ad_place AND d.channel = ? AND d.ad_place = ? AND d.e_date = ?`;
         let sql_params = [params.e_count, params.e_earn, params.channel, params.ad_place, params.e_date];
         const SQL_QUERY_FORMAT = mysql.format(SQL_UPDATE, sql_params);
@@ -65,12 +70,54 @@ function updateJournalData(params) {
     });
 }
 
-function updateChannelData(params) {
+function insertChannelData(params) {
     return new Promise((resolve, reject) => {
-
+        const SQL_INSERT = `INSERT INTO earn_channel_info SET ? `;
+        let sql_params = [params];
+        const SQL_INSERT_FORMAT = mysql.format(SQL_INSERT, sql_params);
+        courier.sendAsyncCall("dbopter", "asyncQuery", "", "earn_data", SQL_INSERT_FORMAT)
+            .then(ret => {
+                let orgArr = ret.ret;
+                resolve(orgArr);
+            })
+            .catch(e => {
+                reject(e);
+            });
     });
 }
 
+function queryChannelData() {
+    return new Promise((resolve, reject) => {
+        const SQL_QUERY = "SELECT channel, ad_place, settlement, ecpm, rebat FROM earn_channel_info";
+        courier.sendAsyncCall("dbopter", "asyncQuery", "", "earn_data", SQL_QUERY)
+            .then(ret => {
+                let orgArr = ret.ret;
+                resolve(orgArr);
+            })
+            .catch(e => {
+                reject(e);
+            });
+    });
+}
+
+
+function updateChannelData(params) {
+    return new Promise((resolve, reject) => {
+        const SQL_UPDATE = `UPDATE earn_channel_info SET ? WHERE channel = ? AND ad_place = ?`;
+        let sql_params = [params, params.channel, params.ad_place];
+        const SQL_QUERY_FORMAT = mysql.format(SQL_UPDATE, sql_params);
+        courier.sendAsyncCall("dbopter", "asyncQuery", "", "earn_data", SQL_QUERY_FORMAT)
+            .then(ret => {
+                let orgArr = ret.ret;
+                resolve(orgArr);
+            })
+            .catch(e => {
+                reject(e);
+            });
+    });
+}
+
+const MIN_CONTENT_LENGTH = 5;
 
 function insertEarningsDataIntoDB(dateS) {
     return new Promise((resolve, reject) => {
@@ -96,28 +143,14 @@ function insertEarningsDataIntoDB(dateS) {
                         logger.info("[earnings] neo_content: %s", neo_content);
                         neo_content.split(";").forEach(sub => {
                             logger.info("[earnings] sub: %s", sub);
-                            if (sub.length > 5) {
+                            if (sub.length > MIN_CONTENT_LENGTH) {
                                 // channel, ad_place, e_date, e_exposure, e_click
                                 let items = sub.split(",");
                                 insertArr.push(items);
-                                // insertArr.push({
-                                //     channel: items[0],
-                                //     ad_place: items[1],
-                                //     e_date: items[2],
-                                //     e_exposure: items[3],
-                                //     e_click: items[4]
-                                // });
                             }
                         });
                         logger.info("[earnings] insertArr: %s", JSON.stringify(insertArr));
                         const SQL_INSERT_DATA = "INSERT INTO earn_daily_journal (channel, ad_place, e_date, e_exposure, e_click) VALUES ?";
-                        // try {
-                        //     const SQL_QUERY_FORMAT_INSERT = mysql.format(SQL_INSERT_DATA, [insertArr]);
-                        // } catch (e) {
-                        //     logger.warn("err: %s", JSON.stringify(e));
-                        // }
-                        // logger.info("[earnings] SQL_QUERY_FORMAT_INSERT: %s", SQL_QUERY_FORMAT_INSERT);
-
                         courier.sendAsyncCall("dbopter", "asyncQueryInsert", "", "earn_data", SQL_INSERT_DATA, [insertArr])
                             .then(ret => {
                                 logger.info("[earnings] insert succeed: %s", JSON.stringify(ret));
