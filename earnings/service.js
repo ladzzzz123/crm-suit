@@ -15,7 +15,7 @@ let export_func = {
             default:
                 break;
         }
-        return Promise.reject("unknown opt");
+        return Promise.resolve("unknown opt");
     },
 
     asyncAdminOpt: (action, params) => {
@@ -33,7 +33,7 @@ let export_func = {
             default:
                 break;
         }
-        return Promise.reject("unknown opt");
+        return Promise.resolve("unknown opt");
     },
 };
 
