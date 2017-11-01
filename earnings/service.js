@@ -50,7 +50,18 @@ function queryJournalData(...dates) {
 
 function updateJournalData(params) {
     return new Promise((resolve, reject) => {
-
+        const SQL_UPDATE = `UPDATE earn_daily_journal d, earn_channel_info i SET d.e_count = ?, d.e_earn = IF(i.ecpm > 0, d.e_count / i.ecpm * 1000, ?) 
+        WHERE d.channel = i.channel AND d.ad_place = i.ad_place AND d.channel = ? AND d.ad_place = ? AND d.e_date = ?`;
+        let sql_params = [params.e_count, params.e_earn, params.channel, params.ad_place, params.e_date];
+        const SQL_QUERY_FORMAT = mysql.format(SQL_UPDATE, sql_params);
+        courier.sendAsyncCall("dbopter", "asyncQuery", "", "earn_data", SQL_QUERY_FORMAT)
+            .then(ret => {
+                let orgArr = ret.ret;
+                resolve(orgArr);
+            })
+            .catch(e => {
+                reject(e);
+            });
     });
 }
 

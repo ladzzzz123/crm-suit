@@ -448,6 +448,8 @@ router
             } catch (e) {
                 ctx.body = { status: RESULT.SUCCESS, content: [], msg: JSON.stringify(e) };
             }
+        } else {
+            ctx.body = _util.verifyTokenResult(verify);
         }
     });
 
