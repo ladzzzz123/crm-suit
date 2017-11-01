@@ -19,12 +19,13 @@ CREATE TABLE earn_daily_journal (
     e_click     INT(10) NOT NULL DEFAULT 0 COMMENT "点击量",
     e_count     INT(10) DEFAULT 0 COMMENT "渠道提供曝光/点击数量",
     e_earn     DECIMAL(10,2) DEFAULT 0 COMMENT "收益",
+    ecpm       DECIMAL(5,2) NOT NULL COMMENT "ecpm 值为-1时代表动态结算",
     PRIMARY KEY(channel, ad_place, e_date)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT "每日展示信息表";
 
 
 
-
+ALTER TABLE earn_daily_journal ADD ecpm DECIMAL(5,2) NOT NULL COMMENT "ecpm 值为-1时代表动态结算";
 
 
 --INSERT channel setting info

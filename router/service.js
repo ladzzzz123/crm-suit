@@ -425,9 +425,9 @@ router
             }
             try {
                 let ret = await courier.sendAsyncCall("earnings", "asyncOpt", "", postData.action, postData.m_date);
-                ctx.body = { status: RESULT.SUCCESS, content: ret, msg: "query end" };
+                ctx.body = { status: RESULT.SUCCESS, content: ret, msg: "opt end" };
             } catch (e) {
-                ctx.body = { status: RESULT.SUCCESS, content: [], msg: JSON.stringify(e) };
+                ctx.body = { status: RESULT.FAILED, content: [], msg: JSON.stringify(e) };
             }
         } else {
             ctx.body = _util.verifyTokenResult(verify);
@@ -443,10 +443,11 @@ router
                 ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
             }
             try {
-                let ret = await courier.sendAsyncCall("earnings", "asyncAdminOpt", "", postData.action, postData.params);
-                ctx.body = { status: RESULT.SUCCESS, content: ret, msg: "update end" };
+                let ret = await courier.sendAsyncCall("earnings", "asyncAdminOpt", "",
+                    postData.action, postData.params);
+                ctx.body = { status: RESULT.SUCCESS, content: ret, msg: "admin opt end" };
             } catch (e) {
-                ctx.body = { status: RESULT.SUCCESS, content: [], msg: JSON.stringify(e) };
+                ctx.body = { status: RESULT.FAILED, content: [], msg: JSON.stringify(e) };
             }
         } else {
             ctx.body = _util.verifyTokenResult(verify);
