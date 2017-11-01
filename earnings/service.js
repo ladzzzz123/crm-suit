@@ -12,6 +12,8 @@ let export_func = {
         switch (action) {
             case "query-journal":
                 return queryJournalData(...dates);
+            case "query-sum":
+                return querySum(...dates);
             default:
                 break;
         }
@@ -37,6 +39,27 @@ let export_func = {
     },
 };
 
+function querySum(...dates) {
+    return new Promise((resolve, reject) => {
+        let params_date = [dates[0], dates[1] || dates[0]];
+        const SQL_QUERY = `SELECT COUNT(e_earn) as earns, channel FROM earn_daily_journal
+                            WHERE e_date >= ? AND e_date =< ?
+                            GROUP BY channel;`
+        const SQL_QUERY_FORMAT = mysql.format(SQL_QUERY, params_date);
+        courier.sendAsyncCall("dbopter", "asyncQuery", "", "earn_data", SQL_QUERY_FORMAT)
+            .then(ret => {
+                let retArr = ret.ret;
+                if (Array.isArray(retArr)) {
+                    resolve(retArr);
+                } else {
+                    resolve([]);
+                }
+            })
+            .catch(e => {
+                reject(e);
+            });
+    });
+}
 
 function queryJournalData(...dates) {
     return new Promise((resolve, reject) => {
@@ -69,7 +92,10 @@ function updateJournalData(params) {
         const SQL_QUERY_FORMAT = mysql.format(SQL_UPDATE, sql_params);
         courier.sendAsyncCall("dbopter", "asyncQuery", "", "earn_data", SQL_QUERY_FORMAT)
             .then(ret => {
-                let orgArr = ret.ret;
+                let update_ret = ret.ret;
+                if (update_ret.affectedRows > 0) {
+                    resolve({ result: "success", })
+                }
                 resolve(orgArr);
             })
             .catch(e => {

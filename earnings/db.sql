@@ -57,3 +57,9 @@ SELECT d.e_date, d.ad_place, d.e_exposure, d.e_count,
     JOIN earn_channel_info i 
     ON d.channel = i.channel
     WHERE d.e_date >= "20171001" AND d.e_date <= "20171101";
+
+
+-- QUERY earn sum
+SELECT channel, COUNT(e_earn) as earns  FROM earn_daily_journal
+WHERE e_date >= ? AND e_date =< ?
+GROUP BY channel;
