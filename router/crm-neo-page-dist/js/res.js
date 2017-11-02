@@ -1,1 +1,1 @@
-webpackJsonp([2],{78:function(n,o,p){"use strict";p(79),p(80)},79:function(n,o,p){n.exports=p.p+"../img/logo.png"},80:function(n,o,p){n.exports=p.p+"../img/bg.jpg"}},[78]);
+webpackJsonp([2],{83:function(n,o,p){"use strict";p(84),p(85)},84:function(n,o,p){n.exports=p.p+"../img/logo.png"},85:function(n,o,p){n.exports=p.p+"../img/bg.jpg"}},[83]);
