@@ -13,18 +13,11 @@
             <br/>
             <br/>
 
-        <Collapse>
+        <Collapse width="550">
             <Panel v-for="sumInfo in earnSumArr" 
                 v-bind:key="sumInfo.channel"
                 @on-change="pannelOpen(sumInfo.channel)">
-                <Row>
-                    <Col span="8">
-                        {{ sumInfo.channel }}
-                    </Col>
-                    <Col span="8" offset="8">
-                        {{ sumInfo.earns }}
-                    </Col>
-                </Row>
+                {{ sumInfo.channel }}: {{ sumInfo.earns }}
                 <p slot="content">
                     <Table width="550" border 
                         :columns="dailyDataColumnArr" 
@@ -205,39 +198,36 @@ export default {
 
         fetchEarns: function() {
             if (this.m_date) {
-                requester.send("/crm-inner/earnings/opt", 
-                    { 
-                        token: this.token, 
-                        m_date: this.m_date.toLocaleDateString(),
-                        action:"query-sum"
-                    },
-                    result => {
-                        if (result.status === RESULT_CODE.SUCCESS) {
-                            // this.processArr(result.content);
-                            if (Array.isArray(result.content)) {
-                                this.earnSumArr = result.content;
-                            }
-                        }
-                    }, (status, msg) => {
-                        processFailed(status);
-                    });
-                requester.send("/crm-inner/earnings/opt", 
-                    { 
-                        token: this.token, 
-                        m_date: this.m_date.toLocaleDateString(),
-                        action:"query-journal"
-                    },
-                    result => {
-                        if (result.status === RESULT_CODE.SUCCESS) {
-                            // this.processArr(result.content);
-                            if (Array.isArray(result.content)) {
-                                this.dailyDataArr = result.content;
-                            }
-                        }
-                    }, (status, msg) => {
-                        processFailed(status);
-                    });
+                // requester.send("/crm-inner/earnings/opt", 
+                //     { 
+                //         token: this.token, 
+                //         m_date: this.m_date.toLocaleDateString(),
+                //         action:"query-journal"
+                //     },
+                //     result => {
+                //         if (result.status === RESULT_CODE.SUCCESS) {
+                //             // this.processArr(result.content);
+                //             if (Array.isArray(result.content)) {
+                //                 this.dailyDataArr = result.content;
+                //             }
+                //         }
+                //     }, (status, msg) => {
+                //         processFailed(status);
+                //     });
+                queryDataByDate("/crm-inner/earnings/opt", 
+                    { token: this.token, m_date: this.m_date }, "query-sum")
+                    .then(ret => {
+                        this.earnSumArr = ret;
+                        return queryDataByDate("/crm-inner/earnings/opt", 
+                            { token: this.token, m_date: this.m_date }, "query-journal")
+                    })
+                    .then(ret => {
+                        console.log(JSON.stringify(ret));
+                        this.dailyDataArr = ret;
+                    })
+                    .catch(e => {
 
+                    });
             }
         },
         reportRet: function() {
@@ -275,5 +265,29 @@ export default {
                 });
         },
     }
+}
+
+
+function queryDataByDate(path, params, action) {
+    return new Promise((resolve, reject) => {
+        requester.send("/crm-inner/earnings/opt", 
+            { 
+                token: params.token, 
+                m_date: params.m_date.toLocaleDateString(),
+                action: action
+            },
+            result => {
+                if (result.status === RESULT_CODE.SUCCESS) {
+                    // this.processArr(result.content);
+                    if (Array.isArray(result.content)) {
+                        resolve(result.content);
+                        // this.earnSumArr = ;
+                    }
+                }
+            }, (status, msg) => {
+                reject(status);
+                // processFailed(status);
+            });
+    });
 }
 </script>
