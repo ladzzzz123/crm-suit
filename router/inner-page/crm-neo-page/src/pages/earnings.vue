@@ -1,5 +1,23 @@
 <style>
+    .collapse-title{
+        text-align: left;
+    }
 
+    table {
+        border-width:2px;
+        border-style: solid;
+    }
+    td {
+        border-width:2px;
+        border-style: solid;
+    }
+    th {
+        border-width:2px;
+        border-style: solid;
+    }
+    tr {
+        padding: 2px;
+    }
 </style>
 
 <template>
@@ -12,17 +30,48 @@
             </DatePicker>
             <br/>
             <br/>
-        <Col span="20">
-            <Collapse>
+        <Col span="20" offset="2">
+            <Collapse class="collapse-title">
                 <Panel v-for="sumInfo in earnSumArr" 
                     v-bind:key="sumInfo.channel"
                     @on-change="pannelOpen(sumInfo.channel)">
-                    {{ sumInfo.channel }}: {{ sumInfo.earns }}
+                    {{ sumInfo.channel }}: &nbsp;&nbsp; {{ m_date.toLocaleDateString() }} &nbsp;&nbsp;收入：￥{{ sumInfo.earns }}
                     <p slot="content">
-                        <Table border 
-                            :columns="dailyDataColumnArr" 
-                            :data="dailyDataArr.filter(data => data.channel === sumInfo.channel)">
-                        </Table>
+                        <table>
+                            <thead>
+                                <th>位置</th>
+                                <th>日期</th>
+                                <th>触宝曝光量</th>
+                                <th>渠道曝光量</th>
+                                <th>Gap</th>
+                                <th>收入</th>
+                                <th>ecpm</th>
+                                <th v-if="isAdmin">操作</th>
+                            </thead>
+                            <tbody>
+                                <tr v-for="dailyData in dailyDataArr.filter(data => data.channel === sumInfo.channel)"
+                                    v-bind:key="dailyData.ad_place">
+                                    <td>{{ dailyData.ad_place }}</td>
+                                    <td>{{ m_date.toLocaleDateString() }}</td>
+                                    <td>{{ dailyData.e_exposure }}</td>
+                                    <td>
+                                        <span v-if="dailyData.editting">
+                                            <input v-model="dailyData.e_count"/>
+                                        </span>
+                                        <span v-else>{{ dailyData.e_count }}</span>
+                                    </td>
+                                    <td>{{ dailyData.gap }}</td>
+                                    <td>{{ dailyData.net_income }}</td>
+                                    <td>{{ dailyData.ecpm }}</td>
+                                    <td v-if="isAdmin">
+                                        <i-switch v-model="dailyData.editting" @on-change="switchEdit(dailyData)"></i-switch>
+                                        <!-- <Button v-if="dailyData.editting" @click="switchEdit(dailyData)">提交</Button>
+                                        <Button v-else @click="switchEdit(dailyData)">编辑</Button> -->
+                                        {{ dailyData.editting }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </p>
                 </Panel>
             </Collapse>
@@ -62,56 +111,6 @@ export default {
             m_date: "",
             earnSumArr: [],
             dailyDataArr: [],
-            dailyDataColumnArr:[
-                {
-                    title:"位置",
-                    key: "ad_place"
-                },
-                {
-                    title:"触宝曝光量",
-                    key: "e_exposure"
-                },
-                {
-                    title:"渠道曝光量",
-                    key: "e_count"
-                },
-                {
-                    title:"Gap",
-                    key: "gap"
-                },
-                {
-                    title:"收入",
-                    key: "net_income"
-                },
-                {
-                    title:"ecpm",
-                    key: "ecpm"
-                },
-                 {
-                    title: '操作',
-                    key: 'action',
-                    width: 150,
-                    align: 'center',
-                    render: (h, params) => {
-                        return h('div', [
-                            h('Button', {
-                                props: {
-                                    type: 'primary',
-                                    size: 'small'
-                                },
-                                style: {
-                                    marginRight: '5px'
-                                },
-                                on: {
-                                    click: () => {
-                                        // this.show(params.index)
-                                    }
-                                }
-                            }, '编辑')
-                        ]);
-                    }
-                }
-            ],
             curIndex: 0,
             colors: [
                 "blue",
@@ -150,6 +149,9 @@ export default {
     },
 
     watch: {
+        dailyDataArr: function() {
+            console.log("dailyDataArr changed");
+        }
     },
 
     components: {
@@ -198,22 +200,6 @@ export default {
 
         fetchEarns: function() {
             if (this.m_date) {
-                // requester.send("/crm-inner/earnings/opt", 
-                //     { 
-                //         token: this.token, 
-                //         m_date: this.m_date.toLocaleDateString(),
-                //         action:"query-journal"
-                //     },
-                //     result => {
-                //         if (result.status === RESULT_CODE.SUCCESS) {
-                //             // this.processArr(result.content);
-                //             if (Array.isArray(result.content)) {
-                //                 this.dailyDataArr = result.content;
-                //             }
-                //         }
-                //     }, (status, msg) => {
-                //         processFailed(status);
-                //     });
                 queryDataByDate("/crm-inner/earnings/opt", 
                     { token: this.token, m_date: this.m_date }, "query-sum")
                     .then(ret => {
@@ -224,45 +210,21 @@ export default {
                     .then(ret => {
                         console.log(JSON.stringify(ret));
                         this.dailyDataArr = ret;
+                        this.dailyDataArr.map(item => item.editting = true);
                     })
                     .catch(e => {
 
                     });
             }
         },
+
         reportRet: function() {
 
         },
-
-        updateStatus: function(_id, ldp, action, inputText, m_version, n_status) {
-            requester.send("/crm-inner/censor/update", 
-                {
-                    token: this.token, 
-                    ids: [_id],
-                    action: action,
-                    reason: inputText || "",
-                    m_version: m_version
-                },
-                result => {
-                    func.showTips("alert-success", "操作成功");
-                    let neoArr = this.curArray.find(item => {
-                        return ldp.indexOf(item[0]) > -1;
-                    });
-                    neoArr = neoArr || ["", []];
-                    let neoItem = neoArr[1].find(subItem => ("" + subItem._id) === _id);
-                    if(neoItem) {
-                        neoItem.m_status = n_status;
-                        neoItem.m_version = parseInt(neoItem.m_version) + 1;
-                        neoItem.reason = inputText;
-                        neoItem.opter = this.userInfo.mail;
-                    }
-                    func.hideDialog();
-                }, (status, msg) => {
-                    setTimeout(() => {
-                        func.showTips("alert-error", "更新状态失败，该素材可能已被他人编辑，请刷新列表后再尝试！");
-                    }, 2000);
-                    processFailed(status);
-                });
+        switchEdit: function(dailyData) {
+            console.log("dailyData:%s", JSON.stringify(dailyData));
+            let data = this.dailyDataArr.find(item => JSON.stringify(item) === JSON.stringify(dailyData));
+            data.editting = !data.editting;
         },
     }
 }
@@ -290,4 +252,10 @@ function queryDataByDate(path, params, action) {
             });
     });
 }
+
+
+function submitChannel(channel, ad_place, newVal) {
+
+}
+
 </script>
