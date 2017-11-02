@@ -67,8 +67,10 @@ function queryJournalData(...dates) {
         const SQL_QUERY = `SELECT d.channel, d.e_date, d.ad_place, d.e_exposure, d.e_count, 
             ((d.e_exposure - d.e_count) / d.e_exposure) as gap, d.e_earn,
             (d.e_earn * i.rebate) AS net_income, i.ecpm, 
-            (d.e_earn / d.e_count) * 1000 AS dym_ecpm FROM earn_daily_journal d 
-            JOIN earn_channel_info i ON d.channel = i.channel 
+            IF(i.ecpm < 0, (d.e_earn / d.e_count) * 1000, i.ecpm) AS ecpm 
+            FROM earn_daily_journal d 
+            JOIN earn_channel_info i 
+            ON d.channel = i.channel AND d.ad_place = i.ad_place
             WHERE d.e_date >= ? AND d.e_date <= ?`;
         const SQL_QUERY_FORMAT = mysql.format(SQL_QUERY, params_date);
         courier.sendAsyncCall("dbopter", "asyncQuery", "", "earn_data", SQL_QUERY_FORMAT)

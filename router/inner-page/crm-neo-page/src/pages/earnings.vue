@@ -12,21 +12,21 @@
             </DatePicker>
             <br/>
             <br/>
-
-        <Collapse width="550">
-            <Panel v-for="sumInfo in earnSumArr" 
-                v-bind:key="sumInfo.channel"
-                @on-change="pannelOpen(sumInfo.channel)">
-                {{ sumInfo.channel }}: {{ sumInfo.earns }}
-                <p slot="content">
-                    <Table width="550" border 
-                        :columns="dailyDataColumnArr" 
-                        :data="dailyDataArr.filter(data => data.channel === sumInfo.channel)">
-                    </Table>
-                </p>
-            </Panel>
-        </Collapse>
-
+        <Col span="20">
+            <Collapse>
+                <Panel v-for="sumInfo in earnSumArr" 
+                    v-bind:key="sumInfo.channel"
+                    @on-change="pannelOpen(sumInfo.channel)">
+                    {{ sumInfo.channel }}: {{ sumInfo.earns }}
+                    <p slot="content">
+                        <Table border 
+                            :columns="dailyDataColumnArr" 
+                            :data="dailyDataArr.filter(data => data.channel === sumInfo.channel)">
+                        </Table>
+                    </p>
+                </Panel>
+            </Collapse>
+        </Col>
         </div>
         <div class="data-list" v-else>
             <p>您没有该功能的使用权限，请点击<a @click="gotoLogin">此处</a>重新登录，</p>
