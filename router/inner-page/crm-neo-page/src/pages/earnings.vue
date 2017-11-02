@@ -6,11 +6,34 @@
     <div class="container" v-if="logged">
         <Spin size="large" fix v-if="loading"></Spin>
         <div class="data-list" v-if="verified">
-            <DatePicker type="date" placeholder="选择日期和时间" v-model="m_date" 
-            @on-ok="fetchEarns"
-            confirm style="width: 2rem"></DatePicker>
+            <DatePicker type="date" placeholder="选择日期和时间" 
+                v-model="m_date" @on-ok="fetchEarns"
+                confirm style="width: 2rem">
+            </DatePicker>
             <br/>
             <br/>
+
+        <Collapse>
+            <Panel v-for="sumInfo in earnSumArr" 
+                v-bind:key="sumInfo.channel"
+                @on-change="pannelOpen(sumInfo.channel)">
+                <Row>
+                    <Col span="8">
+                        {{ sumInfo.channel }}
+                    </Col>
+                    <Col span="8" offset="8">
+                        {{ sumInfo.earns }}
+                    </Col>
+                </Row>
+                <p slot="content">
+                    <Table width="550" border 
+                        :columns="dailyDataColumnArr" 
+                        :data="dailyDataArr.filter(data => data.channel === sumInfo.channel)">
+                    </Table>
+                </p>
+            </Panel>
+        </Collapse>
+
         </div>
         <div class="data-list" v-else>
             <p>您没有该功能的使用权限，请点击<a @click="gotoLogin">此处</a>重新登录，</p>
@@ -44,9 +67,58 @@ export default {
         return {
             verified: false,
             m_date: "",
-            orgArr:[],
-            localArr:[],
-            list: [],
+            earnSumArr: [],
+            dailyDataArr: [],
+            dailyDataColumnArr:[
+                {
+                    title:"位置",
+                    key: "ad_place"
+                },
+                {
+                    title:"触宝曝光量",
+                    key: "e_exposure"
+                },
+                {
+                    title:"渠道曝光量",
+                    key: "e_count"
+                },
+                {
+                    title:"Gap",
+                    key: "gap"
+                },
+                {
+                    title:"收入",
+                    key: "net_income"
+                },
+                {
+                    title:"ecpm",
+                    key: "ecpm"
+                },
+                 {
+                    title: '操作',
+                    key: 'action',
+                    width: 150,
+                    align: 'center',
+                    render: (h, params) => {
+                        return h('div', [
+                            h('Button', {
+                                props: {
+                                    type: 'primary',
+                                    size: 'small'
+                                },
+                                style: {
+                                    marginRight: '5px'
+                                },
+                                on: {
+                                    click: () => {
+                                        // this.show(params.index)
+                                    }
+                                }
+                            }, '编辑')
+                        ]);
+                    }
+                }
+            ],
             curIndex: 0,
             colors: [
                 "blue",
@@ -71,6 +143,16 @@ export default {
         },
         curArray() {
             return this.list.slice(this.curIndex * this.LDP_PER_PAGE, (this.curIndex + 1) * this.LDP_PER_PAGE);
+        },
+        isAdmin() {
+            let roleArr = this.$store.state.roleInfo;
+            if (!Array.isArray(roleArr)) {
+                roleArr = Object.values(roleArr);
+            }
+            let role = roleArr.find(item => {
+                return item.module == "earnings" && item.role_name === "admin";
+            });
+            return role;
         },
     },
 
@@ -131,37 +213,35 @@ export default {
                     },
                     result => {
                         if (result.status === RESULT_CODE.SUCCESS) {
-                            this.processArr(result.content);
+                            // this.processArr(result.content);
+                            if (Array.isArray(result.content)) {
+                                this.earnSumArr = result.content;
+                            }
                         }
                     }, (status, msg) => {
                         processFailed(status);
                     });
+                requester.send("/crm-inner/earnings/opt", 
+                    { 
+                        token: this.token, 
+                        m_date: this.m_date.toLocaleDateString(),
+                        action:"query-journal"
+                    },
+                    result => {
+                        if (result.status === RESULT_CODE.SUCCESS) {
+                            // this.processArr(result.content);
+                            if (Array.isArray(result.content)) {
+                                this.dailyDataArr = result.content;
+                            }
+                        }
+                    }, (status, msg) => {
+                        processFailed(status);
+                    });
+
             }
         },
         reportRet: function() {
 
-        },
-
-
-
-        pass: function(id, ldp, m_version) {
-            console.log("pass:" + id);
-            let _id = id.replace("material_", "");
-            this.updateStatus(_id, ldp, "pass", "", m_version, "PASS");
-        },
-        denied: function(id, ldp, m_version) {
-            console.log("denied:" + id);
-            func.showDialog("input", "确认拒绝该素材？", inputText => {
-                let _id = id.replace("material_", "");
-                this.updateStatus(_id, ldp, "denied", inputText, m_version, "REJECT");
-            }, "请填写拒绝理由");
-        },
-        delay:function(id, ldp, m_version) {
-            console.log("delay:" + id);
-            func.showDialog("input", "该素材需要再议？", inputText => {
-                let _id = id.replace("material_", "");
-                this.updateStatus(_id, ldp, "tbd", inputText, m_version, "TBD");
-            }, "请填写理由");
         },
 
         updateStatus: function(_id, ldp, action, inputText, m_version, n_status) {

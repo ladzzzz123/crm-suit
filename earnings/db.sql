@@ -15,11 +15,12 @@ CREATE TABLE earn_daily_journal (
     channel     VARCHAR(255) NOT NULL COMMENT "第三方渠道",
     ad_place    VARCHAR(255) NOT NULL COMMENT "广告展示位置",
     e_date      DATETIME NOT NULL, 
-    e_exposure  INT(10) NOT NULL DEFAULT 0 COMMENT "曝光量",
-    e_click     INT(10) NOT NULL DEFAULT 0 COMMENT "点击量",
-    e_count     INT(10) DEFAULT 0 COMMENT "渠道提供曝光/点击数量",
-    e_earn     DECIMAL(10,2) DEFAULT 0 COMMENT "收益",
+    e_exposure  INT(10) NOT NULL DEFAULT -1 COMMENT "曝光量",
+    e_click     INT(10) NOT NULL DEFAULT -1 COMMENT "点击量",
+    e_count     INT(10) DEFAULT -1 COMMENT "渠道提供曝光/点击数量",
+    e_earn     DECIMAL(10,2) DEFAULT -1 COMMENT "收益",
     ecpm       DECIMAL(5,2) NOT NULL COMMENT "ecpm 值为-1时代表动态结算",
+    e_version  INT(10) NOT NULL DEFAULT 0 COMMENT "数据乐观锁",
     PRIMARY KEY(channel, ad_place, e_date)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT "每日展示信息表";
 
