@@ -2,10 +2,10 @@ import RESULT_CODE from "../../../../codemap.json";
 import func from "../main";
 let requesting = false;
 let uploading = false;
-const DEBUG_URL = "http://121.52.235.231:40716";
+// const DEBUG_URL = "http://121.52.235.231:40716";
+const DEBUG_URL = "";
 const UPLOAD_URL = DEBUG_URL + "/crm-inner/plan-order/upload";
 // let DEBUG_URL = "http://127.0.0.1:3002";
-// let DEBUG_URL = "";
 const requester = {
     UPLOAD_URL: UPLOAD_URL,
     send: function(path, params, callback, failedCb) {
