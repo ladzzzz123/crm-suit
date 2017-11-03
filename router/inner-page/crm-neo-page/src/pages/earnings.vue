@@ -349,8 +349,7 @@ export default {
                 queryDataByDate(PATH_OPT, 
                    { 
                         token: this.token, 
-                        m_date: 
-                            `${this.m_date.getFullYear()}${this.m_date.getMonth()}${this.m_date.getDay() < 10 ? this.m_date.getDay() : '0' + this.m_date.getDay()}`
+                        m_date: this.m_date
                     },
                         "query-sum")
                     .then(ret => {
@@ -358,8 +357,7 @@ export default {
                         return queryDataByDate(PATH_OPT, 
                             { 
                                 token: this.token, 
-                                m_date: 
-                                    `${this.m_date.getFullYear()}${this.m_date.getMonth()}${this.m_date.getDay() < 10 ? this.m_date.getDay() : '0' + this.m_date.getDay()} `
+                                m_date:this.m_date
                             },
                             "query-journal")
                     })

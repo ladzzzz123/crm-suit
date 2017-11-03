@@ -3,6 +3,7 @@ const logger = require("node-process-bearer").logger.getLogger();
 const mysql = require("mysql");
 let request = require("request");
 const fs = require("fs");
+const moment = require("moment");
 
 const CONFIG = require("../config/earnings.json");
 
@@ -44,6 +45,9 @@ let export_func = {
 function querySum(...dates) {
     return new Promise((resolve, reject) => {
         let params_date = [dates[0], dates[1] || dates[0]];
+        params_date.map(item => {
+            return moment(item).format("YYYYmmDD");
+        });
         const SQL_QUERY = `SELECT SUM(e_earn) as earns, channel FROM earn_daily_journal
                             WHERE e_date >= ? AND e_date <= ?
                             GROUP BY channel;`
@@ -66,6 +70,9 @@ function querySum(...dates) {
 function queryJournalData(...dates) {
     return new Promise((resolve, reject) => {
         let params_date = [dates[0], dates[1] || dates[0]];
+        params_date.map(item => {
+            return moment(item).format("YYYYmmDD");
+        });
         const SQL_QUERY = `SELECT d.channel, d.e_date, d.ad_place, d.e_exposure, d.e_click,
         i.settlement, d.e_count, d.e_earn, (d.e_earn * i.rebate) AS net_income, i.ecpm
         FROM earn_daily_journal d 
@@ -178,7 +185,7 @@ const MIN_CONTENT_LENGTH = 5;
 
 function insertEarningsDataIntoDB(dateS) {
     return new Promise((resolve, reject) => {
-        let dateStr = [dateS.replace(/(\/|\-)/gi, "")];
+        let dateStr = moment(dateS).format("YYYYmmDD");
         const SQL_QUERY_DATA_FROM_MAIL = `SELECT m_content FROM mail_info WHERE 
             m_module = "${export_func.name}" AND m_date >= ?`;
         const SQL_QUERY_FORMAT = mysql.format(SQL_QUERY_DATA_FROM_MAIL, dateStr);
