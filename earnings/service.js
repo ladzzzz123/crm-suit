@@ -32,6 +32,8 @@ let export_func = {
                 return updateJournalData(params);
             case "update-channel":
                 return updateChannelData(params);
+            case "delete-channel":
+                return deleteChannelData(params);
             default:
                 break;
         }
@@ -150,6 +152,21 @@ function updateChannelData(params) {
             .then(ret => {
                 let orgArr = ret.ret;
                 resolve(orgArr);
+            })
+            .catch(e => {
+                reject(e);
+            });
+    });
+}
+
+function deleteChannelData(params) {
+    return new Promise((resolve, reject) => {
+        const SQL_UPDATE = `DELETE FROM earn_channel_info WHERE channel = ? AND ad_place = ?`;
+        let sql_params = [params.channel, params.ad_place];
+        const SQL_QUERY_FORMAT = mysql.format(SQL_UPDATE, sql_params);
+        courier.sendAsyncCall("dbopter", "asyncQuery", "", "earn_data", SQL_QUERY_FORMAT)
+            .then(ret => {
+                resolve(ret);
             })
             .catch(e => {
                 reject(e);

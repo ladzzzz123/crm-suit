@@ -148,7 +148,10 @@
                                     <Button type="success" @click="submitChannel(channelData)">提交</Button>
                                     <Button @click="cancelEdit(channelData)">取消</Button>
                                 </ButtonGroup>
-                                <Button v-else type="primary" @click="switchEdit(channelData)">编辑</Button>
+                                <ButtonGroup v-else>
+                                    <Button type="primary" @click="switchEdit(channelData)">编辑</Button>
+                                    <Button type="error" @click="deleteChannel(channelData)">删除</Button>
+                                </ButtonGroup>
                             </td>
                         </tr>
                     </tbody>
@@ -353,10 +356,32 @@ export default {
                 });
         },
 
+        deleteChannel: function(channelData) {
+            let params = {
+                token: this.token,
+                action: "delete-channel",
+                params: {
+                    channel: channelData.channel,
+                    ad_place: channelData.ad_place,
+                }
+            };
+            requester.send(PATH_ADMIN, 
+                params,
+                result => {
+                    if (result.status === RESULT_CODE.SUCCESS) {
+                        func.showTips("alert-success", "删除成功！");
+                    }
+                    this.fetchEarns();
+                }, (status, msg) => {
+                    func.showTips("alert-error", "删除失败！");
+                    // this.cancelEdit(dailyData);
+                });
+        },
+
         submitDaily: function(dailyData) {
             dailyData.e_date = new Date(dailyData.e_date).toLocaleDateString();
-            console.log(dailyData.e_date);
-            dailyData.earn = dailyData.ecpm < 0 ? dailyData.net_income : dailyData.e_count * dailyData.ecpm / 1000;
+            dailyData.e_earn = dailyData.ecpm < 0 ? dailyData.net_income : (dailyData.e_count * dailyData.ecpm) / 1000;
+            console.log(JSON.stringify(dailyData));
             let params = {
                 token: this.token,
                 action: "update-journal",
