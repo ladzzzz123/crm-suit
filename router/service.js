@@ -421,7 +421,21 @@ router
         if (!verify) {
             return;
         } else if (verify.pass) {
-            ctx.body = { status: RESULT.SUCCESS, msg: "verify pass" };
+            if (!_util.verifyParams(postData.fields, ["ad_pos"])) {
+                logger.info("[router] upload: missing params");
+                ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
+                return;
+            }
+            let opter = verify.info.u_name;
+            let ad_pos = postData.fields.ad_pos;
+            let file = postData.files.file;
+
+            let ret = await courier.sendAsyncCall("ad-preview", "asyncUploadFile", "", file, ad_pos, opter);
+            logger.info("[router] upload ret:" + JSON.stringify(ret));
+            ctx.body = { status: RESULT.SUCCESS, content: ret };
+            if (!_util.verifyParams(postData, "m_date", "action")) {
+                ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
+            }
         } else {
             ctx.body = _util.verifyTokenResult(verify);
         }
@@ -444,21 +458,6 @@ router
             return;
         } else if (verify.pass) {
             let postData = ctx.request.body;
-            if (!_util.verifyParams(postData.fields, ["ad_pos"])) {
-                logger.info("[router] upload: missing params");
-                ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
-                return;
-            }
-            let opter = verify.info.u_name;
-            let ad_pos = postData.fields.ad_pos;
-            let file = postData.files.file;
-
-            let ret = await courier.sendAsyncCall("ad-preview", "asyncUploadFile", "", file, ad_pos, opter);
-            logger.info("[router] upload ret:" + JSON.stringify(ret));
-            ctx.body = { status: RESULT.SUCCESS, content: ret };
-            if (!_util.verifyParams(postData, "m_date", "action")) {
-                ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
-            }
             try {
                 let ret = await courier.sendAsyncCall("earnings", "asyncOpt", "", postData.action, postData.m_date);
                 ctx.body = { status: RESULT.SUCCESS, content: ret, msg: "opt end" };
