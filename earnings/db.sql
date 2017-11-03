@@ -50,8 +50,9 @@ WHERE d.channel = i.channel AND d.ad_place = i.ad_place AND d.channel = "网行"
 
 -- 日期 广告位 曝光量 网行曝光 Gap值 Gap 收入 ecpm
 -- QUERY daily data
-SELECT d.channel, d.e_date, d.ad_place, d.e_exposure, d.e_count, 
-    ((d.e_exposure - d.e_count) / d.e_exposure) as gap, 
+SELECT d.channel, d.e_date, d.ad_place, d.e_exposure, d.e_click,
+    i.settlement,
+    d.e_count, 
     d.e_earn, (d.e_earn * i.rebate) AS net_income, 
     IF(i.ecpm < 0, (d.e_earn / d.e_count) * 1000, i.ecpm) AS ecpm 
     FROM earn_daily_journal d 
