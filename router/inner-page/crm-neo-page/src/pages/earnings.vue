@@ -347,11 +347,21 @@ export default {
         fetchEarns: function() {
             if (this.m_date) {
                 queryDataByDate(PATH_OPT, 
-                    { token: this.token, m_date: this.m_date }, "query-sum")
+                   { 
+                        token: this.token, 
+                        m_date: 
+                            `${this.m_date.getFullYear()}${this.m_date.getMonth()}${this.m_date.getDay() < 10 ? this.m_date.getDay() : '0' + this.m_date.getDay()}`
+                    },
+                        "query-sum")
                     .then(ret => {
                         this.earnSumArr = ret;
                         return queryDataByDate(PATH_OPT, 
-                            { token: this.token, m_date: this.m_date }, "query-journal")
+                            { 
+                                token: this.token, 
+                                m_date: 
+                                    `${this.m_date.getFullYear()}${this.m_date.getMonth()}${this.m_date.getDay() < 10 ? this.m_date.getDay() : '0' + this.m_date.getDay()} `
+                            },
+                            "query-journal")
                     })
                     .then(ret => {
                         console.log(JSON.stringify(ret));
