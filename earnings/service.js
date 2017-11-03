@@ -88,7 +88,7 @@ function updateJournalData(params) {
         let dy_ecpm = parseFloat(params.e_earn * 1000 / params.e_count);
         const SQL_UPDATE = `UPDATE earn_daily_journal d, earn_channel_info i 
             SET d.e_count = ?, d.ecpm = IF(i.ecpm > 0, i.ecpm, ?),
-            d.e_earn = IF(i.ecpm > 0, d.e_count / i.ecpm * 1000, ?) 
+            d.e_earn = ? 
             WHERE d.channel = i.channel AND d.ad_place = i.ad_place 
             AND d.channel = ? AND d.ad_place = ? AND d.e_date = ?`;
         let sql_params = [

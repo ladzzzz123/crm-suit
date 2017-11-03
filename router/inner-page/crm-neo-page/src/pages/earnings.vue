@@ -48,7 +48,7 @@
                                     <th>触宝曝光量</th>
                                     <th>渠道曝光量</th>
                                     <th>Gap</th>
-                                    <th>收入</th>
+                                    <th>收入(若ecpm为定值<br/>请勿修改此项,改了也没用,呵呵)</th>
                                     <th>ecpm</th>
                                     <th v-if="isAdmin" style="width:1rem;">操作</th>
                                 </thead>
@@ -77,10 +77,12 @@
                                             <span v-else>0</span>
                                         </td>
                                         <td>
-                                            <span v-if="dailyData.editting">
+                                            <span v-if="dailyData.editting && dailyData.ecpm < 0">
                                                 <input v-model="dailyData.net_income" type="number" step="0.01" style="width:0.3rem;"/>
                                             </span>
-                                            <span v-else>{{ dailyData.net_income }}</span>
+                                            <span v-else>
+                                                {{ dailyData.ecpm < 0 ? dailyData.net_income : dailyData.e_count * dailyData.ecpm / 1000 }}
+                                            </span>
                                         </td>
                                         <td>{{ dailyData.ecpm < 0 ? (dailyData.e_earn / dailyData.e_count) * 1000 : dailyData.ecpm }}</td>
                                         <td v-if="isAdmin" style="text-align: center">
@@ -354,6 +356,7 @@ export default {
         submitDaily: function(dailyData) {
             dailyData.e_date = new Date(dailyData.e_date).toLocaleDateString();
             console.log(dailyData.e_date);
+            dailyData.earn = dailyData.ecpm < 0 ? dailyData.net_income : dailyData.e_count * dailyData.ecpm / 1000;
             let params = {
                 token: this.token,
                 action: "update-journal",
