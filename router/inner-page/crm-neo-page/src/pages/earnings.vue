@@ -82,7 +82,7 @@
                                             </span>
                                             <span v-else>{{ dailyData.net_income }}</span>
                                         </td>
-                                        <td>{{ dailyData.ecpm }}</td>
+                                        <td>{{ dailyData.ecpm < 0 ? (dailyData.e_earn / dailyData.e_count) * 1000 : dailyData.ecpm }}</td>
                                         <td v-if="isAdmin" style="text-align: center">
                                             <!-- <i-switch v-model="dailyData.editting"></i-switch> -->
                                             <ButtonGroup v-if="dailyData.editting">
