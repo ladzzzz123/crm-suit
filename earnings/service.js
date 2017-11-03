@@ -232,4 +232,4 @@ let courier = new Courier(export_func);
 courier.listening(() => {
     let today = new Date().toLocaleDateString();
     insertEarningsDataIntoDB(today);
-}, 86400 * 1000);
+}, 20 * 1000);
