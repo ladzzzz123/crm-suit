@@ -159,9 +159,40 @@
             </Modal>
 
 
+            <Modal
+                v-model="dlgShowFlags.insertChannel"
+                title="新增渠道设定"
+                @on-ok="submitInsertChannel"
+                :ok-text="'提交'"
+                :closable="false"
+                :mask-closable="false"
+                :loading="formChannelLoading"
+                width="800">
+                <Form ref="formChannel" :model="formChannel" :rules="channelValidate" :label-width="80">
+                    <FormItem label="渠道名" prop="channel">
+                        <Input v-model="formChannel.channel" placeholder="请输入渠道名称" />
+                    </FormItem>
+                    <FormItem label="广告位置" prop="ad_place">
+                        <Input v-model="formChannel.ad_place" placeholder="请输入广告位置" />
+                    </FormItem>
+                    <FormItem label="结算方式" prop="settlement">
+                        <Select v-model="formChannel.settlement" placeholder="请选择结算方式">
+                            <Option value="1">按曝光结算</Option>
+                            <Option value="2">按点击结算</Option>
+                        </Select>
+                    </FormItem>
+                    <FormItem label="ecpm" prop="ecpm">
+                        <Input v-model="formChannel.ecpm" placeholder="请输入ecpm,若动态结算则填写-1" type="text" />
+                    </FormItem>
+                    <FormItem label="返点" prop="rebate">
+                        <Input v-model="formChannel.rebate" placeholder="返点值,若无返点则填写1" type="text" />
+                    </FormItem>
+                </Form>
+            </Modal>
+
             <ButtonGroup v-if="isAdmin" style="position: fixed; bottom:0.2rem;left:50%;">
-                <Button type="success">新增渠道设定</Button>
-                <Button type="primary" @click="showChannels">查看渠道设定</Button>
+                <Button type="success" @click="showDialog('insertChannel')">新增渠道设定</Button>
+                <Button type="primary" @click="showDialog('channel')">查看渠道设定</Button>
             </ButtonGroup>
         </div>
         <div class="data-list" v-else>
@@ -204,6 +235,22 @@ export default {
             channelDataArr: [],
             dlgShowFlags: {
                 channel: false,
+                insertChannel: false
+            },
+            formChannel: {
+                channel: "",
+                ad_place: "",
+                settlement: 1,
+                ecpm: -1,
+                rebate: 1.0,
+            },
+            formChannelLoading: true,
+            channelValidate: {
+                channel: { required: true, message: "请输入渠道名称", trigger: "blur" },
+                ad_place: { required: true, message: "请输入广告位置", trigger: "blur" },
+                settlement: { required: true, message: "请输入结算方式", trigger: "blur" },
+                ecpm: { required: true, message: "ecpm必须为数字", trigger: 'blur' },
+                rebate: { required: true, message: "返点值必须为数字", trigger: "blur" }
             },
             curIndex: 0,
             colors: [
@@ -242,15 +289,15 @@ export default {
         },
     },
 
-    watch: {
-        dailyDataArr: function() {
-            console.log("dailyDataArr changed");
-        }
-    },
+    // watch: {
+    //     dailyDataArr: function() {
+    //         console.log("dailyDataArr changed");
+    //     }
+    // },
 
-    components: {
-        pageNav
-    },
+    // components: {
+    //     pageNav
+    // },
 
     mounted: function() {
         if (this.logged) {
@@ -286,6 +333,7 @@ export default {
 
         hideDialog: function() {
             Object.keys(this.dlgShowFlags).forEach(key => this.dlgShowFlags[key] = false);
+            this.formChannelLoading = true;
         },
 
         processArr: function(orgArr) {
@@ -316,18 +364,68 @@ export default {
             }
         },
 
-        showChannels: function() {
-            this.dlgShowFlags.channel = true
-            queryDataByDate(PATH_ADMIN, 
-                { token: this.token }, "query-channel")
-                .then(ret => {
-                    console.log(JSON.stringify(ret));
-                    ret.map(item => item.editting = false);
-                    this.channelDataArr = Object.assign(ret);
-                })
-                .catch(e => {
+        showDialog: function(type) {
+            this.dlgShowFlags[type] = true;
+            switch (type) {
+                case "channel":
+                    queryDataByDate(PATH_ADMIN, 
+                        { token: this.token }, "query-channel")
+                        .then(ret => {
+                            console.log(JSON.stringify(ret));
+                            ret.map(item => item.editting = false);
+                            this.channelDataArr = Object.assign(ret);
+                        })
+                        .catch(e => {
 
-                });
+                        });
+                    break;
+                case "insertChannel":
+                default:
+                    break;
+            }
+            
+        },
+
+        submitInsertChannel: function() {
+            this.$refs["formChannel"].validate((valid) => {
+                if (valid) {
+                    if (Number.isNaN(parseFloat(this.formChannel.ecpm)) ||
+                        Number.isNaN(parseFloat(this.formChannel.rebate))) {
+                        func.showTips("alert-error","ecpm与返点值必须是数字!");
+                        setTimeout(() => {
+                            this.formChannelLoading = false;
+                        }, 2000);
+                        setTimeout(() => {
+                            this.formChannelLoading = true;
+                        }, 2100);
+                        return;
+                    }
+                let params = {
+                    token: this.token,
+                    action: "insert-channel",
+                    params: this.formChannel
+                };
+                requester.send(PATH_ADMIN, 
+                    params,
+                    result => {
+                        if (result.status === RESULT_CODE.SUCCESS) {
+                            func.showTips("alert-success", "添加成功！");
+                        }
+                        this.hideDialog();
+                        this.fetchEarns();
+                    }, (status, msg) => {
+                        func.showTips("alert-error", "添加失败！");
+                    });
+                } else {
+                    func.showTips("alert-error","表单验证失败!");
+                    setTimeout(() => {
+                        this.formChannelLoading = false;
+                    }, 2000);
+                    setTimeout(() => {
+                        this.formChannelLoading = true;
+                    }, 2100);
+                }
+            })
         },
 
         submitChannel: function(channelData) {
@@ -371,6 +469,10 @@ export default {
                     if (result.status === RESULT_CODE.SUCCESS) {
                         func.showTips("alert-success", "删除成功！");
                     }
+                    let deletedChannelPos = this.channelDataArr.findIndex(item => {
+                        return item.channel === channelData.channel && item.ad_place === channelData.ad_place;
+                    });
+                    this.channelDataArr.splice(deletedChannelPos, 1);
                     this.fetchEarns();
                 }, (status, msg) => {
                     func.showTips("alert-error", "删除失败！");
@@ -430,8 +532,6 @@ export default {
         },
         cancelEdit: function(editData, targetDataArr) {
             console.log("cancel edit editData:%s", JSON.stringify(editData));
-            // let data = this.targetDataArr.find(item => 
-            //     item.channel === editData.channel && item.ad_place === editData.ad_place);
             if (editData.backup) {
                 Object.assign(editData, editData.backup);
             }
