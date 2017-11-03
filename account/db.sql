@@ -31,13 +31,13 @@ INSERT INTO role_map (role_pos, role_name, module) VALUES
 ("01000000", "admin", "censor"),
 ("10000000", "opter", "censor");
 
--- add module ad-preview
 INSERT INTO role_map (role_pos, role_name, module) VALUES 
 ("010001000000", "admin", "ad-preview"),
 ("100010000000", "opter", "ad-preview");
 
-
-
+INSERT INTO role_map (role_pos, role_name, module) VALUES 
+("0100000000", "admin", "earnings"),
+("1000000000", "opter", "earnings");
 
 ALTER TABLE account ADD nick_name VARCHAR(128) COMMENT "昵称";
 ALTER TABLE account ADD sex VARCHAR(2) COMMENT "性别";

@@ -25,6 +25,7 @@
     "[设计]": "plan-order",
     "[需求]": "plan-order",
     "【需求】": "plan-order",
+    "[第三方平台数据]": "earnings",
     "fetchMailInternval": 20,
     "redis_config": {
         "port": 6379,

@@ -1,9 +1,19 @@
 [{
-    "name": "market_db",
-    "host": "121.52.35.231",
-    "user": "cootek",
-    "password": "cootek",
-    "database": "market_db",
-    "port": 3306,
-    "useConnectionPooling": true
-}]
+        "name": "market_db",
+        "host": "121.52.35.231",
+        "user": "cootek",
+        "password": "cootek",
+        "database": "market_db",
+        "port": 3306,
+        "useConnectionPooling": true
+    },
+    {
+        "name": "earn_data",
+        "host": "121.52.35.231",
+        "user": "cootek",
+        "password": "cootek",
+        "database": "earn_data",
+        "port": 3306,
+        "useConnectionPooling": true
+    }
+]

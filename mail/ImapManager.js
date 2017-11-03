@@ -4,6 +4,7 @@ const Imap = require("imap"),
     inspect = require("util").inspect,
     fs = require("fs"),
     logger = require("node-process-bearer").logger.getLogger();
+const cheerio = require("cheerio");
 
 class ImapManager {
     constructor(imap_conf) {
@@ -90,7 +91,9 @@ class ImapManager {
                     }
                     let m_to = mail.to.value[0].address || "";
                     let m_date = new Date(mail.date) || new Date();
-                    let m_content = mail.html || "";
+
+                    let $ = cheerio.load(mail.html);
+                    let m_content = $("body").text() || "";
 
                     let neoMail = {
                         title: title,
@@ -98,9 +101,8 @@ class ImapManager {
                         m_to: m_to,
                         m_cc: m_cc.toString(),
                         m_date: m_date,
-                        m_content: mail.html,
+                        m_content: m_content,
                     };
-                    logger.info("simpleParse before process m_attachments");
                     neoMail.m_attachments = "";
                     if (mail.attachments) {
                         _self.saveAttach(mail.attachments, m_attachments => {
