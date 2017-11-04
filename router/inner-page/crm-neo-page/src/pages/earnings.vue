@@ -289,6 +289,7 @@ export default {
         },
     },
 
+
     mounted: function() {
         if (this.logged) {
             requester.send("/crm-inner/earnings", { token: this.token },
@@ -337,23 +338,26 @@ export default {
         fetchEarns: function() {
             if (this.m_date) {
                 queryDataByDate(PATH_OPT, 
-                    { 
+                   { 
                         token: this.token, 
-                        m_date:this.m_date
+                        m_date: this.m_date
                     },
-                    "query-journal")
+                        "query-sum")
                     .then(ret => {
-                        ret.map(item => item.editting = false);
-                        this.dailyDataArr = Object.assign(ret);
+                        this.earnSumArr = ret;
                         return queryDataByDate(PATH_OPT, 
                             { 
                                 token: this.token, 
-                                m_date: this.m_date
+                                m_date:this.m_date
                             },
-                                "query-sum")
+                            "query-journal")
                     })
                     .then(ret => {
-                        this.earnSumArr = ret;
+                        console.log(JSON.stringify(ret));
+                        setTimeout(() => {
+                            ret.map(item => item.editting = false);
+                            this.dailyDataArr = Object.assign(ret);
+                        }, 1000);
                     })
                     .catch(e => {
 
