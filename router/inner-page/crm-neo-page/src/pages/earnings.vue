@@ -289,16 +289,6 @@ export default {
         },
     },
 
-    // watch: {
-    //     dailyDataArr: function() {
-    //         console.log("dailyDataArr changed");
-    //     }
-    // },
-
-    // components: {
-    //     pageNav
-    // },
-
     mounted: function() {
         if (this.logged) {
             requester.send("/crm-inner/earnings", { token: this.token },
@@ -347,24 +337,23 @@ export default {
         fetchEarns: function() {
             if (this.m_date) {
                 queryDataByDate(PATH_OPT, 
-                   { 
+                    { 
                         token: this.token, 
-                        m_date: this.m_date
+                        m_date:this.m_date
                     },
-                        "query-sum")
+                    "query-journal")
                     .then(ret => {
-                        this.earnSumArr = ret;
+                        ret.map(item => item.editting = false);
+                        this.dailyDataArr = Object.assign(ret);
                         return queryDataByDate(PATH_OPT, 
                             { 
                                 token: this.token, 
-                                m_date:this.m_date
+                                m_date: this.m_date
                             },
-                            "query-journal")
+                                "query-sum")
                     })
                     .then(ret => {
-                        console.log(JSON.stringify(ret));
-                        ret.map(item => item.editting = false);
-                        this.dailyDataArr = Object.assign(ret);
+                        this.earnSumArr = ret;
                     })
                     .catch(e => {
 
