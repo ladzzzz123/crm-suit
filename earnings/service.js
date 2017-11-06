@@ -254,4 +254,4 @@ let courier = new Courier(export_func);
 courier.listening(() => {
     let today = new Date().toLocaleDateString();
     insertEarningsDataIntoDB(today);
-}, 7200 * 1000);
+}, 300 * 1000);
