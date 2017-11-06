@@ -43,7 +43,7 @@
             <br/>
             <Carousel v-if="earnSumArr.length > 0" 
                 style="height: 0.6rem;margin: 0 auto;text-align: center;width: 1rem;" 
-                :arrow="'false'"
+                :arrow="'never'"
                 loop>
                 <CarouselItem class="demo-carousel">
                     <div>
@@ -51,11 +51,11 @@
                         {{ earnSumArr.reduce((sum, item) => { return (isNaN(sum) ? 0 : sum) + parseFloat(item.earns) }).toFixed(2) }}
                     </div>
                 </CarouselItem>
-                <CarouselItem class="demo-carousel">
-                    <div @click="fetchSum">当月收入总和：</div>
+                <CarouselItem v-if="earnSumMonthlyArr.length > 0" class="demo-carousel">
+                    <div @click="fetchSum">当月收入总和：{{ earnSumMonthlyArr[0].earns.toFixed(2) }}</div>
                 </CarouselItem>
-                <CarouselItem class="demo-carousel">
-                    <div>今年收入总和：</div>
+                <CarouselItem v-if="earnSumYearlyArr.length > 0" class="demo-carousel">
+                    <div>今年收入总和：{{ earnSumYearlyArr[0].earns.toFixed(2) }}</div>
                 </CarouselItem>
             </Carousel>
 
