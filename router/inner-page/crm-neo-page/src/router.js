@@ -13,7 +13,7 @@ export default [
     { path: "/enterance", component: cmptEnterance, content: "主页", icon: "", hide: true, based: true },
     { path: "/profile", component: cmptManager, content: "个人信息", icon: "", hide: true, based: true },
     { path: "/plan-order", component: cmptPlan, content: "策划任务工具", icon: "ios-paper" },
-    { path: "/earnings", component: cmptEarnings, content: "广告收入数据" },
+    { path: "/earnings", component: cmptEarnings, content: "PAD收入数据" },
     { path: "/dist-analy", component: cmptDistAnaly, content: "用户分析工具", icon: "stats-bars", based: true },
     { path: "/censor", component: cmptCensor, content: "PAD素材管理", icon: "ios-checkmark" },
     { path: "/ad-preview", component: cmptAdPreview, content: "AD素材投放预览", icon: "eye" },

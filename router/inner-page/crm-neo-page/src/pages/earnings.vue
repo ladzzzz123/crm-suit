@@ -26,6 +26,9 @@
     tr {
         padding: 0.02rem;
     }
+    .demo-carousel {
+        line-height: 0.18rem;
+    }
 </style>
 
 <template>
@@ -38,11 +41,14 @@
             </DatePicker>
             <br/>
             <br/>
-            <Carousel v-if="earnSumArr.length > 0" style="height: 1rem;text-align: center;width: 1.2rem;" loop>
+            <Carousel v-if="earnSumArr.length > 0" 
+                style="height: 0.6rem;margin: 0 auto;text-align: center;width: 1rem;" 
+                :arrow="'false'"
+                loop>
                 <CarouselItem class="demo-carousel">
                     <div>
                         当日收入总和:
-                        {{ earnSumArr.reduce((sum, item) => { return (isNaN(sum) ? 0 : sum) + parseFloat(item.earns) }) }}
+                        {{ earnSumArr.reduce((sum, item) => { return (isNaN(sum) ? 0 : sum) + parseFloat(item.earns) }).toFixed(2) }}
                     </div>
                 </CarouselItem>
                 <CarouselItem class="demo-carousel" @click="fetchSum">
