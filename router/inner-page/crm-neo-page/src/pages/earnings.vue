@@ -419,11 +419,14 @@ export default {
         },
         fetchSum: function() {
             console.log("before fxxk request send");
-            console.log("fxxk params: %s", JSON.stringify([ `${this.m_date.getFullYear()}/${this.m_date.getMonth()}/01`, this.m_date ]));
+            console.log("fxxk params: %s", 
+                JSON.stringify([ `${this.m_date.getFullYear()}/${this.m_date.getMonth()}/01`, 
+                `${this.m_date.getFullYear()}/${this.m_date.getMonth()}/${this.m_date.getDay()}` ]));
             queryDataByDate(PATH_OPT,
                 {
                     token: this.token,
-                    m_date: [ `${this.m_date.getFullYear()}/${this.m_date.getMonth()}/01`, this.m_date ]
+                    m_date: [ `${this.m_date.getFullYear()}/${this.m_date.getMonth()}/01`,
+                        `${this.m_date.getFullYear()}/${this.m_date.getMonth()}/${this.m_date.getDay()}` ]
                 }, "query-sum")
                 .then(ret => {
                     console.log("monthly: %s", JSON.stringify(ret));
@@ -431,7 +434,8 @@ export default {
                     return queryDataByDate(PATH_OPT,
                         {
                             token: this.token,
-                            m_date: [ `${this.m_date.getFullYear()}/01/01`, this.m_date ]
+                            m_date: [ `${this.m_date.getFullYear()}/01/01`, 
+                                `${this.m_date.getFullYear()}/${this.m_date.getMonth()}/${this.m_date.getDay()}` ]
                         }, "query-sum");
                 })
                 .then(ret => {

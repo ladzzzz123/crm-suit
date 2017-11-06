@@ -470,6 +470,7 @@ router
             } else {
                 dateArr.push(postData.m_date, postData.m_date);
             }
+            logger.info("[router] dateArr: %s", JSON.stringify(dateArr));
             try {
                 let ret = await courier.sendAsyncCall("earnings", "asyncOpt", "", postData.action, dateArr[0], dateArr[1]);
                 ctx.body = { status: RESULT.SUCCESS, content: ret, msg: "opt end" };
