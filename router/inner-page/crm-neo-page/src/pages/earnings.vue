@@ -51,8 +51,8 @@
                         {{ earnSumArr.reduce((sum, item) => { return (isNaN(sum) ? 0 : sum) + parseFloat(item.earns) }).toFixed(2) }}
                     </div>
                 </CarouselItem>
-                <CarouselItem class="demo-carousel" @click="fetchSum">
-                    <div>当月收入总和：</div>
+                <CarouselItem class="demo-carousel">
+                    <div @click="fetchSum">当月收入总和：</div>
                 </CarouselItem>
                 <CarouselItem class="demo-carousel">
                     <div>今年收入总和：</div>
