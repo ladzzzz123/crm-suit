@@ -38,7 +38,7 @@
             </DatePicker>
             <br/>
             <br/>
-            <Col span="20" offset="2">
+            <Col span="20" offset="2" style="margin-bottom: 0.6rem;">
                 <Collapse class="collapse-title">
                     <Panel v-for="sumInfo in earnSumArr" 
                         v-bind:key="sumInfo.channel"
@@ -360,6 +360,7 @@ export default {
                         console.log(JSON.stringify(ret));
                         setTimeout(() => {
                             ret.map(item => item.editting = false);
+                            this.dailyDataArr.length = 0;
                             this.dailyDataArr = Object.assign(ret);
                         }, 1000);
                     })
