@@ -74,7 +74,7 @@ function queryJournalData(...dates) {
             return moment(item).format("YYYYmmDD");
         });
         const SQL_QUERY = `SELECT d.channel, d.e_date, d.ad_place, d.e_exposure, d.e_click,
-        i.settlement, d.e_count, d.e_earn, (d.e_earn * i.rebate) AS net_income, i.ecpm
+        i.settlement, d.e_count, d.e_earn, i.rebate, i.ecpm
         FROM earn_daily_journal d 
         JOIN earn_channel_info i 
         ON d.channel = i.channel

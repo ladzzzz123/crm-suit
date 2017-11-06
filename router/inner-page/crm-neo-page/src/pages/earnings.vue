@@ -52,7 +52,8 @@
                                     <th>触宝曝光量</th>
                                     <th>渠道曝光量</th>
                                     <th>Gap</th>
-                                    <th>收入(若ecpm为定值<br/>请勿修改此项)</th>
+                                    <th>收入</th>
+                                    <th>收入(返点后)</th>
                                     <th>ecpm</th>
                                     <th v-if="isAdmin" style="width:1rem;">操作</th>
                                 </thead>
@@ -82,11 +83,14 @@
                                         </td>
                                         <td>
                                             <span v-if="dailyData.editting && dailyData.ecpm < 0">
-                                                <input v-model="dailyData.net_income" type="number" step="0.01" style="width:0.5rem;"/>
+                                                <input v-model="dailyData.earn" type="number" step="0.01" style="width:0.5rem;"/>
                                             </span>
                                             <span v-else>
-                                                {{ dailyData.ecpm < 0 ? dailyData.net_income : dailyData.e_count * dailyData.ecpm / 1000 }}
+                                                {{ dailyData.ecpm < 0 ? dailyData.earn : dailyData.e_count * dailyData.ecpm / 1000 }}
                                             </span>
+                                        </td>
+                                        <td>
+                                            {{ dailyData.earn * dailyData.rebate }}
                                         </td>
                                         <td>{{ dailyData.ecpm < 0 ? (dailyData.e_earn / dailyData.e_count) * 1000 : dailyData.ecpm }}</td>
                                         <td v-if="isAdmin" style="text-align: center">
@@ -493,7 +497,7 @@ export default {
 
         submitDaily: function(dailyData) {
             dailyData.e_date = new Date(dailyData.e_date).toLocaleDateString();
-            dailyData.e_earn = dailyData.ecpm < 0 ? dailyData.net_income : (dailyData.e_count * dailyData.ecpm) / 1000;
+            dailyData.e_earn = dailyData.ecpm < 0 ? dailyData.e_earn : (dailyData.e_count * dailyData.ecpm) / 1000;
             console.log(JSON.stringify(dailyData));
             let params = {
                 token: this.token,
@@ -528,10 +532,10 @@ export default {
             }
         },
         backupDataBeforeEdit: function(data) {
-            if (data.e_count && data.net_income) {
+            if (data.e_count && data.e_earn) {
                 data.backup =  {
                     e_count: data.e_count,
-                    net_income: data.net_income
+                    e_earn: data.e_earn
                 };
             } else if (data.settlement && data.ecpm != 0 && data.rebate != 0) {
                 data.backup = {
