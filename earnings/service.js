@@ -51,7 +51,7 @@ function queryChannelSum(...dates) {
         let dateArr = params_date.map(item => {
             let date = item.replace(/\//gi, "-");
             logger.info("[earnings] date: %s", date);
-            return moment("2017-11-1").format("YYYYMMDD");
+            return moment("2017-11-02").format("YYYYMMDD");
         });
         const SQL_QUERY = `SELECT SUM(e_earn) as earns, channel FROM earn_daily_journal
                             WHERE e_date >= ? AND e_date <= ? GROUP BY channel`;
