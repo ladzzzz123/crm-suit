@@ -49,9 +49,9 @@ function queryChannelSum(...dates) {
         let params_date = [dates[0], dates[1] || dates[0]];
         logger.info("[earnings] queryChannelSum params_date: %s", JSON.stringify(params_date));
         let dateArr = params_date.map(item => {
-            let date = item.replace(/\//gi, "-");
+            let date = new Date(item);
             logger.info("[earnings] date: %s", date);
-            return moment("2017-11-02").format("YYYYMMDD");
+            return moment(date.toISOString()).format("YYYYMMDD");
         });
         const SQL_QUERY = `SELECT SUM(e_earn) as earns, channel FROM earn_daily_journal
                             WHERE e_date >= ? AND e_date <= ? GROUP BY channel`;
@@ -76,8 +76,9 @@ function querySum(...dates) {
         let params_date = [dates[0], dates[1] || dates[0]];
         logger.info("[earnings] querySum params_date: %s", JSON.stringify(params_date));
         let dateArr = params_date.map(item => {
-            let date = item.replace(/\//gi, "-");
-            return moment(date).format("YYYYMMDD");
+            let date = new Date(item);
+            logger.info("[earnings] date: %s", date);
+            return moment(date.toISOString()).format("YYYYMMDD");
         });
         const SQL_QUERY = `SELECT SUM(e_earn) as earns FROM earn_daily_journal WHERE e_date >= ? AND e_date <= ?`;
         const SQL_QUERY_FORMAT = mysql.format(SQL_QUERY, dateArr);
