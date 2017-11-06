@@ -38,7 +38,7 @@
             </DatePicker>
             <br/>
             <br/>
-            <Carousel v-if="earnSumArr.length > 0" style="height: 3rem;text-align: center;width: 3rem;" loop>
+            <Carousel v-if="earnSumArr.length > 0" style="height: 1.5rem;text-align: center;width: 3rem;" loop>
                 <CarouselItem>
                     <div>当日收入总和: {{ earnSumArr.reduce((sum, item) => { return parseFloat(sum + item.earns) }) }}</div>
                 </CarouselItem>
@@ -49,8 +49,8 @@
                     <div>今年收入总和：</div>
                 </CarouselItem>
             </Carousel>
-            
-            <Col span="20" offset="2" style="margin-bottom: 0.6rem;margin-top: 3.5rem;">
+
+            <Col span="20" offset="2" style="margin-bottom: 0.6rem;">
                 <Collapse class="collapse-title" v-if="earnSumArr.length > 0">
                     <Panel v-for="sumInfo in earnSumArr" 
                         v-bind:key="sumInfo.channel"

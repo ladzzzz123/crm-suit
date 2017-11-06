@@ -101,7 +101,9 @@ function queryJournalData(...dates) {
     return new Promise((resolve, reject) => {
         let params_date = [dates[0], dates[1] || dates[0]];
         params_date.map(item => {
-            return moment(item).format("YYYYmmDD");
+            let date = new Date(item);
+            logger.info("[earnings] date: %s", date);
+            return moment(date.toISOString()).format("YYYYMMDD");
         });
         const SQL_QUERY = `SELECT d.channel, d.e_date, d.ad_place, d.e_exposure, d.e_click,
             i.settlement, d.e_count, d.e_earn, i.rebate, i.ecpm
@@ -215,7 +217,7 @@ const MIN_CONTENT_LENGTH = 0;
 
 function insertEarningsDataIntoDB(dateS) {
     return new Promise((resolve, reject) => {
-        let dateStr = moment(dateS).format("YYYYmmDD");
+        let dateStr = moment(dateS).format("YYYYMMDD");
         let ids = [];
         const SQL_QUERY_DATA_FROM_MAIL = `SELECT _id, m_content FROM mail_info WHERE 
             m_module = "${export_func.name}" AND m_date >= ? AND m_status = "NEW" `;
