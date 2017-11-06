@@ -213,6 +213,7 @@ function insertEarningsDataIntoDB(dateS) {
                             logger.info("[earnings] neo_sub: %s, length: %s", neo_sub, neo_sub.length);
                             if (neo_sub.length > MIN_CONTENT_LENGTH) {
                                 logger.info("[earnings] count: %s", count);
+                                temp_data[DATA_FORMAT[count++]] = neo_sub;
                                 // channel, ad_place, e_date, e_exposure, e_click
                                 if (count > 0 && (count % (DATA_FORMAT.length) === 0)) {
                                     logger.info("[earnings] temp_data: %s", JSON.stringify(temp_data));
@@ -220,7 +221,6 @@ function insertEarningsDataIntoDB(dateS) {
                                     count = 0;
                                     temp_data = {};
                                 }
-                                temp_data[DATA_FORMAT[count++]] = neo_sub;
                             }
                         });
                         ids.push(item._id);
