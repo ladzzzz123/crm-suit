@@ -209,7 +209,10 @@ function insertEarningsDataIntoDB(dateS) {
                         let temp_data = {};
                         neo_content.split("\n").forEach(sub => {
                             logger.info("[earnings] sub: %s", sub);
-                            if (sub.replace(/(\ |\ )/gi, "").length > MIN_CONTENT_LENGTH) {
+                            let neo_sub = sub.replace(/(\ |\ )/gi, "");
+                            logger.info("[earnings] neo_sub: %s", neo_sub);
+
+                            if (neo_sub.length > MIN_CONTENT_LENGTH) {
                                 // channel, ad_place, e_date, e_exposure, e_click
                                 if (count >= DATA_FORMAT.length) {
                                     logger.info("[earnings] temp_data: %s", JSON.stringify(temp_data));
