@@ -223,7 +223,8 @@ const MIN_CONTENT_LENGTH = 0;
 
 function insertEarningsDataIntoDB(dateS) {
     return new Promise((resolve, reject) => {
-        let dateStr = moment(dateS).format("YYYYMMDD");
+        logger.info("[earnings] dateS: %s", dateS);
+        let dateStr = moment(new Date(dateS).toISOString()).format("YYYYMMDD");
         let ids = [];
         const SQL_QUERY_DATA_FROM_MAIL = `SELECT _id, m_content FROM mail_info WHERE 
             m_module = "${export_func.name}" AND m_date >= ? AND m_status = "NEW" `;

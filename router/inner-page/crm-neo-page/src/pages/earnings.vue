@@ -418,6 +418,8 @@ export default {
             }
         },
         fetchSum: function() {
+            console.log("before fxxk request send");
+            console.log("fxxk params: %s", [ `${this.m_date.getYear()}/${this.m_date.getMonth()}/01`, this.m_date ]);
             queryDataByDate(PATH_OPT,
                 {
                     token: this.token,
