@@ -88,10 +88,10 @@
                                                 </span>
                                             </template>
                                             <template v-else>
-                                                <span v-if="dailyData.settlement == 1">
+                                                <span v-if="dailyData.settlement === 1">
                                                     {{ dailyData.ecpm < 0 ? dailyData.e_earn : dailyData.e_count * dailyData.ecpm / 1000 }}
                                                 </span>
-                                                <span v-if="dailyData.settlement == 2">
+                                                <span v-if="dailyData.settlement === 2">
                                                     {{ dailyData.ecpm < 0 ? dailyData.e_earn : dailyData.e_count * dailyData.ecpm }}
                                                 </span>
                                             </template>
@@ -100,7 +100,14 @@
                                             {{ dailyData.e_earn * dailyData.rebate }}
                                         </td>
                                         <td>
+                                            <span v-if="dailyData.settlement === 1">
                                             {{ dailyData.ecpm < 0 ? (dailyData.e_earn / dailyData.e_count) * 1000 : dailyData.ecpm }}
+                                            </span>
+                                            <span v-else-if="dailyData.settlement === 2">
+                                            {{ dailyData.ecpm < 0 ? 
+                                                (dailyData.e_earn / dailyData.e_count) : dailyData.ecpm }}
+                                            </span>
+                                            <span v-else>dailyData.ecpm</span>
                                         </td>
                                         <td v-if="isAdmin" style="text-align: center">
                                             <!-- <i-switch v-model="dailyData.editting"></i-switch> -->
@@ -506,7 +513,10 @@ export default {
 
         submitDaily: function(dailyData) {
             dailyData.e_date = new Date(dailyData.e_date).toLocaleDateString();
-            dailyData.e_earn = dailyData.ecpm < 0 ? dailyData.e_earn : (dailyData.e_count * dailyData.ecpm) / 1000;
+            dailyData.e_earn = dailyData.ecpm < 0 ?
+                dailyData.e_earn : 
+                dailyData.settlement === 1 ? 
+                    (dailyData.e_count * dailyData.ecpm) / 1000 : dailyData.e_count * dailyData.ecpm;
             console.log(JSON.stringify(dailyData));
             let params = {
                 token: this.token,
