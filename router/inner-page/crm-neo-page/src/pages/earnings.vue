@@ -409,8 +409,8 @@ export default {
                         setTimeout(() => {
                             ret.map(item => item.editting = false);
                             this.dailyDataArr = ret;
+                            this.fetchSum();
                         }, 1000);
-                        setTimeout(this.fetchSum, 1000);
                     })
                     .catch(e => {
                         console.log("request err: %s", JSON.stringify(e));
