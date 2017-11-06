@@ -47,6 +47,7 @@ let export_func = {
 function queryChannelSum(...dates) {
     return new Promise((resolve, reject) => {
         let params_date = [dates[0], dates[1] || dates[0]];
+        logger.info("[earnings] queryChannelSum params_date: %s", JSON.stringify(params_date));
         params_date.map(item => {
             return moment(item).format("YYYYmmDD");
         });
@@ -71,7 +72,7 @@ function queryChannelSum(...dates) {
 function querySum(...dates) {
     return new Promise((resolve, reject) => {
         let params_date = [dates[0], dates[1] || dates[0]];
-        logger.info("[earnings] params_date: %s", JSON.stringify(params_date));
+        logger.info("[earnings] querySum params_date: %s", JSON.stringify(params_date));
         params_date.map(item => {
             return moment(item).format("YYYYmmDD");
         });
