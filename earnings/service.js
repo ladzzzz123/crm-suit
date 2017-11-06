@@ -53,6 +53,8 @@ function queryChannelSum(...dates) {
             logger.info("[earnings] date: %s", date);
             return moment(date.toISOString()).format("YYYYMMDD");
         });
+        logger.info("[earnings] queryChannelSum dateArr: %s", JSON.stringify(dateArr));
+
         const SQL_QUERY = `SELECT SUM(e_earn) as earns, channel FROM earn_daily_journal
                             WHERE e_date >= ? AND e_date <= ? GROUP BY channel`;
         const SQL_QUERY_FORMAT = mysql.format(SQL_QUERY, dateArr);
@@ -80,6 +82,8 @@ function querySum(...dates) {
             logger.info("[earnings] date: %s", date);
             return moment(date.toISOString()).format("YYYYMMDD");
         });
+        logger.info("[earnings] querySum dateArr: %s", JSON.stringify(dateArr));
+
         const SQL_QUERY = `SELECT SUM(e_earn) as earns FROM earn_daily_journal WHERE e_date >= ? AND e_date <= ?`;
         const SQL_QUERY_FORMAT = mysql.format(SQL_QUERY, dateArr);
         courier.sendAsyncCall("dbopter", "asyncQuery", "", "earn_data", SQL_QUERY_FORMAT)
@@ -100,11 +104,13 @@ function querySum(...dates) {
 function queryJournalData(...dates) {
     return new Promise((resolve, reject) => {
         let params_date = [dates[0], dates[1] || dates[0]];
-        params_date.map(item => {
+        let dateArr = params_date.map(item => {
             let date = new Date(item);
             logger.info("[earnings] date: %s", date);
             return moment(date.toISOString()).format("YYYYMMDD");
         });
+        logger.info("[earnings] queryJournalData dateArr: %s", JSON.stringify(dateArr));
+
         const SQL_QUERY = `SELECT d.channel, d.e_date, d.ad_place, d.e_exposure, d.e_click,
             i.settlement, d.e_count, d.e_earn, i.rebate, i.ecpm
             FROM earn_daily_journal d 
