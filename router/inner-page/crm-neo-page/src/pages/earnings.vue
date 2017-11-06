@@ -405,23 +405,25 @@ export default {
                         console.log(JSON.stringify(ret));
                         setTimeout(() => {
                             ret.map(item => item.editting = false);
-                            Object.assign(this.dailyDataArr, ret);
+                            this.dailyDataArr = ret;
                         }, 1000);
                         return queryDataByDate(PATH_OPT,
                             {
                                 token: this.token,
-                                m_date: [ `${this.m_date.getYear()}${this.m_date.getMonth()}01`, this.m_date ]
+                                m_date: [ `${this.m_date.getYear()}/${this.m_date.getMonth()}/01`, this.m_date ]
                             }, "query-sum");
                     })
                     .then(ret => {
+                        console.log("monthly: %s", JSON.stringify(ret));
                         this.earnSumMonthlyArr = ret;
                         return queryDataByDate(PATH_OPT,
                             {
                                 token: this.token,
-                                m_date: [ `${this.m_date.getYear()}0101`, this.m_date ]
+                                m_date: [ `${this.m_date.getYear()}/01/01`, this.m_date ]
                             }, "query-sum");
                     })
                     .then(ret => {
+                        console.log("yearly: %s", JSON.stringify(ret));
                         this.earnSumYearlyArr = ret;
                     })
                     .catch(e => {
