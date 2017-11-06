@@ -45,7 +45,7 @@
                         {{ earnSumArr.reduce((sum, item) => { return (isNaN(sum) ? 0 : sum) + parseFloat(item.earns) }) }}
                     </div>
                 </CarouselItem>
-                <CarouselItem class="demo-carousel">
+                <CarouselItem class="demo-carousel" @click="fetchSum">
                     <div>当月收入总和：</div>
                 </CarouselItem>
                 <CarouselItem class="demo-carousel">
@@ -409,8 +409,8 @@ export default {
                         setTimeout(() => {
                             ret.map(item => item.editting = false);
                             this.dailyDataArr = ret;
-                            this.fetchSum();
                         }, 1000);
+                        setTimeout(this.fetchSum, 2000);
                     })
                     .catch(e => {
                         console.log("request err: %s", JSON.stringify(e));
@@ -421,12 +421,12 @@ export default {
             console.log("before fxxk request send");
             console.log("fxxk params: %s", 
                 JSON.stringify([ `${this.m_date.getFullYear()}/${this.m_date.getMonth()}/01`, 
-                `${this.m_date.getFullYear()}/${this.m_date.getMonth()}/${this.m_date.getDay()}` ]));
+                `${this.m_date.getFullYear()}/${this.m_date.getMonth() + 1}/${this.m_date.getDate()}` ]));
             queryDataByDate(PATH_OPT,
                 {
                     token: this.token,
                     m_date: [ `${this.m_date.getFullYear()}/${this.m_date.getMonth()}/01`,
-                        `${this.m_date.getFullYear()}/${this.m_date.getMonth()}/${this.m_date.getDay()}` ]
+                        `${this.m_date.getFullYear()}/${this.m_date.getMonth() + 1}/${this.m_date.getDate()}` ]
                 }, "query-sum")
                 .then(ret => {
                     console.log("monthly: %s", JSON.stringify(ret));
@@ -435,7 +435,7 @@ export default {
                         {
                             token: this.token,
                             m_date: [ `${this.m_date.getFullYear()}/01/01`, 
-                                `${this.m_date.getFullYear()}/${this.m_date.getMonth()}/${this.m_date.getDay()}` ]
+                                `${this.m_date.getFullYear()}/${this.m_date.getMonth() + 1}/${this.m_date.getDate()}` ]
                         }, "query-sum");
                 })
                 .then(ret => {
