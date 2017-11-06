@@ -84,15 +84,15 @@
                                         <td>
                                             <template v-if="dailyData.editting && dailyData.ecpm < 0">
                                                 <span>
-                                                    <input v-model="dailyData.earn" type="number" step="0.01" style="width:0.5rem;"/>
+                                                    <input v-model="dailyData.e_earn" type="number" step="0.01" style="width:0.5rem;"/>
                                                 </span>
                                             </template>
                                             <template v-else>
                                                 <span v-if="dailyData.settlement == 1">
-                                                    {{ dailyData.ecpm < 0 ? dailyData.earn : dailyData.e_count * dailyData.ecpm / 1000 }}
+                                                    {{ dailyData.ecpm < 0 ? dailyData.e_earn : dailyData.e_count * dailyData.ecpm / 1000 }}
                                                 </span>
                                                 <span v-if="dailyData.settlement == 2">
-                                                    {{ dailyData.ecpm < 0 ? dailyData.earn : dailyData.e_count * dailyData.ecpm }}
+                                                    {{ dailyData.ecpm < 0 ? dailyData.e_earn : dailyData.e_count * dailyData.ecpm }}
                                                 </span>
                                             </template>
                                         </td>

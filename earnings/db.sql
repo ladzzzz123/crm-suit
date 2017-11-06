@@ -44,7 +44,9 @@ SELECT d.channel, d.ad_place, d.e_date, IF (i.settlement = 1, d.e_exposure, d.e_
 
 
 -- UPDATE e_count/e_earn FROM INPUT
-UPDATE earn_daily_journal d, earn_channel_info i SET d.e_count = 352982, d.e_earn = IF(i.ecpm > 0, d.e_count / i.ecpm * 1000, 4235.78) 
+UPDATE earn_daily_journal d, earn_channel_info i SET d.e_count = 352982, d.e_earn = IF(i.ecpm > 0, 
+    IF(i.settlement = 1, d.e_count / i.ecpm * 1000, d.e_count * i.ecpm),
+    4235.78) 
 WHERE d.channel = i.channel AND d.ad_place = i.ad_place AND d.channel = "网行" AND d.ad_place = "信息流" AND d.e_date = "20171022";
 
 
