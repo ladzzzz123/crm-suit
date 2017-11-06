@@ -103,11 +103,15 @@
                                         </td>
                                         <td><!-- ecpm/ecpc -->
                                             <span v-if="dailyData.settlement === 1">
-                                            {{ dailyData.ecpm < 0 ? (dailyData.e_earn / dailyData.e_count) * 1000 : dailyData.ecpm }}
+                                            {{ 
+                                                ((dailyData.ecpm < 0 ? (dailyData.e_earn / dailyData.e_count) * 1000 : dailyData.ecpm)
+                                                || 0).toFixed(2) }}
                                             </span>
                                             <span v-else-if="dailyData.settlement === 2">
-                                            {{ dailyData.ecpm < 0 ? 
-                                                (dailyData.e_earn / dailyData.e_count) : dailyData.ecpm }}
+                                            {{ 
+                                                ((dailyData.ecpm < 0 ? 
+                                                (dailyData.e_earn / dailyData.e_count) : dailyData.ecpm)
+                                                || 0).toFixed(2) }}
                                             </span>
                                             <span v-else>dailyData.ecpm</span>
                                         </td>
