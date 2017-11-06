@@ -74,25 +74,34 @@
                                         <td>
                                             <span v-if="dailyData.e_count <= 0">0</span>
                                             <span v-else-if="parseInt(dailyData.settlement) === 1">
-                                                {{ (dailyData.e_exposure - dailyData.e_count) / dailyData.e_exposure }}
+                                                {{ (Math.abs(dailyData.e_exposure - dailyData.e_count) / dailyData.e_exposur.toFixed(2)) }}
                                             </span>
                                             <span v-else-if="parseInt(dailyData.settlement) === 2">
-                                                {{ (dailyData.e_click - dailyData.e_count) / dailyData.e_click }}
+                                                {{ ((Math.abs(dailyData.e_click - dailyData.e_count) / dailyData.e_click)).toFixed(2) }}
                                             </span>
                                             <span v-else>0</span>
                                         </td>
                                         <td>
-                                            <span v-if="dailyData.editting && dailyData.ecpm < 0">
-                                                <input v-model="dailyData.earn" type="number" step="0.01" style="width:0.5rem;"/>
-                                            </span>
-                                            <span v-else>
-                                                {{ dailyData.ecpm < 0 ? dailyData.earn : dailyData.e_count * dailyData.ecpm / 1000 }}
-                                            </span>
+                                            <template v-if="dailyData.editting && dailyData.ecpm < 0">
+                                                <span>
+                                                    <input v-model="dailyData.earn" type="number" step="0.01" style="width:0.5rem;"/>
+                                                </span>
+                                            </template>
+                                            <template v-else>
+                                                <span v-if="dailyData.settlement == 1">
+                                                    {{ dailyData.ecpm < 0 ? dailyData.earn : dailyData.e_count * dailyData.ecpm / 1000 }}
+                                                </span>
+                                                <span v-if="dailyData.settlement == 2">
+                                                    {{ dailyData.ecpm < 0 ? dailyData.earn : dailyData.e_count * dailyData.ecpm }}
+                                                </span>
+                                            </template>
                                         </td>
                                         <td>
-                                            {{ dailyData.earn * dailyData.rebate }}
+                                            {{ dailyData.e_earn * dailyData.rebate }}
                                         </td>
-                                        <td>{{ dailyData.ecpm < 0 ? (dailyData.e_earn / dailyData.e_count) * 1000 : dailyData.ecpm }}</td>
+                                        <td>
+                                            {{ dailyData.ecpm < 0 ? (dailyData.e_earn / dailyData.e_count) * 1000 : dailyData.ecpm }}
+                                        </td>
                                         <td v-if="isAdmin" style="text-align: center">
                                             <!-- <i-switch v-model="dailyData.editting"></i-switch> -->
                                             <ButtonGroup v-if="dailyData.editting">

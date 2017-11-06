@@ -49,8 +49,7 @@ function querySum(...dates) {
             return moment(item).format("YYYYmmDD");
         });
         const SQL_QUERY = `SELECT SUM(e_earn) as earns, channel FROM earn_daily_journal
-                            WHERE e_date >= ? AND e_date <= ?
-                            GROUP BY channel;`
+                            WHERE e_date >= ? AND e_date <= ? GROUP BY channel`;
         const SQL_QUERY_FORMAT = mysql.format(SQL_QUERY, params_date);
         courier.sendAsyncCall("dbopter", "asyncQuery", "", "earn_data", SQL_QUERY_FORMAT)
             .then(ret => {
@@ -74,12 +73,12 @@ function queryJournalData(...dates) {
             return moment(item).format("YYYYmmDD");
         });
         const SQL_QUERY = `SELECT d.channel, d.e_date, d.ad_place, d.e_exposure, d.e_click,
-        i.settlement, d.e_count, d.e_earn, i.rebate, i.ecpm
-        FROM earn_daily_journal d 
-        JOIN earn_channel_info i 
-        ON d.channel = i.channel
-        AND d.ad_place = i.ad_place
-        WHERE d.e_date >= ? AND d.e_date <= ?`;
+            i.settlement, d.e_count, d.e_earn, i.rebate, i.ecpm
+            FROM earn_daily_journal d 
+            JOIN earn_channel_info i 
+            ON d.channel = i.channel
+            AND d.ad_place = i.ad_place
+            WHERE d.e_date >= ? AND d.e_date <= ?`;
         const SQL_QUERY_FORMAT = mysql.format(SQL_QUERY, params_date);
         courier.sendAsyncCall("dbopter", "asyncQuery", "", "earn_data", SQL_QUERY_FORMAT)
             .then(ret => {
@@ -109,7 +108,7 @@ function updateJournalData(params) {
             .then(ret => {
                 let update_ret = ret.ret;
                 if (update_ret.affectedRows > 0) {
-                    resolve({ result: "success", })
+                    resolve({ result: "success" });
                 }
                 resolve(orgArr);
             })
