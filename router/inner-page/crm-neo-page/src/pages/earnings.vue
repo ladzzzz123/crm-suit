@@ -39,12 +39,12 @@
             <br/>
             <br/>
             <Col span="20" offset="2" style="margin-bottom: 0.6rem;">
-                <Collapse class="collapse-title">
+                <Collapse class="collapse-title" v-if="earnSumArr.length > 0">
                     <Panel v-for="sumInfo in earnSumArr" 
                         v-bind:key="sumInfo.channel"
                         @on-change="pannelOpen(sumInfo.channel)">
                         {{ sumInfo.channel }}: &nbsp;&nbsp; {{ m_date.toLocaleDateString() }} &nbsp;&nbsp;收入：￥{{ sumInfo.earns }}
-                        <p slot="content">
+                        <p slot="content" v-if="dailyDataArr.filter(data => data.channel === sumInfo.channel).length > 0">
                             <table>
                                 <thead>
                                     <th>位置</th>
@@ -52,7 +52,7 @@
                                     <th>触宝曝光量</th>
                                     <th>渠道曝光量</th>
                                     <th>Gap</th>
-                                    <th>收入(若ecpm为定值<br/>请勿修改此项,改了也没用,呵呵)</th>
+                                    <th>收入(若ecpm为定值<br/>请勿修改此项)</th>
                                     <th>ecpm</th>
                                     <th v-if="isAdmin" style="width:1rem;">操作</th>
                                 </thead>
@@ -101,7 +101,11 @@
                                 </tbody>
                             </table>
                         </p>
+                        <p v-else>目前没有数据或未设定渠道信息</p>
                     </Panel>
+                </Collapse>
+                <Collapse>
+                    目前没有数据
                 </Collapse>
             </Col>
 
