@@ -49,39 +49,39 @@
                                 <thead>
                                     <th>位置</th>
                                     <th>日期</th>
-                                    <th>触宝曝光量</th>
-                                    <th>渠道曝光量</th>
+                                    <th>触宝曝光/点击量</th>
+                                    <th>渠道曝光/点击量</th>
                                     <th>Gap</th>
                                     <th>收入</th>
                                     <th>收入(返点后)</th>
-                                    <th>ecpm</th>
+                                    <th>ecpm/ecpc</th>
                                     <th v-if="isAdmin" style="width:1rem;">操作</th>
                                 </thead>
                                 <tbody>
                                     <tr v-for="dailyData in dailyDataArr.filter(data => data.channel === sumInfo.channel)"
                                         v-bind:key="dailyData.ad_place">
-                                        <td>{{ dailyData.ad_place }}</td>
-                                        <td>{{ m_date.toLocaleDateString() }}</td>
+                                        <td>{{ dailyData.ad_place }}</td><!-- 位置 -->
+                                        <td>{{ m_date.toLocaleDateString() }}</td><!-- 日期 -->
                                         <td>{{ parseInt(dailyData.settlement) === 1 ?
                                             dailyData.e_exposure : parseInt(dailyData.settlement) === 2 ?
-                                            dailyData.e_click : dailyData.e_exposure }}</td>
-                                        <td>
+                                            dailyData.e_click : dailyData.e_exposure }}</td><!-- 触宝曝光/点击量 -->
+                                        <td><!-- 渠道曝光/点击量 -->
                                             <span v-if="dailyData.editting">
                                                 <input v-model="dailyData.e_count" type="number" style="width:0.5rem;"/>
                                             </span>
                                             <span v-else>{{ dailyData.e_count }}</span>
                                         </td>
-                                        <td>
+                                        <td><!-- Gap -->
                                             <span v-if="dailyData.e_count <= 0">0</span>
                                             <span v-else-if="parseInt(dailyData.settlement) === 1">
-                                                {{ (Math.abs(dailyData.e_exposure - dailyData.e_count) / dailyData.e_exposur || 0).toFixed(2)}}
+                                                {{ (Math.abs(dailyData.e_exposure - dailyData.e_count) / dailyData.e_exposur || 0).toFixed(2) * 100 }} %
                                             </span>
                                             <span v-else-if="parseInt(dailyData.settlement) === 2">
-                                                {{ ((Math.abs(dailyData.e_click - dailyData.e_count) / dailyData.e_click) || 0 ).toFixed(2)}}
+                                                {{ ((Math.abs(dailyData.e_click - dailyData.e_count) / dailyData.e_click) || 0 ).toFixed(2) * 100 }}%
                                             </span>
                                             <span v-else>0</span>
                                         </td>
-                                        <td>
+                                        <td><!-- 收入 -->
                                             <template v-if="dailyData.editting && dailyData.ecpm < 0">
                                                 <span>
                                                     <input v-model="dailyData.e_earn" type="number" step="0.01" style="width:0.5rem;"/>
@@ -89,17 +89,19 @@
                                             </template>
                                             <template v-else>
                                                 <span v-if="dailyData.settlement === 1">
-                                                    {{ dailyData.ecpm < 0 ? dailyData.e_earn : dailyData.e_count * dailyData.ecpm / 1000 }}
+                                                    {{ ((dailyData.ecpm < 0 ? 
+                                                        dailyData.e_earn : dailyData.e_count * dailyData.ecpm / 1000) || 0).toFixed(2) }}
                                                 </span>
                                                 <span v-if="dailyData.settlement === 2">
-                                                    {{ dailyData.ecpm < 0 ? dailyData.e_earn : dailyData.e_count * dailyData.ecpm }}
+                                                    {{ ((dailyData.ecpm < 0 ? 
+                                                        dailyData.e_earn : dailyData.e_count * dailyData.ecpm) || 0).toFixed(2) }}
                                                 </span>
                                             </template>
                                         </td>
-                                        <td>
-                                            {{ dailyData.e_earn * dailyData.rebate }}
+                                        <td><!-- 收入(返点后) -->
+                                            {{ (dailyData.e_earn * dailyData.rebate || 0).toFixed(2) }}
                                         </td>
-                                        <td>
+                                        <td><!-- ecpm/ecpc -->
                                             <span v-if="dailyData.settlement === 1">
                                             {{ dailyData.ecpm < 0 ? (dailyData.e_earn / dailyData.e_count) * 1000 : dailyData.ecpm }}
                                             </span>
@@ -443,7 +445,8 @@ export default {
                             func.showTips("alert-success", "添加成功！");
                         }
                         this.hideDialog();
-                        this.fetchEarns();
+                        setTimeout(this.fetchEarns, 500);
+                        // this.fetchEarns();
                     }, (status, msg) => {
                         func.showTips("alert-error", "添加失败！");
                     });
@@ -478,7 +481,8 @@ export default {
                         func.showTips("alert-success", "修改成功！");
                     }
                     this.switchEdit(channelData);
-                    this.fetchEarns();
+                    setTimeout(this.fetchEarns, 500);
+                    // this.fetchEarns();
                 }, (status, msg) => {
                     func.showTips("alert-error", "修改失败！");
                     // this.cancelEdit(dailyData);
@@ -504,7 +508,8 @@ export default {
                         return item.channel === channelData.channel && item.ad_place === channelData.ad_place;
                     });
                     this.channelDataArr.splice(deletedChannelPos, 1);
-                    this.fetchEarns();
+                    setTimeout(this.fetchEarns, 500);
+                    // this.fetchEarns();
                 }, (status, msg) => {
                     func.showTips("alert-error", "删除失败！");
                     // this.cancelEdit(dailyData);
@@ -530,7 +535,8 @@ export default {
                         func.showTips("alert-success", "修改成功！");
                     }
                     dailyData.e_version++;
-                    this.fetchEarns();
+                    setTimeout(this.fetchEarns, 500);
+                    // this.fetchEarns();
                     this.switchEdit(dailyData);
                 }, (status, msg) => {
                     func.showTips("alert-error", "修改失败！");
