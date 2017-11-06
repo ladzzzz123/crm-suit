@@ -459,8 +459,19 @@ router
             if (!_util.verifyParams(postData, "m_date", "action")) {
                 ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
             }
+            let dateArr = [];
+            if (Array.isArray(postData.m_date) && postData.m_date.length > 0) {
+                if (postData.m_date.length > 1) {
+                    dateArr.push(postData.m_date[0]);
+                    dateArr.push(postData.m_date[1]);
+                } else {
+                    dateArr.push(postData.m_date[0], postData.m_date[0]);
+                }
+            } else {
+                dateArr.push(postData.m_date, postData.m_date);
+            }
             try {
-                let ret = await courier.sendAsyncCall("earnings", "asyncOpt", "", postData.action, postData.m_date);
+                let ret = await courier.sendAsyncCall("earnings", "asyncOpt", "", postData.action, dateArr[0], dateArr[1]);
                 ctx.body = { status: RESULT.SUCCESS, content: ret, msg: "opt end" };
             } catch (e) {
                 ctx.body = { status: RESULT.FAILED, content: [], msg: JSON.stringify(e) };

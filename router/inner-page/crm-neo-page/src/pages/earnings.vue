@@ -5,6 +5,7 @@
 
     .data-list {
         margin-bottom:  0.4rem;
+        margin-top: 3.5rem;
     }
 
     table {
@@ -25,6 +26,11 @@
     }
     tr {
         padding: 0.02rem;
+    }
+    .carousel {
+        height: 3rem;
+        text-align: center;
+        width: 3rem;
     }
 </style>
 
@@ -223,15 +229,15 @@
                 </Form>
             </Modal>
 
-            <Carousel v-if="earnSumArr.length > 0" loop>
+            <Carousel v-if="earnSumArr.length > 0" class="carousel" loop>
                 <CarouselItem>
-                    <div class="carousel">当日收入总和: {{ earnSumArr.reduce((sum, item) => { return sum + item.earns }) }}</div>
+                    <div>当日收入总和: {{ earnSumArr.reduce((sum, item) => { return sum + item.earns }) }}</div>
                 </CarouselItem>
                 <CarouselItem>
-                    <div class="carousel">当月收入总和：</div>
+                    <div>当月收入总和：</div>
                 </CarouselItem>
                 <CarouselItem>
-                    <div class="carousel">今年收入总和：</div>
+                    <div>今年收入总和：</div>
                 </CarouselItem>
             </Carousel>
 
