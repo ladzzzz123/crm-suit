@@ -101,7 +101,7 @@
                                 </tbody>
                             </table>
                         </p>
-                        <p v-else>目前没有数据或未设定渠道信息</p>
+                        <p slot="content" v-else>目前没有数据或未设定渠道信息</p>
                     </Panel>
                 </Collapse>
                 <Collapse>
