@@ -223,7 +223,7 @@
                 </Form>
             </Modal>
 
-            <Carousel loop>
+            <Carousel v-if="earnSumArr.length > 0" loop>
                 <CarouselItem>
                     <div class="carousel">当日收入总和: {{ earnSumArr.reduce((sum, item) => { return sum + item.earns }) }}</div>
                 </CarouselItem>
