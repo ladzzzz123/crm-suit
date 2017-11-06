@@ -74,10 +74,10 @@
                                         <td>
                                             <span v-if="dailyData.e_count <= 0">0</span>
                                             <span v-else-if="parseInt(dailyData.settlement) === 1">
-                                                {{ (Math.abs(dailyData.e_exposure - dailyData.e_count) / dailyData.e_exposur.toFixed(2)) }}
+                                                {{ (Math.abs(dailyData.e_exposure - dailyData.e_count) / dailyData.e_exposur).toFixed(2) || 0.0 }}
                                             </span>
                                             <span v-else-if="parseInt(dailyData.settlement) === 2">
-                                                {{ ((Math.abs(dailyData.e_click - dailyData.e_count) / dailyData.e_click)).toFixed(2) }}
+                                                {{ ((Math.abs(dailyData.e_click - dailyData.e_count) / dailyData.e_click)).toFixed(2) || 0.0 }}
                                             </span>
                                             <span v-else>0</span>
                                         </td>
