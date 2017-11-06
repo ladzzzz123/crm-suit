@@ -208,14 +208,16 @@ async function insertOpt(mailArr, callback) {
     try {
         if (mailArr && Array.isArray(mailArr)) {
             let ret = {};
+            let neoMailArr = [];
             for (let index = 0; index < mailArr.length; index++) {
                 let neoMail = Object.assign(mailArr[index]);
                 delete neoMail.uid;
                 neoMail.m_module = MAIL_MODULE[neoMail.title.match(REG_FETCH_MAIL_MODULE)[0]] || "all";
                 logger.debug("[mail] neo mail:%s", JSON.stringify(neoMail));
+                neoMailArr.push(neoMail);
                 ret = await insertIntoDB(neoMail);
             }
-            callback(ret);
+            callback(neoMailArr);
         } else {
             callback(false);
         }
@@ -228,6 +230,9 @@ async function insertOpt(mailArr, callback) {
 function asyncMail(mailArr) {
     insertOpt(mailArr, ret => {
         if (ret) {
+            if (Array.isArray(ret)) {
+                if (!ret.some(item => item.m_module === "plan")) return;
+            }
             redisClient.hgetall(MAIL_NOTICE_KEY)
                 .then(arr => {
                     logger.info("[asyncMail] mail.arr:%s", JSON.stringify(arr));

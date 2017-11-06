@@ -181,7 +181,7 @@ function deleteChannelData(params) {
     });
 }
 
-const MIN_CONTENT_LENGTH = 5;
+const MIN_CONTENT_LENGTH = 0;
 
 function insertEarningsDataIntoDB(dateS) {
     return new Promise((resolve, reject) => {
@@ -202,16 +202,26 @@ function insertEarningsDataIntoDB(dateS) {
                     orgDataArr.forEach((item) => {
                         logger.info("[earnings] item: %s", JSON.stringify(item));
                         let neo_content =
-                            item.m_content.replace(/(\n)+/gi, ";")
-                            .replace(/\ /gi, ",")
-                            .replace(/(\,\;|\;\,)/gi, ",");
+                            // item.m_content.replace(/(\n)+/gi, ";")
+                            // .replace(/\ /gi, ",")
+                            // .replace(/(\,\;|\;\,)/gi, ",");
+                            item.m_content.replace(/(\ )+/gi, "");
                         logger.info("[earnings] neo_content: %s", neo_content);
-                        neo_content.split(";").forEach(sub => {
+
+                        let count = 0;
+                        const DATA_FORMAT = ["channel", "ad_place", "e_date", "e_exposure", "e_click"];
+                        let temp_data = {};
+                        neo_content.split("\n").forEach(sub => {
                             logger.info("[earnings] sub: %s", sub);
                             if (sub.length > MIN_CONTENT_LENGTH) {
                                 // channel, ad_place, e_date, e_exposure, e_click
-                                let items = sub.split(",");
-                                insertArr.push(items);
+                                if (count >= DATA_FORMAT.length) {
+                                    logger.info("[earnings] temp_data: %s", JSON.stringify(temp_data));
+                                    insertArr.push(Object.values(temp_data));
+                                    count = 0;
+                                    temp_data = {};
+                                }
+                                temp_data[DATA_FORMAT[count++]] = sub;
                             }
                         });
                         logger.info("[earnings] insertArr: %s", JSON.stringify(insertArr));
