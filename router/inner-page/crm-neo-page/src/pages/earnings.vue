@@ -5,7 +5,6 @@
 
     .data-list {
         margin-bottom:  0.4rem;
-        margin-top: 3.5rem;
     }
 
     table {
@@ -27,11 +26,6 @@
     tr {
         padding: 0.02rem;
     }
-    .carousel {
-        height: 3rem;
-        text-align: center;
-        width: 3rem;
-    }
 </style>
 
 <template>
@@ -44,7 +38,7 @@
             </DatePicker>
             <br/>
             <br/>
-            <Col span="20" offset="2" style="margin-bottom: 0.6rem;">
+            <Col span="20" offset="2" style="margin-bottom: 0.6rem;margin-top: 3.5rem;">
                 <Collapse class="collapse-title" v-if="earnSumArr.length > 0">
                     <Panel v-for="sumInfo in earnSumArr" 
                         v-bind:key="sumInfo.channel"
@@ -229,7 +223,7 @@
                 </Form>
             </Modal>
 
-            <Carousel v-if="earnSumArr.length > 0" class="carousel" loop>
+            <Carousel v-if="earnSumArr.length > 0" style="height: 3rem;text-align: center;width: 3rem;" loop>
                 <CarouselItem>
                     <div>当日收入总和: {{ earnSumArr.reduce((sum, item) => { return sum + item.earns }) }}</div>
                 </CarouselItem>
