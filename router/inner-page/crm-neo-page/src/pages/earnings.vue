@@ -38,6 +38,18 @@
             </DatePicker>
             <br/>
             <br/>
+            <Carousel v-if="earnSumArr.length > 0" style="height: 3rem;text-align: center;width: 3rem;" loop>
+                <CarouselItem>
+                    <div>当日收入总和: {{ earnSumArr.reduce((sum, item) => { return parseFloat(sum + item.earns) }) }}</div>
+                </CarouselItem>
+                <CarouselItem>
+                    <div>当月收入总和：</div>
+                </CarouselItem>
+                <CarouselItem>
+                    <div>今年收入总和：</div>
+                </CarouselItem>
+            </Carousel>
+            
             <Col span="20" offset="2" style="margin-bottom: 0.6rem;margin-top: 3.5rem;">
                 <Collapse class="collapse-title" v-if="earnSumArr.length > 0">
                     <Panel v-for="sumInfo in earnSumArr" 
@@ -222,18 +234,6 @@
                     </FormItem>
                 </Form>
             </Modal>
-
-            <Carousel v-if="earnSumArr.length > 0" style="height: 3rem;text-align: center;width: 3rem;" loop>
-                <CarouselItem>
-                    <div>当日收入总和: {{ earnSumArr.reduce((sum, item) => { return sum + item.earns }) }}</div>
-                </CarouselItem>
-                <CarouselItem>
-                    <div>当月收入总和：</div>
-                </CarouselItem>
-                <CarouselItem>
-                    <div>今年收入总和：</div>
-                </CarouselItem>
-            </Carousel>
 
             <ButtonGroup v-if="isAdmin" style="position: fixed; bottom:0.2rem;left:50%;">
                 <Button type="success" @click="showDialog('insertChannel')">新增客户设定</Button>
