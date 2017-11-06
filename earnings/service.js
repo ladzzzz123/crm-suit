@@ -185,8 +185,9 @@ const MIN_CONTENT_LENGTH = 0;
 function insertEarningsDataIntoDB(dateS) {
     return new Promise((resolve, reject) => {
         let dateStr = moment(dateS).format("YYYYmmDD");
-        const SQL_QUERY_DATA_FROM_MAIL = `SELECT m_content FROM mail_info WHERE 
-            m_module = "${export_func.name}" AND m_date >= ?`;
+        let ids = [];
+        const SQL_QUERY_DATA_FROM_MAIL = `SELECT _id, m_content FROM mail_info WHERE 
+            m_module = "${export_func.name}" AND m_date >= ? AND m_status = "NEW" `;
         const SQL_QUERY_FORMAT = mysql.format(SQL_QUERY_DATA_FROM_MAIL, dateStr);
         courier.sendAsyncCall("dbopter", "asyncQuery", "", "market_db", SQL_QUERY_FORMAT)
             .then(ret => {
@@ -200,11 +201,7 @@ function insertEarningsDataIntoDB(dateS) {
                     logger.info("[earnings] Array.isArray(orgDataArr): %s", Array.isArray(orgDataArr));
                     orgDataArr.forEach((item) => {
                         logger.info("[earnings] item: %s", JSON.stringify(item));
-                        let neo_content =
-                            // item.m_content.replace(/(\n)+/gi, ";")
-                            // .replace(/\ /gi, ",")
-                            // .replace(/(\,\;|\;\,)/gi, ",");
-                            item.m_content.replace(/(\ )+/gi, "");
+                        let neo_content = item.m_content.replace(/(\ )/gi, "");
                         logger.info("[earnings] neo_content: %s", neo_content);
 
                         let count = 0;
@@ -223,12 +220,18 @@ function insertEarningsDataIntoDB(dateS) {
                                 temp_data[DATA_FORMAT[count++]] = sub;
                             }
                         });
+                        ids.push(item._id);
+
                         logger.info("[earnings] insertArr: %s", JSON.stringify(insertArr));
                         const SQL_INSERT_DATA = `INSERT INTO earn_daily_journal 
                             (channel, ad_place, e_date, e_exposure, e_click) VALUES ?`;
+                        const SQL_UPDATE_STATUS = `UPDATE mail_info SET m_status = "RESOLVED" WHERE _id IN (${ids.toString()})`;
                         courier.sendAsyncCall("dbopter", "asyncQueryInsert", "", "earn_data", SQL_INSERT_DATA, [insertArr])
                             .then(ret => {
                                 logger.info("[earnings] insert succeed: %s", JSON.stringify(ret));
+                                return courier.sendAsyncCall("dbopter", "asyncQuery", "", "market_db", SQL_UPDATE_STATUS);
+                            })
+                            .then(ret => {
                                 resolve("sync success: %s", JSON.stringify(ret));
                             })
                             .catch(e => {

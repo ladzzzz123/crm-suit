@@ -231,7 +231,7 @@ function asyncMail(mailArr) {
     insertOpt(mailArr, ret => {
         if (ret) {
             if (Array.isArray(ret)) {
-                if (!ret.some(item => item.m_module === "plan")) return;
+                if (!ret.some(item => item.m_module === "plan-order")) return;
             }
             redisClient.hgetall(MAIL_NOTICE_KEY)
                 .then(arr => {
