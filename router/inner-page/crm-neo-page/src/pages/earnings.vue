@@ -50,7 +50,7 @@
                                     <th>位置</th>
                                     <th>日期</th>
                                     <th>触宝曝光/点击量</th>
-                                    <th>渠道曝光/点击量</th>
+                                    <th>客户曝光/点击量</th>
                                     <th>Gap</th>
                                     <th>收入</th>
                                     <th>收入(返点后)</th>
@@ -65,7 +65,7 @@
                                         <td>{{ parseInt(dailyData.settlement) === 1 ?
                                             dailyData.e_exposure : parseInt(dailyData.settlement) === 2 ?
                                             dailyData.e_click : dailyData.e_exposure }}</td><!-- 触宝曝光/点击量 -->
-                                        <td><!-- 渠道曝光/点击量 -->
+                                        <td><!-- 客户曝光/点击量 -->
                                             <span v-if="dailyData.editting">
                                                 <input v-model="dailyData.e_count" type="number" style="width:0.5rem;"/>
                                             </span>
@@ -127,7 +127,7 @@
                                 </tbody>
                             </table>
                         </p>
-                        <p slot="content" v-else>目前没有数据或未设定渠道信息</p>
+                        <p slot="content" v-else>目前没有数据或未设定客户信息</p>
                     </Panel>
                 </Collapse>
                 <Collapse v-else>
@@ -137,12 +137,12 @@
 
             <Modal
                 v-model="dlgShowFlags.channel"
-                title="当前渠道设定"
+                title="当前客户设定"
                 @on-cancel="hideDialog"
                 width="800">
                 <table>
                     <thead>
-                        <th>渠道</th>
+                        <th>客户名称</th>
                         <th>位置</th>
                         <th>结算方式(曝光/点击)</th>
                         <th>ecpm<br/>(-1表示按收入动态结算)</th>
@@ -192,10 +192,9 @@
                 </table>
             </Modal>
 
-
             <Modal
                 v-model="dlgShowFlags.insertChannel"
-                title="新增渠道设定"
+                title="新增客户设定"
                 @on-ok="submitInsertChannel"
                 :ok-text="'提交'"
                 :closable="false"
@@ -203,8 +202,8 @@
                 :loading="formChannelLoading"
                 width="800">
                 <Form ref="formChannel" :model="formChannel" :rules="channelValidate" :label-width="80">
-                    <FormItem label="渠道名" prop="channel">
-                        <Input v-model="formChannel.channel" placeholder="请输入渠道名称" />
+                    <FormItem label="客户名称" prop="channel">
+                        <Input v-model="formChannel.channel" placeholder="请输入客户名称" />
                     </FormItem>
                     <FormItem label="广告位置" prop="ad_place">
                         <Input v-model="formChannel.ad_place" placeholder="请输入广告位置" />
@@ -224,9 +223,21 @@
                 </Form>
             </Modal>
 
+            <Carousel loop>
+                <CarouselItem>
+                    <div class="carousel">当日收入总和: {{ earnSumArr.reduce((sum, item) => { return sum + item.earns }) }}</div>
+                </CarouselItem>
+                <CarouselItem>
+                    <div class="carousel">当月收入总和：</div>
+                </CarouselItem>
+                <CarouselItem>
+                    <div class="carousel">今年收入总和：</div>
+                </CarouselItem>
+            </Carousel>
+
             <ButtonGroup v-if="isAdmin" style="position: fixed; bottom:0.2rem;left:50%;">
-                <Button type="success" @click="showDialog('insertChannel')">新增渠道设定</Button>
-                <Button type="primary" @click="showDialog('channel')">查看渠道设定</Button>
+                <Button type="success" @click="showDialog('insertChannel')">新增客户设定</Button>
+                <Button type="primary" @click="showDialog('channel')">查看客户设定</Button>
             </ButtonGroup>
         </div>
         <div class="data-list" v-else>
@@ -265,6 +276,8 @@ export default {
             verified: false,
             m_date: "",
             earnSumArr: [],
+            earnSumMonthlyArr: [],
+            earnSumYearlyArr: [],
             dailyDataArr: [],
             channelDataArr: [],
             dlgShowFlags: {
@@ -280,11 +293,11 @@ export default {
             },
             formChannelLoading: true,
             channelValidate: {
-                channel: { required: true, message: "请输入渠道名称", trigger: "blur" },
+                channel: { required: true, message: "请输入客户名称", trigger: "blur" },
                 ad_place: { required: true, message: "请输入广告位置", trigger: "blur" },
                 settlement: { required: true, message: "请输入结算方式", trigger: "blur" },
-                ecpm: { required: true, message: "ecpm必须为数字", trigger: 'blur' },
-                rebate: { required: true, message: "返点值必须为数字", trigger: "blur" }
+                // ecpm: { required: true, message: "ecpm必须为数字", trigger: 'blur' },
+                // rebate: { required: true, message: "返点值必须为数字", trigger: "blur" }
             },
             curIndex: 0,
             colors: [
@@ -374,11 +387,11 @@ export default {
             this.dailyDataArr.length = 0;
             if (this.m_date) {
                 queryDataByDate(PATH_OPT, 
-                   { 
+                    { 
                         token: this.token, 
                         m_date: this.m_date
                     },
-                        "query-sum")
+                    "query-channel-sum")
                     .then(ret => {
                         this.earnSumArr = ret;
                         return queryDataByDate(PATH_OPT, 
@@ -386,14 +399,30 @@ export default {
                                 token: this.token, 
                                 m_date:this.m_date
                             },
-                            "query-journal")
+                            "query-journal");
                     })
                     .then(ret => {
                         console.log(JSON.stringify(ret));
                         setTimeout(() => {
                             ret.map(item => item.editting = false);
-                            this.dailyDataArr = Object.assign(ret);
+                            Object.assign(this.dailyDataArr, ret);
                         }, 1000);
+                        return queryDataByDate(PATH_OPT,
+                            {
+                                token: this.token,
+                                m_date: [ `${this.m_date.getYear()}${this.m_date.getMonth()}01`, this.m_date ]
+                            }, "query-sum");
+                    })
+                    .then(ret => {
+                        this.earnSumMonthlyArr = ret;
+                        return queryDataByDate(PATH_OPT,
+                            {
+                                token: this.token,
+                                m_date: [ `${this.m_date.getYear()}0101`, this.m_date ]
+                            }, "query-sum");
+                    })
+                    .then(ret => {
+                        this.earnSumYearlyArr = ret;
                     })
                     .catch(e => {
 
@@ -547,7 +576,6 @@ export default {
                     // this.cancelEdit(dailyData);
                 });
         },
-
         reportRet: function() {
 
         },

@@ -65,6 +65,10 @@ SELECT d.channel, d.e_date, d.ad_place, d.e_exposure, d.e_click,
 
 
 -- QUERY earn sum
-SELECT channel, COUNT(e_earn) as earns  FROM earn_daily_journal
+SELECT channel, SUM(e_earn) as earns  FROM earn_daily_journal
 WHERE e_date >= ? AND e_date =< ?
 GROUP BY channel;
+
+
+SELECT SUM(e_earn) as earns FROM earn_daily_journal 
+WHERE e_date >= ? AND e_date =< ?;

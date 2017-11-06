@@ -13,6 +13,8 @@ let export_func = {
         switch (action) {
             case "query-journal":
                 return queryJournalData(...dates);
+            case "query-channel-sum":
+                return queryChannelSum(...dates);
             case "query-sum":
                 return querySum(...dates);
             default:
@@ -42,7 +44,7 @@ let export_func = {
     },
 };
 
-function querySum(...dates) {
+function queryChannelSum(...dates) {
     return new Promise((resolve, reject) => {
         let params_date = [dates[0], dates[1] || dates[0]];
         params_date.map(item => {
@@ -50,6 +52,29 @@ function querySum(...dates) {
         });
         const SQL_QUERY = `SELECT SUM(e_earn) as earns, channel FROM earn_daily_journal
                             WHERE e_date >= ? AND e_date <= ? GROUP BY channel`;
+        const SQL_QUERY_FORMAT = mysql.format(SQL_QUERY, params_date);
+        courier.sendAsyncCall("dbopter", "asyncQuery", "", "earn_data", SQL_QUERY_FORMAT)
+            .then(ret => {
+                let retArr = ret.ret;
+                if (Array.isArray(retArr)) {
+                    resolve(retArr);
+                } else {
+                    resolve([]);
+                }
+            })
+            .catch(e => {
+                reject(e);
+            });
+    });
+}
+
+function querySum(...dates) {
+    return new Promise((resolve, reject) => {
+        let params_date = [dates[0], dates[1] || dates[0]];
+        params_date.map(item => {
+            return moment(item).format("YYYYmmDD");
+        });
+        const SQL_QUERY = `SELECT SUM(e_earn) as earns FROM earn_daily_journal WHERE e_date >= ? AND e_date <= ?`;
         const SQL_QUERY_FORMAT = mysql.format(SQL_QUERY, params_date);
         courier.sendAsyncCall("dbopter", "asyncQuery", "", "earn_data", SQL_QUERY_FORMAT)
             .then(ret => {
