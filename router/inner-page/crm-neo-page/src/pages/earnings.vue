@@ -410,7 +410,7 @@ export default {
                             ret.map(item => item.editting = false);
                             this.dailyDataArr = ret;
                         }, 1000);
-                        this.fetchSum();
+                        setTimeout(this.fetchSum, 1000);
                     })
                     .catch(e => {
                         console.log("request err: %s", JSON.stringify(e));
@@ -418,29 +418,27 @@ export default {
             }
         },
         fetchSum: function() {
-            setTimeout(() => {
-                queryDataByDate(PATH_OPT,
-                    {
-                        token: this.token,
-                        m_date: [ `${this.m_date.getYear()}/${this.m_date.getMonth()}/01`, this.m_date ]
-                    }, "query-sum")
-                    .then(ret => {
-                        console.log("monthly: %s", JSON.stringify(ret));
-                        this.earnSumMonthlyArr = ret;
-                        return queryDataByDate(PATH_OPT,
-                            {
-                                token: this.token,
-                                m_date: [ `${this.m_date.getYear()}/01/01`, this.m_date ]
-                            }, "query-sum");
-                    })
-                    .then(ret => {
-                        console.log("yearly: %s", JSON.stringify(ret));
-                        this.earnSumYearlyArr = ret;
-                    })
-                    .catch(e => {
-                        console.log("request err: %s", JSON.stringify(e));
-                    });
-            }, 2000);
+            queryDataByDate(PATH_OPT,
+                {
+                    token: this.token,
+                    m_date: [ `${this.m_date.getYear()}/${this.m_date.getMonth()}/01`, this.m_date ]
+                }, "query-sum")
+                .then(ret => {
+                    console.log("monthly: %s", JSON.stringify(ret));
+                    this.earnSumMonthlyArr = ret;
+                    return queryDataByDate(PATH_OPT,
+                        {
+                            token: this.token,
+                            m_date: [ `${this.m_date.getYear()}/01/01`, this.m_date ]
+                        }, "query-sum");
+                })
+                .then(ret => {
+                    console.log("yearly: %s", JSON.stringify(ret));
+                    this.earnSumYearlyArr = ret;
+                })
+                .catch(e => {
+                    console.log("request err: %s", JSON.stringify(e));
+                });
         },
         
 
