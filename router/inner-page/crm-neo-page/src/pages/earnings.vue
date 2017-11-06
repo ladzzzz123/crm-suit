@@ -639,10 +639,14 @@ export default {
 
 function queryDataByDate(path, params, action) {
     return new Promise((resolve, reject) => {
+        let date = params.m_date;
+        if (!Array.isArray(date)) {
+            date = date.toLocaleDateString();
+        }
         requester.send(path, 
             { 
                 token: params.token, 
-                m_date: params.m_date ? params.m_date.toLocaleDateString() : "",
+                m_date: date || "",
                 action: action
             },
             result => {
