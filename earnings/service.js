@@ -49,6 +49,7 @@ function queryChannelSum(...dates) {
         let params_date = [dates[0], dates[1] || dates[0]];
         logger.info("[earnings] queryChannelSum params_date: %s", JSON.stringify(params_date));
         let dateArr = params_date.map(item => {
+            logger.info("[earnings] date item: %s", item);
             return moment(item).format("YYYYMMDD");
         });
         const SQL_QUERY = `SELECT SUM(e_earn) as earns, channel FROM earn_daily_journal
