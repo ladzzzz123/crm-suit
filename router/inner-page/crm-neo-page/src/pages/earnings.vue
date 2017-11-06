@@ -420,12 +420,12 @@ export default {
         fetchSum: function() {
             console.log("before fxxk request send");
             console.log("fxxk params: %s", 
-                JSON.stringify([ `${this.m_date.getFullYear()}/${this.m_date.getMonth()}/01`, 
+                JSON.stringify([ `${this.m_date.getFullYear()}/${this.m_date.getMonth() + 1}/01`, 
                 `${this.m_date.getFullYear()}/${this.m_date.getMonth() + 1}/${this.m_date.getDate()}` ]));
             queryDataByDate(PATH_OPT,
                 {
                     token: this.token,
-                    m_date: [ `${this.m_date.getFullYear()}/${this.m_date.getMonth()}/01`,
+                    m_date: [ `${this.m_date.getFullYear()}/${this.m_date.getMonth() + 1}/01`,
                         `${this.m_date.getFullYear()}/${this.m_date.getMonth() + 1}/${this.m_date.getDate()}` ]
                 }, "query-sum")
                 .then(ret => {
