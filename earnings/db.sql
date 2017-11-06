@@ -72,3 +72,4 @@ GROUP BY channel;
 
 SELECT SUM(e_earn) as earns FROM earn_daily_journal 
 WHERE e_date >= ? AND e_date =< ?;
+

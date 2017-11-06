@@ -38,14 +38,17 @@
             </DatePicker>
             <br/>
             <br/>
-            <Carousel v-if="earnSumArr.length > 0" style="height: 1.5rem;text-align: center;width: 3rem;" loop>
-                <CarouselItem>
-                    <div>当日收入总和: {{ earnSumArr.reduce((sum, item) => { return parseFloat(sum + item.earns) }) }}</div>
+            <Carousel v-if="earnSumArr.length > 0" style="height: 1rem;text-align: center;width: 1.2rem;" loop>
+                <CarouselItem class="demo-carousel">
+                    <div>
+                        当日收入总和:
+                        {{ earnSumArr.reduce((sum, item) => { return (isNaN(sum) ? 0 : sum) + parseFloat(item.earns) }) }}
+                    </div>
                 </CarouselItem>
-                <CarouselItem>
+                <CarouselItem class="demo-carousel">
                     <div>当月收入总和：</div>
                 </CarouselItem>
-                <CarouselItem>
+                <CarouselItem class="demo-carousel">
                     <div>今年收入总和：</div>
                 </CarouselItem>
             </Carousel>
@@ -407,12 +410,20 @@ export default {
                             ret.map(item => item.editting = false);
                             this.dailyDataArr = ret;
                         }, 1000);
-                        return queryDataByDate(PATH_OPT,
-                            {
-                                token: this.token,
-                                m_date: [ `${this.m_date.getYear()}/${this.m_date.getMonth()}/01`, this.m_date ]
-                            }, "query-sum");
+                        this.fetchSum();
                     })
+                    .catch(e => {
+                        console.log("request err: %s", JSON.stringify(e));
+                    });
+            }
+        },
+        fetchSum: function() {
+            setTimeout(() => {
+                queryDataByDate(PATH_OPT,
+                    {
+                        token: this.token,
+                        m_date: [ `${this.m_date.getYear()}/${this.m_date.getMonth()}/01`, this.m_date ]
+                    }, "query-sum")
                     .then(ret => {
                         console.log("monthly: %s", JSON.stringify(ret));
                         this.earnSumMonthlyArr = ret;
@@ -427,10 +438,11 @@ export default {
                         this.earnSumYearlyArr = ret;
                     })
                     .catch(e => {
-
+                        console.log("request err: %s", JSON.stringify(e));
                     });
-            }
+            }, 2000);
         },
+        
 
         showDialog: function(type) {
             this.dlgShowFlags[type] = true;
