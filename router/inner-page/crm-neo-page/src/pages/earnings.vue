@@ -104,7 +104,7 @@
                         <p slot="content" v-else>目前没有数据或未设定渠道信息</p>
                     </Panel>
                 </Collapse>
-                <Collapse>
+                <Collapse v-else>
                     目前没有数据
                 </Collapse>
             </Col>
@@ -344,6 +344,8 @@ export default {
         },
 
         fetchEarns: function() {
+            this.earnSumArr.length = 0;
+            this.dailyDataArr.length = 0;
             if (this.m_date) {
                 queryDataByDate(PATH_OPT, 
                    { 
@@ -364,7 +366,6 @@ export default {
                         console.log(JSON.stringify(ret));
                         setTimeout(() => {
                             ret.map(item => item.editting = false);
-                            this.dailyDataArr.length = 0;
                             this.dailyDataArr = Object.assign(ret);
                         }, 1000);
                     })
