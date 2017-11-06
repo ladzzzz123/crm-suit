@@ -118,7 +118,7 @@ function queryJournalData(...dates) {
             ON d.channel = i.channel
             AND d.ad_place = i.ad_place
             WHERE d.e_date >= ? AND d.e_date <= ?`;
-        const SQL_QUERY_FORMAT = mysql.format(SQL_QUERY, params_date);
+        const SQL_QUERY_FORMAT = mysql.format(SQL_QUERY, dateArr);
         courier.sendAsyncCall("dbopter", "asyncQuery", "", "earn_data", SQL_QUERY_FORMAT)
             .then(ret => {
                 let orgArr = ret.ret;
