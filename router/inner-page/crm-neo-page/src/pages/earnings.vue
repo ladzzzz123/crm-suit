@@ -3,6 +3,10 @@
         text-align: left;
     }
 
+    .data-list {
+        margin-bottom:  0.4rem;
+    }
+
     table {
         border-width: 2px;
         border-style: solid;
@@ -62,7 +66,7 @@
                                             dailyData.e_click : dailyData.e_exposure }}</td>
                                         <td>
                                             <span v-if="dailyData.editting">
-                                                <input v-model="dailyData.e_count" type="number" style="width:0.3rem;"/>
+                                                <input v-model="dailyData.e_count" type="number" style="width:0.5rem;"/>
                                             </span>
                                             <span v-else>{{ dailyData.e_count }}</span>
                                         </td>
@@ -78,7 +82,7 @@
                                         </td>
                                         <td>
                                             <span v-if="dailyData.editting && dailyData.ecpm < 0">
-                                                <input v-model="dailyData.net_income" type="number" step="0.01" style="width:0.3rem;"/>
+                                                <input v-model="dailyData.net_income" type="number" step="0.01" style="width:0.5rem;"/>
                                             </span>
                                             <span v-else>
                                                 {{ dailyData.ecpm < 0 ? dailyData.net_income : dailyData.e_count * dailyData.ecpm / 1000 }}
@@ -133,13 +137,13 @@
                             </td>
                             <td>
                                 <span v-if="channelData.editting">
-                                    <input v-model="channelData.ecpm" type="number" step="0.01" style="width:0.3rem;"/>
+                                    <input v-model="channelData.ecpm" type="number" step="0.01" style="width:0.5rem;"/>
                                 </span>
                                 <span v-else>{{ channelData.ecpm }}</span>
                             </td>
                             <td>
                                 <span v-if="channelData.editting">
-                                    <input v-model="channelData.rebate" type="number" step="0.01" style="width:0.3rem;"/>
+                                    <input v-model="channelData.rebate" type="number" step="0.01" style="width:0.5rem;"/>
                                 </span>
                                 <span v-else>{{ channelData.rebate }}</span>
                             </td>
