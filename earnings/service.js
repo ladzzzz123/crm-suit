@@ -208,9 +208,9 @@ function insertEarningsDataIntoDB(dateS) {
                         const DATA_FORMAT = ["channel", "ad_place", "e_date", "e_exposure", "e_click"];
                         let temp_data = {};
                         neo_content.split("\n").forEach(sub => {
-                            logger.info("[earnings] sub: %s", sub);
+                            logger.info("[earnings] sub: %s, length: %s", sub, sub.length);
                             let neo_sub = sub.replace(/(\ |\ )/gi, "");
-                            logger.info("[earnings] neo_sub: %s", neo_sub);
+                            logger.info("[earnings] neo_sub: %s, length: %s", neo_sub, neo_sub.length);
 
                             if (neo_sub.length > MIN_CONTENT_LENGTH) {
                                 // channel, ad_place, e_date, e_exposure, e_click
