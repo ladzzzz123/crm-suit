@@ -42,7 +42,7 @@
             <br/>
             <br/>
             <Row>
-                <Col span="8" offset="16">
+                <Col span="8">
                     <Carousel v-if="Array.isArray(earnSumArr) && earnSumArr.length > 0" 
                         style="height: 0.6rem;margin: 0 auto;
                                 text-align: center;width: 1rem;
@@ -256,9 +256,9 @@
             <Table :columns="columns" :data="dailyDataArr" size="small" ref="table" style="display:none"></Table>
 
             <ButtonGroup v-if="isAdmin" style="position: fixed; bottom:0.2rem;left:50%;">
-                <Button type="success" @click="showDialog('insertChannel')"><Icon type="android-add"></Icon>新增客户设定</Button>
-                <Button type="primary" @click="showDialog('channel')"><Icon type="ios-list-outline"></Icon>查看客户设定</Button>
-                <Button type="info" @click="exportReport()"><Icon type="ios-download-outline"></Icon>导出当日结果</Button>
+                <Button type="success" @click="showDialog('insertChannel')"><Icon type="android-add"></Icon>  新增客户设定</Button>
+                <Button type="primary" @click="showDialog('channel')"><Icon type="ios-list-outline"></Icon>  查看客户设定</Button>
+                <Button type="info" @click="exportReport()" v-if="dailyDataArr.length > 0"><Icon type="ios-download-outline"></Icon>  导出当日结果</Button>
     
             </ButtonGroup>
         </div>
@@ -447,7 +447,7 @@ export default {
                 item.earn_rebate = item.e_earn * item.rebate;
             });
             this.$refs.table.exportCsv({
-                filename: "report_" + this.m_date.toLocaleDateString()
+                filename: "report_" + this.m_date
             });
         },
 
@@ -489,10 +489,6 @@ export default {
             }
         },
         fetchSum: function() {
-            console.log("before fxxk request send");
-            console.log("fxxk params: %s", 
-                JSON.stringify([ `${this.m_date.getFullYear()}/${this.m_date.getMonth() + 1}/01`, 
-                `${this.m_date.getFullYear()}/${this.m_date.getMonth() + 1}/${this.m_date.getDate()}` ]));
             queryDataByDate(PATH_OPT,
                 {
                     token: this.token,
@@ -517,7 +513,6 @@ export default {
                     console.log("request err: %s", JSON.stringify(e));
                 });
         },
-        
 
         showDialog: function(type) {
             this.dlgShowFlags[type] = true;
@@ -538,7 +533,6 @@ export default {
                 default:
                     break;
             }
-            
         },
 
         submitInsertChannel: function() {
