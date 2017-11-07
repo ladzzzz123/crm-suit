@@ -25,8 +25,8 @@
         overflow-x: auto;
         overflow-y: hidden;
         vertical-align: middle;
-        border-bottom: 1px solid #e9eaec;
-        border-right: 1px solid #e9eaec;
+        border-bottom: 1px solid #888888;
+        border-right: 1px solid #888888;
         width: 0.8rem;
         padding-left: 18px;
         padding-right: 18px;
@@ -47,9 +47,11 @@
         box-sizing: border-box;
         text-align: left;
         text-overflow: ellipsis;
+        padding-left: 18px;
+        padding-right: 18px;
         vertical-align: middle;
-        border-bottom: 1px solid #e9eaec;
-        border-right: 1px solid #e9eaec;
+        border-bottom: 1px solid #888888;
+        border-right: 1px solid #888888;
         width: 0.8rem;
     }
     tr {
