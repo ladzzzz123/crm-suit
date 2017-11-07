@@ -106,7 +106,8 @@
                         v-bind:key="sumInfo.channel"
                         @on-change="pannelOpen(sumInfo.channel)">
                         {{ sumInfo.channel }}: &nbsp;&nbsp; {{ m_date.toLocaleDateString() }} &nbsp;&nbsp;收入：￥{{ sumInfo.earns }}
-                        <p slot="content" v-if="dailyDataArr.filter(data => data.channel === sumInfo.channel).length > 0">
+                        <p slot="content" style="overflow: auto;"
+                            v-if="dailyDataArr.filter(data => data.channel === sumInfo.channel).length > 0">
                             <table>
                                 <thead>
                                     <th>位置</th>
