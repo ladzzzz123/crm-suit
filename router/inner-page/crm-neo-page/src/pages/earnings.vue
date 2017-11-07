@@ -42,7 +42,7 @@
             <br/>
             <br/>
             <Row>
-                <Col span="6" offset="18">
+                <Col span="8" offset="16">
                     <Carousel v-if="earnSumArr.length > 0" 
                         style="height: 0.6rem;margin: 0 auto;
                                 text-align: center;width: 1rem;

@@ -266,7 +266,7 @@ function insertEarningsDataIntoDB(dateS) {
                         ids.push(item._id);
 
                         logger.info("[earnings] insertArr: %s", JSON.stringify(insertArr));
-                        const SQL_INSERT_DATA = `INSERT INTO earn_daily_journal 
+                        const SQL_INSERT_DATA = `INSERT IGNORE earn_daily_journal 
                             (channel, ad_place, e_date, e_exposure, e_click) VALUES ?`;
                         const SQL_UPDATE_STATUS = `UPDATE mail_info SET m_status = "RESOLVED" WHERE _id IN (${ids.toString()})`;
                         courier.sendAsyncCall("dbopter", "asyncQueryInsert", "", "earn_data", SQL_INSERT_DATA, [insertArr])
