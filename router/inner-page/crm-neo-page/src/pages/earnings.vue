@@ -26,7 +26,14 @@
         overflow-y: hidden;
         vertical-align: middle;
         border-bottom: 1px solid #e9eaec;
+        border-right: 1px solid #e9eaec;
         width: 0.8rem;
+        padding-left: 18px;
+        padding-right: 18px;
+        text-overflow: ellipsis;
+        white-space: normal;
+        word-break: break-all;
+        box-sizing: border-box;
     }
     th {
         /* border-width:2px;
@@ -42,6 +49,7 @@
         text-overflow: ellipsis;
         vertical-align: middle;
         border-bottom: 1px solid #e9eaec;
+        border-right: 1px solid #e9eaec;
         width: 0.8rem;
     }
     tr {
@@ -67,7 +75,8 @@
                     <Carousel v-if="Array.isArray(earnSumArr) && earnSumArr.length > 0" 
                         style="height: 0.6rem;margin: 0 auto;
                                 text-align: center;width: 1rem;
-                                background: rgba(6,6,6,0.1);" 
+                                background: rgba(6,6,6,0.1);
+                                border-radius: 6px;" 
                         :arrow="'never'"
                         loop>
                         <CarouselItem class="demo-carousel">
