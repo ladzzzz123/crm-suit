@@ -159,7 +159,8 @@ let insertMail = async function() {
             logger.info("[mail] listening asyncGetNewMail ret: %s", JSON.stringify(ret));
         }
     } catch (e) {
-        logger.warn("[mail] listening asyncGetNewMail err: %s", JSON.stringify(err));
+        logger.warn("[mail] listening asyncGetNewMail err: %s", JSON.stringify(e));
+        export_func.imapConnect(mailConfig.imap);
     }
 };
 
