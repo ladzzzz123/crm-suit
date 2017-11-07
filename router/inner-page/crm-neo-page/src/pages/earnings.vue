@@ -256,9 +256,10 @@
             <Table :columns="columns" :data="dailyDataArr" size="small" ref="table" style="display:none"></Table>
 
             <ButtonGroup v-if="isAdmin" style="position: fixed; bottom:0.2rem;left:50%;">
-                <Button type="success" @click="showDialog('insertChannel')">新增客户设定</Button>
-                <Button type="primary" @click="showDialog('channel')">查看客户设定</Button>
-                <Button type="info" @click="exportReport()">导出当日结果</Button>
+                <Button type="success" @click="showDialog('insertChannel')"><Icon type="android-add"></Icon>新增客户设定</Button>
+                <Button type="primary" @click="showDialog('channel')"><Icon type="ios-list-outline"></Icon>查看客户设定</Button>
+                <Button type="info" @click="exportReport()"><Icon type="ios-download-outline"></Icon>导出当日结果</Button>
+    
             </ButtonGroup>
         </div>
         <div class="data-list" v-else>
