@@ -27,7 +27,7 @@
         vertical-align: middle;
         border-bottom: 1px solid #888888;
         border-right: 1px solid #888888;
-        width: 0.8rem;
+        min-width: 0.8rem;
         padding-left: 18px;
         padding-right: 18px;
         text-overflow: ellipsis;
@@ -52,7 +52,7 @@
         vertical-align: middle;
         border-bottom: 1px solid #888888;
         border-right: 1px solid #888888;
-        width: 0.8rem;
+        min-width: 0.8rem;
     }
     tr {
         padding: 0.02rem;
