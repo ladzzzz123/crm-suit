@@ -393,10 +393,8 @@ router
         logger.info("[router] verify: %s", JSON.stringify(verify));
         if (verify.pass) {
             _ret = { status: RESULT.FAILED, msg: "add failed" };
-            let insert_ret = await courier.sendAsyncCall("account", "asyncAddUser", ret => {
-                _ret = { status: RESULT.SUCCESS, content: ret };
-            }, postData.userInfo);
-
+            let insert_ret = await courier.sendAsyncCall("account", "asyncAddUser", "", postData.userInfo);
+            logger.info("[router] add user insert_ret: %s", JSON.stringify(insert_ret));
             if (insert_ret.status === "success") {
                 let info = insert_ret.ret;
                 let ret = await courier.sendAsyncCall("mail", "asyncSendMail", "", info.mail,
