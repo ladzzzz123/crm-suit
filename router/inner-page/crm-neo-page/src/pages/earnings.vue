@@ -469,7 +469,7 @@ export default {
                             this.channelDataArr = Object.assign(ret);
                         })
                         .catch(e => {
-                            console.log("query-channel err: %s", JSON.stringify(ret));
+                            console.log("query-channel err: %s", JSON.stringify(e));
                         });
                     break;
                 case "insertChannel":
@@ -642,15 +642,15 @@ export default {
 
 function queryDataByDate(path, params, action) {
     return new Promise((resolve, reject) => {
-        let date = params.m_date;
-        if (!Array.isArray(date)) {
+        let date = params.m_date || "";
+        if (date && !Array.isArray(date)) {
             date = date.toLocaleDateString();
         }
         let req_params = { 
             token: params.token, 
             action: action
         };
-        req_params.m_date = date || "";
+        req_params.m_date = date;
         requester.send(path, 
             req_params,
             result => {
