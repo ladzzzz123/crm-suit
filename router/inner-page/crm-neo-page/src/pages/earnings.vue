@@ -18,7 +18,6 @@
         overflow-x: auto;
         overflow-y: hidden;
         padding: 0.02rem; */
-        min-width: 0;
         height: 48px;
         box-sizing: border-box;
         text-align: left;
@@ -27,17 +26,23 @@
         overflow-y: hidden;
         vertical-align: middle;
         border-bottom: 1px solid #e9eaec;
+        width: 0.8rem;
     }
     th {
         /* border-width:2px;
         border-style: solid; */
         min-width: 0;
         /* height: 48px; */
+        height: 40px;
+        white-space: nowrap;
+        overflow: hidden;
+        background-color: #f8f8f9;
         box-sizing: border-box;
         text-align: left;
         text-overflow: ellipsis;
         vertical-align: middle;
         border-bottom: 1px solid #e9eaec;
+        width: 0.8rem;
     }
     tr {
         padding: 0.02rem;
