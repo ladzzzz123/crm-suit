@@ -58,11 +58,11 @@
                 </CarouselItem>
                 <CarouselItem v-if="earnSumYearlyArr.length > 0" class="demo-carousel">
                     <div>截止{{ m_date.toLocaleDateString() }} <br/>
-                        今年收入总和：{{ earnSumYearlyArr[0].earns.toFixed(2) }}</div>
+                        年收入总和：{{ earnSumYearlyArr[0].earns.toFixed(2) }}</div>
                 </CarouselItem>
             </Carousel>
 
-            <Col span="20" offset="2" style="margin-bottom: 0.6rem;">
+            <Col span="20" offset="2" style="margin-bottom: 0.6rem;margin-top: 0.3rem;">
                 <Collapse class="collapse-title" v-if="earnSumArr.length > 0">
                     <Panel v-for="sumInfo in earnSumArr" 
                         v-bind:key="sumInfo.channel"
@@ -469,7 +469,7 @@ export default {
                             this.channelDataArr = Object.assign(ret);
                         })
                         .catch(e => {
-
+                            console.log("query-channel err: %s", JSON.stringify(ret));
                         });
                     break;
                 case "insertChannel":
@@ -646,12 +646,13 @@ function queryDataByDate(path, params, action) {
         if (!Array.isArray(date)) {
             date = date.toLocaleDateString();
         }
+        let req_params = { 
+            token: params.token, 
+            action: action
+        };
+        req_params.m_date = date || "";
         requester.send(path, 
-            { 
-                token: params.token, 
-                m_date: date || "",
-                action: action
-            },
+            req_params,
             result => {
                 if (result.status === RESULT_CODE.SUCCESS) {
                     // this.processArr(result.content);
