@@ -12,16 +12,32 @@
         border-style: solid;
     }
     td {
-        border-width:2px;
+        /* border-width:2px;
         border-style: solid;
         width: 0.8rem;
         overflow-x: auto;
         overflow-y: hidden;
-        padding: 0.02rem;
+        padding: 0.02rem; */
+        min-width: 0;
+        height: 48px;
+        box-sizing: border-box;
+        text-align: left;
+        text-overflow: ellipsis;
+        overflow-x: auto;
+        overflow-y: hidden;
+        vertical-align: middle;
+        border-bottom: 1px solid #e9eaec;
     }
     th {
-        border-width:2px;
-        border-style: solid;
+        /* border-width:2px;
+        border-style: solid; */
+        min-width: 0;
+        /* height: 48px; */
+        box-sizing: border-box;
+        text-align: left;
+        text-overflow: ellipsis;
+        vertical-align: middle;
+        border-bottom: 1px solid #e9eaec;
     }
     tr {
         padding: 0.02rem;
@@ -146,7 +162,6 @@
                                             <span v-else>dailyData.ecpm</span>
                                         </td>
                                         <td v-if="isAdmin" style="text-align: center">
-                                            <!-- <i-switch v-model="dailyData.editting"></i-switch> -->
                                             <ButtonGroup v-if="dailyData.editting">
                                                 <Button type="success" @click="submitDaily(dailyData)">提交</Button>
                                                 <Button @click="cancelEdit(dailyData)">取消</Button>
