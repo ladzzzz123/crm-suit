@@ -43,7 +43,7 @@
             <br/>
             <Row>
                 <Col span="8" offset="16">
-                    <Carousel v-if="earnSumArr.length > 0" 
+                    <Carousel v-if="Array.isArray(earnSumArr) && earnSumArr.length > 0" 
                         style="height: 0.6rem;margin: 0 auto;
                                 text-align: center;width: 1rem;
                                 background: rgba(6,6,6,0.1);" 
@@ -253,9 +253,12 @@
                 </Form>
             </Modal>
 
+            <Table :columns="columns" :data="dailyDataArr" size="small" ref="table" style="display:none"></Table>
+
             <ButtonGroup v-if="isAdmin" style="position: fixed; bottom:0.2rem;left:50%;">
                 <Button type="success" @click="showDialog('insertChannel')">新增客户设定</Button>
                 <Button type="primary" @click="showDialog('channel')">查看客户设定</Button>
+                <Button type="info" @click="exportReport()">导出当日结果</Button>
             </ButtonGroup>
         </div>
         <div class="data-list" v-else>
@@ -326,7 +329,45 @@ export default {
                 "default"
             ],
             loading: false,
-            qrList: {}
+            qrList: {},
+            columns: [
+                {
+                    title: "客户",
+                    key: "channel"
+                },
+                {
+                    title: "日期",
+                    key: "e_date"
+                },
+                {
+                    title: "广告位置",
+                    key: "ad_place"
+                },
+                {
+                    title: "曝光",
+                    key: "e_exposure"
+                },
+                {
+                    title: "点击",
+                    key: "e_click"
+                },
+                {
+                    title: "客户曝光/点击",
+                    key: "e_count"
+                },
+                {
+                    title: "收入",
+                    key: "e_earn"
+                },
+                {
+                    title: "收入(返点后)",
+                    key: "earn_rebate"
+                },
+                {
+                    title: "ecpm/ecpc",
+                    key: "ecpm"
+                },
+            ],
         }
     },
     computed: {
@@ -400,6 +441,15 @@ export default {
             this.curIndex = index;
         },
 
+        exportReport: function() {
+            this.dailyDataArr.forEach(item => {
+                item.earn_rebate = item.e_earn * item.rebate;
+            });
+            this.$refs.table.exportCsv({
+                filename: "report_" + this.m_date.toLocaleDateString()
+            });
+        },
+
         fetchEarns: function() {
             this.earnSumArr.length = 0;
             this.dailyDataArr.length = 0;
@@ -412,6 +462,9 @@ export default {
                     "query-channel-sum")
                     .then(ret => {
                         this.earnSumArr = ret;
+                        this.earnSumArr.sort((a, b) => {
+                            return a.e_earn - b.e_earn;
+                        });
                         return queryDataByDate(PATH_OPT, 
                             { 
                                 token: this.token, 
@@ -422,8 +475,10 @@ export default {
                     .then(ret => {
                         console.log(JSON.stringify(ret));
                         setTimeout(() => {
-                            ret.map(item => item.editting = false);
-                            this.dailyDataArr = ret;
+                            this.dailyDataArr = ret.map(item =>  {
+                                item.editting = false;
+                                return item;
+                            });
                         }, 1000);
                         setTimeout(this.fetchSum, 2000);
                     })
