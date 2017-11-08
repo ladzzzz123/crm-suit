@@ -374,6 +374,24 @@ router
         } else {
             ctx.body = _util.verifyTokenResult(verify);
         }
+    })
+    .post("/crm-inner/censor-data", async(ctx, next) => {
+        let postData = ctx.request.body;
+        logger.info("[router] censor data: %s", JSON.stringify(postData));
+        if (!_util.verifyParams(postData, ["date", "data"])) {
+            ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
+        }
+        await courier.sendAsyncCall("censor", "asyncInsertData", "", postData.date, postData.data)
+            .then(ret => {
+                if (ret.status === "success") {
+                    ctx.body = { status: RESULT.SUCCESS, msg: ret.msg };
+                } else {
+                    ctx.body = { status: RESULT.FAILED, msg: ret.msg };
+                }
+            })
+            .catch(e => {
+                ctx.body = { status: RESULT.REQ_ERROR, msg: "Internal Error" };
+            });
     });
 // censor module end
 
@@ -410,6 +428,7 @@ router
         let _ret = await courier.sendAsyncCall("mail", "asyncGetNewMail");
         ctx.body = _ret;
     });
+
 
 
 router

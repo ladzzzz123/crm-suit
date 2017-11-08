@@ -49,6 +49,14 @@ let export_func = {
         });
     },
 
+    asyncInsertData: (dateStr, data) => {
+        let dateStr = dateS.replace(/(\/|\-)/gi, "");
+        logger.info("[censor] insert data: %s", JSON.stringify(data));
+        let neo_datas = data.map(item => {
+            return [item.tu, item.dsp, dateStr, item.ldp, item.material, item.pv];
+        });
+    },
+
     insertMaterialIntoDB: (dateS) => {
         let dateStr = dateS.replace(/(\/|\-)/gi, "");
         request(`${CONFIG.materialUrl}?date=${dateStr}`, (error, response, body) => {
@@ -220,6 +228,6 @@ let export_func = {
 
 let courier = new Courier(export_func);
 courier.listening(() => {
-    let today = new Date().toLocaleDateString();
-    export_func.insertMaterialIntoDB(today);
+    // let today = new Date().toLocaleDateString();
+    // export_func.insertMaterialIntoDB(today);
 }, 86400 * 1000);
