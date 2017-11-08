@@ -6,7 +6,7 @@ class RedisClient {
         this.client = redis.createClient(redConfig);
         this.config = {};
         Object.assign(this.config, redConfig);
-        if (redConfig.auth) {
+        if (redConfig && redConfig.auth) {
             this.client.auth(redConfig.auth);
         }
         this.client.on("error", function(err) {
