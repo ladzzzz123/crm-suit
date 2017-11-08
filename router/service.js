@@ -21,8 +21,7 @@ const _util = require("./util");
 app
     .use(koaBody({ multipart: true, formLimit: 1024 * 1024 * 5 }))
     .use(router.routes())
-    .use(router.allowedMethods())
-    .use(staticServer(__dirname + "/inner-page"));
+    .use(router.allowedMethods());
 
 let export_func = {
     name: "router"
@@ -52,7 +51,8 @@ async function verifyToken(ctx, module_name, role) {
 router
     .get("/crm-inner", async(ctx, next) => {
         logger.info("[router] path: /");
-        ctx.redirect("/crm-inner/files/crm-neo-page-dist/crm-neo-page.html");
+        ctx.render("/crm-inner/pages/index.html");
+        // ctx.redirect("/crm-inner/pages/index.html");
     })
     .post("/crm-inner/account/login", async(ctx, next) => {
         logger.info("[router] path: /account/login");

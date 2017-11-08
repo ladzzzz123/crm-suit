@@ -25,13 +25,14 @@ else
     mkdir ./$1-dist
     for l_file in ./* 
     do
-        if echo "Seek file: $l_file" | grep "index.html"
-        then
-            cp ./index.html ./$1-dist/$1.html
-        elif echo "Seek file: $l_file" | grep "index-s.html"
-        then
-            cp ./index-s.html ./$1-dist/$1-s.html
-        elif echo "Seek file: $l_file" | grep ".html"
+        # if echo "Seek file: $l_file" | grep "index.html"
+        # then
+        #     cp ./index.html ./$1-dist/$1.html
+        # elif echo "Seek file: $l_file" | grep "index-s.html"
+        # then
+        #     cp ./index-s.html ./$1-dist/$1-s.html
+        # el
+        if echo "Seek file: $l_file" | grep ".html"
         then
             cp $l_file ./$1-dist/$l_file
         fi

@@ -183,7 +183,7 @@
 
 <script>
 import requester from "../utils/request";
-import RESULT_CODE from "../../../../codemap.json";
+import RESULT_CODE from "../../../../../router/codemap.json";
 import func from "../main";
 
 export default {

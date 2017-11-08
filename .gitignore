@@ -17,3 +17,4 @@ node_module/
 *config.json
 !webpack.config.js
 !*.sample
+front-page/*-dist
