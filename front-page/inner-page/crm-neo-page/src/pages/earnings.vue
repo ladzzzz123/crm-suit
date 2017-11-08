@@ -27,9 +27,9 @@
         vertical-align: middle;
         border-bottom: 1px solid #888888;
         border-right: 1px solid #888888;
-        min-width: 0.8rem;
-        padding-left: 18px;
-        padding-right: 18px;
+        min-width: 0.6rem;
+        padding-left: 14px;
+        padding-right: 14px;
         text-overflow: ellipsis;
         white-space: normal;
         word-break: break-all;
@@ -47,12 +47,12 @@
         box-sizing: border-box;
         text-align: left;
         text-overflow: ellipsis;
-        padding-left: 18px;
-        padding-right: 18px;
+        padding-left: 14px;
+        padding-right: 14px;
         vertical-align: middle;
         border-bottom: 1px solid #888888;
         border-right: 1px solid #888888;
-        min-width: 0.8rem;
+        min-width: 0.6rem;
     }
     tr {
         padding: 0.02rem;
@@ -200,7 +200,8 @@
                 v-model="dlgShowFlags.channel"
                 title="当前客户设定"
                 @on-cancel="hideDialog"
-                width="800">
+                width="800"
+                style="overflow:auto">
                 <table>
                     <thead>
                         <th>客户名称</th>
