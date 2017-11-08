@@ -12,6 +12,7 @@ config/
 node_module
 node_module/
 .node_module
+static/
 *config.js
 *config.json
 !webpack.config.js
