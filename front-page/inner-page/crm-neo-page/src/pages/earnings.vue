@@ -731,7 +731,7 @@ function queryDataByDate(path, params, action) {
     return new Promise((resolve, reject) => {
         let date = params.m_date || "";
         if (date && !Array.isArray(date)) {
-            date = date.toLocaleDateString();
+            date = `${this.m_date.getFullYear()}/${this.m_date.getMonth() + 1}/${this.m_date.getDate()}`;
         }
         let req_params = { 
             token: params.token, 
