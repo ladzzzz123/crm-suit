@@ -8,7 +8,6 @@ npm-debug.log
 .vscode/
 .vscode
 config/
-static/
 .node_modules
 node_module
 node_module/
