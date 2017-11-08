@@ -6,6 +6,7 @@ class RedisClient {
         this.client = redis.createClient(redConfig);
         this.config = {};
         Object.assign(this.config, redConfig);
+        logger.info("redis config: %s", JSON.stringify(redConfig));
         if (redConfig && redConfig.auth) {
             this.client.auth(redConfig.auth);
         }
