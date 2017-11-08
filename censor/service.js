@@ -51,8 +51,8 @@ let export_func = {
 
     asyncInsertData: (dateS, data) => {
         let dateStr = dateS.replace(/(\/|\-)/gi, "");
-        logger.info("[censor] insert data: %s", JSON.stringify(data));
-        let neo_datas = data.map(item => {
+        logger.info("[censor] insert data: %s", data);
+        let neo_datas = JSON.parse(data).map(item => {
             return [item.tu, item.dsp, dateStr, item.ldp, item.material, item.pv];
         });
     },
