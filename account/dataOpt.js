@@ -28,6 +28,7 @@ function connect() {
         db_self.isConnected = false;
         connect();
     });
+    logger.info("[account] redConfig: %s", JSON.stringify(redConfig));
     redisClient = new RedisClient(redConfig);
     setInterval(() => {
         db_self.query("SELECT 1");
