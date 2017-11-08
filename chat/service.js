@@ -19,28 +19,30 @@ init();
 function init() {
     logger.info("[chat] redis config: %s", JSON.stringify(REDIS_CONFIG.redis_config));
     redisClient = new RedisClient(REDIS_CONFIG.redis_config);
-    io.on("connection", function(socket) {
-        socket.on("message", async(msg) => {
-            logger.info(JSON.stringify(msg));
-            if (!msg["token"]) return;
-            let token = msg.token;
-            let verify = await courier.sendAsyncCall("account", "asyncVerify", "",
-                token, "account", "opter");
-            if (verify) {
-                io.emit("message", msg);
-                let today = new Date();
-                redisClient.hset(`${CHAT_LOG}_${today.toLocaleDateString()}`,
-                        today.getTime(),
-                        `${today.toLocaleTimeString()}: ${JSON.stringify(msg)}`)
-                    .then(ret => {
-                        resolve("success");
-                    })
-                    .catch(err => {
-                        reject(err);
-                    });
-            }
+    let chat = io.listen(REDIS_CONFIG.PORT || DEFAULT_CHAT_PORT);
+    chat.of("/crm-chat")
+        .on("connection", function(socket) {
+            socket.on("message", async(msg) => {
+                logger.info(JSON.stringify(msg));
+                if (!msg["token"]) return;
+                let token = msg.token;
+                let verify = await courier.sendAsyncCall("account", "asyncVerify", "",
+                    token, "account", "opter");
+                if (verify) {
+                    io.emit("message", msg);
+                    let today = new Date();
+                    redisClient.hset(`${CHAT_LOG}_${today.toLocaleDateString()}`,
+                            today.getTime(),
+                            `${today.toLocaleTimeString()}: ${JSON.stringify(msg)}`)
+                        .then(ret => {
+                            resolve("success");
+                        })
+                        .catch(err => {
+                            reject(err);
+                        });
+                }
+            });
         });
-    });
 }
 
 // const io = require("socket.io");
