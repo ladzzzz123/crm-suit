@@ -66,7 +66,7 @@ export default {
     },
     
     mounted: function() {
-        socket = io.connect();
+        socket = io.connect("http://121.52.235.231:40718");
         socket.on("message", msg => {
             this.msgs.push(msg);
         });
