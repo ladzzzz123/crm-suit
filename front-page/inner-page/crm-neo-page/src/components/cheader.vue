@@ -83,7 +83,8 @@ export default {
             this.$store.dispatch("asyncQuit");
             this.$emit("hideChat");
             setTimeout(() => {
-                this.$router.push("/login");
+                // this.$router.push("/login");
+                window.location.href = "/crm-inner";
             }, 500);
         },
         showChat: function() {
