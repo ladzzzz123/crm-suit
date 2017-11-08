@@ -50,10 +50,23 @@ let export_func = {
     },
 
     asyncInsertData: (dateS, data) => {
-        let dateStr = dateS.replace(/(\/|\-)/gi, "");
-        logger.info("[censor] insert data: %s", data);
-        let neo_datas = JSON.parse(data).map(item => {
-            return [item.tu, item.dsp, dateStr, item.ldp, item.material, item.pv];
+        return new Promise((resolve, reject) => {
+            let dateStr = dateS.replace(/(\/|\-)/gi, "");
+            logger.info("[censor] insert data: %s", data);
+            let neo_datas = JSON.parse(data).map(item => {
+                return [item.tu, item.dsp, dateStr, item.ldp, item.material, item.pv];
+            });
+            let sql_opt = "INSERT INTO material (tu, dsp, m_date, ldp, material, pv) VALUES ?";
+            sql_opt = mysql.format(sql_opt, [neo_datas]);
+            courier.sendAsyncCall("dbopter", "asyncQuery", "", "market_db", sql_opt)
+                .then(ret => {
+                    logger.info("[censor] insert material succeed");
+                    resolve({ msg: "insert success" });
+                })
+                .catch(err => {
+                    logger.warn("[censor] db select err:" + JSON.stringify(err));
+                    reject();
+                });
         });
     },
 
