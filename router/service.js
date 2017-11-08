@@ -19,7 +19,7 @@ const logger = require("node-process-bearer").logger.getLogger();
 const _util = require("./util");
 
 app
-    .use(koaBody({ multipart: true, formLimit: 1024 * 1024 * 5 }))
+    .use(koaBody({ multipart: true, formLimit: 1024 * 1024 * 10 }))
     .use(router.routes())
     .use(router.allowedMethods());
 
