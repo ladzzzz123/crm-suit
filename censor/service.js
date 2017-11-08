@@ -49,7 +49,7 @@ let export_func = {
         });
     },
 
-    asyncInsertData: (dateStr, data) => {
+    asyncInsertData: (dateS, data) => {
         let dateStr = dateS.replace(/(\/|\-)/gi, "");
         logger.info("[censor] insert data: %s", JSON.stringify(data));
         let neo_datas = data.map(item => {
