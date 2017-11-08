@@ -6,5 +6,6 @@
         "socket_keepalive": true,
         "db": 3,
         "expire": 1000
-    }
+    },
+    "PORT": 8206
 }
