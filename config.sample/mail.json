@@ -18,6 +18,14 @@
                 "user": "plan@cootek.cn",
                 "pass": "XwK-HPT-8bb-GJX"
             }
+        },
+        "redis_config": {
+            "port": 6379,
+            "host": "127.0.0.1",
+            "auth": "cootek1024",
+            "socket_keepalive": true,
+            "db": 3,
+            "expire": 1000
         }
     },
     "[策划]": "plan-order",
@@ -27,14 +35,6 @@
     "【需求】": "plan-order",
     "[第三方平台数据]": "earnings",
     "fetchMailInternval": 20,
-    "redis_config": {
-        "port": 6379,
-        "host": "127.0.0.1",
-        "auth": "cootek1024",
-        "socket_keepalive": true,
-        "db": 3,
-        "expire": 1000
-    },
     "msg": {
         "add-user-mail": {
             "address": "http://121.52.235.231:40718/crm-inner/"
