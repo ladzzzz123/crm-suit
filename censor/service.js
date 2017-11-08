@@ -56,7 +56,7 @@ let export_func = {
             let neo_datas = JSON.parse(data).map(item => {
                 return [item.tu, item.dsp, dateStr, item.ldp, item.material, item.pv];
             });
-            let sql_opt = "INSERT INTO material (tu, dsp, m_date, ldp, material, pv) VALUES ?";
+            let sql_opt = "INSERT IGNORE material (tu, dsp, m_date, ldp, material, pv) VALUES ?";
             sql_opt = mysql.format(sql_opt, [neo_datas]);
             courier.sendAsyncCall("dbopter", "asyncQuery", "", "market_db", sql_opt)
                 .then(ret => {
