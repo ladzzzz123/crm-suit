@@ -17,6 +17,7 @@ let courier = new Courier(export_func);
 init();
 
 function init() {
+    logger.info("[chat] redis config: %s", JSON.stringify(REDIS_CONFIG.redis_config));
     redisClient = new RedisClient(REDIS_CONFIG.redis_config);
     io.on("connection", function(socket) {
         socket.on("message", async(msg) => {

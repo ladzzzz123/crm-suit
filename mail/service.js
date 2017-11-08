@@ -261,6 +261,7 @@ function init() {
     logger.info("[mail] init:" + JSON.stringify(mailConfig.imap));
     export_func.imapConnect(mailConfig.imap);
     export_func.smtpConnect(mailConfig.smtp);
+    logger.info("[mail] redis config: %s", JSON.stringify(mailConfig.redis_config));
     redisClient = new RedisClient(mailConfig.redis_config);
 }
 init();
