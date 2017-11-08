@@ -6,6 +6,9 @@ class RedisClient {
         this.client = redis.createClient(redConfig);
         this.config = {};
         Object.assign(this.config, redConfig);
+        if (redConfig.auth) {
+            this.client.auth(redConfig.auth);
+        }
         this.client.on("error", function(err) {
             logger.error("[Db] Error " + err);
         });
