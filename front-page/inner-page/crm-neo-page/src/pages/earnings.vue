@@ -27,9 +27,9 @@
         vertical-align: middle;
         border-bottom: 1px solid #888888;
         border-right: 1px solid #888888;
-        min-width: 0.6rem;
-        padding-left: 14px;
-        padding-right: 14px;
+        min-width: 0.3rem;
+        padding-left: 10px;
+        padding-right: 10px;
         text-overflow: ellipsis;
         white-space: normal;
         word-break: break-all;
@@ -47,12 +47,12 @@
         box-sizing: border-box;
         text-align: left;
         text-overflow: ellipsis;
-        padding-left: 14px;
-        padding-right: 14px;
+        padding-left: 10px;
+        padding-right: 10px;
         vertical-align: middle;
         border-bottom: 1px solid #888888;
         border-right: 1px solid #888888;
-        min-width: 0.6rem;
+        min-width: 0.3rem;
     }
     tr {
         padding: 0.02rem;
