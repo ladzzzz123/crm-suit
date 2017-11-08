@@ -214,7 +214,7 @@ export default {
 
     mounted: function() {
         this.adImgs.forEach(item => {
-            item.img = `/crm-inner/files/static/ad/${this.userInfo.u_name}_${item.pos}.jpg`;
+            item.img = `/crm-inner/static/ad/${this.userInfo.u_name}_${item.pos}.jpg`;
         });
     },
     
@@ -239,7 +239,7 @@ export default {
             if(res.status === 2000) {
                 func.showTips("alert-success", "文件上传成功！！");
                 this.adImgs.forEach(item => {
-                    item.img = `/crm-inner/files/static/ad/${this.userInfo.u_name}_${item.pos}.jpg?v=${parseInt(Math.random() * 1000)}`;
+                    item.img = `/crm-inner/static/ad/${this.userInfo.u_name}_${item.pos}.jpg?v=${parseInt(Math.random() * 1000)}`;
                 });
             } else {
                 func.showTips("alert-danger", "文件上传失败！！");
