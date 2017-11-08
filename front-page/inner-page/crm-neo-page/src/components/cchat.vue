@@ -66,7 +66,7 @@ export default {
     },
     
     mounted: function() {
-        socket = io.connect("http://mkt.chule.cc/crm-chat");
+        socket = io.connect();
         socket.on("message", msg => {
             this.msgs.push(msg);
         });
