@@ -43,7 +43,12 @@
                 </a>
                 <p class="navbar-subtitle">Commercial Operation System</p>
             </Col>
-            <Col span="4" offset="8" v-if="logged" style="text-align:right" >
+            <Col span="4" offset="4">
+                <a class="navbar-brand navbar-brand-right" @click="gotoChangeLog">
+                    更新日志
+                </a>
+            </Col>
+            <Col span="4" v-if="logged" style="text-align:right" >
                 <div class="navbar-brand navbar-brand-right">
                     <Dropdown>
                         <a href="javascript:void(0)">
@@ -91,6 +96,9 @@ export default {
                 // this.$router.push("/login");
                 window.location.href = "/crm-inner";
             }, 500);
+        },
+        gotoChangeLog: function() {
+            this.$router.push("/login");
         },
         showChat: function() {
             this.$emit("showChat");
