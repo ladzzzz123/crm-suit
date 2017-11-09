@@ -218,8 +218,8 @@
     <Row v-if="logged">
         <Row>
             <Col span="6" offset="2">
-                <Select v-model="bg" placeholder="请选择背景图">
-                    <Option v-for="bgItem in bgArr" :key="bgItem.name" :value="bgItem">
+                <Select v-model="curBg" placeholder="请选择背景图" @on-change="updateBgType">
+                    <Option v-for="bgItem in bgArr" :key="bgItem.name" :value="bgItem.bg">
                         <Icon v-if="bgItem.bgType === 'android'" type="social-android"></Icon>
                         <Icon v-else-if="bgItem.bgType === 'iOS'" type="social-apple"></Icon>
                         {{ bgItem.name }}
@@ -236,7 +236,7 @@
                     {{ adInfo.title }}
                 </p>
                 <Row>
-                    <img class="bg" :src="curBgItem.bg" />
+                    <img class="bg" :src="curBg" />
                     <div class="content">
                         <template v-if="adInfo.displayStatus">
                             <div class="notice-bar android layer-top" v-if="curBgItem.bgType === 'android'">
@@ -295,8 +295,8 @@ export default {
                { pos: "hangup", title: "挂机",img: "", mask:"img/preview-mask.png", displayStatus: false },
                { pos: "banner", title: "Banner",img: "", bg: "img/banner-bg-new.jpg", displayStatus: true }
             ],
-            curBgItem: { bg: "img/preview-iphone-new.jpg", bgType: "iOS"},
-            bgType: "iOS",
+            curBg: "img/preview-iphone-new.jpg",
+            curBgItem: { name: "iphone6", bg : "img/preview-iphone-new.jpg", bgType: "iOS" },
             bgArr: [
                 { name: "iphone6", bg : "img/preview-iphone-new.jpg", bgType: "iOS"},
                 { name: "pixel", bg : "img/preview-pixel-new.jpg", bgType: "android"},
@@ -342,8 +342,10 @@ export default {
         onUploadError(error, file, fileList) {
             console.log(JSON.stringify(error));
         },
-        updateBgType(type) {
-            this.bgType = type
+        updateBgType(bg) {
+            this.curBgItem = this.bgArr.find(item => {
+                return item.bg === bg;
+            });
         },
         handleUploadSuccess(res, file, fileList) {
             console.log(JSON.stringify(res));
