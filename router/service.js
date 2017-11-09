@@ -1,5 +1,4 @@
 /* eslint-env node, mocha */
-
 const http = require("http");
 const https = require("https");
 const Koa = require("koa");
@@ -7,7 +6,6 @@ const app = new Koa();
 const Router = require("koa-router");
 const router = Router();
 const koaBody = require("koa-body");
-const staticServer = require("koa-static");
 
 const RESULT = require("./codemap");
 const MSG = require("../config/mail").msg;
@@ -15,7 +13,6 @@ const DEFAULT_PORT = 3002;
 const Courier = require("node-process-bearer").Courier;
 const logger_conf = require("../conf.json").log_conf || "";
 const logger = require("node-process-bearer").logger.getLogger();
-
 const _util = require("./util");
 
 app
@@ -62,7 +59,6 @@ router
         } catch (e) {
             logger.warn("[router] call account asyncLogin err:%s", JSON.stringify(ret));
         }
-
         if (_ret.status === RESULT.SUCCESS) {
             let info = _ret.info;
             ctx.body = {
@@ -129,16 +125,11 @@ router
 // plan-order module start
 router
     .post("/crm-inner/plan-order/list", async(ctx, next) => {
-        let _ret = "",
-            verify = {};
-        let postData = ctx.request.body;
-        if (!_util.verifyParams(postData, "token")) {
-            ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
+        let _ret = "";
+        let verify = await verifyToken(ctx, "plan-order", "opter");
+        if (!verify) {
             return;
-        }
-        verify = await courier.sendAsyncCall("account", "asyncVerify", "",
-            postData.token, "plan-order", "opter");
-        if (verify.pass) {
+        } else if (verify.pass) {
             await courier.sendAsyncCall("plan-order", "asyncFetchPlan")
                 .then(ret => {
                     _ret = { status: RESULT.SUCCESS, content: ret, msg: "fetch list end" };
@@ -429,8 +420,7 @@ router
         ctx.body = _ret;
     });
 
-
-
+// ad-preview module start
 router
     .post("/crm-inner/ad-preview/upload", async(ctx, next) => {
         let verify = await verifyToken(ctx, "ad-preview", "opter");
@@ -454,7 +444,9 @@ router
             ctx.body = _util.verifyTokenResult(verify);
         }
     });
+// ad-preview module end
 
+// earnings module start
 router
     .post("/crm-inner/earnings", async(ctx, next) => {
         let verify = await verifyToken(ctx, "earnings", "opter");
@@ -517,5 +509,7 @@ router
             ctx.body = _util.verifyTokenResult(verify);
         }
     });
+// earnings module end
+
 
 http.createServer(app.callback()).listen(DEFAULT_PORT);
