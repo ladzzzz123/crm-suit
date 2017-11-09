@@ -3,20 +3,20 @@
         position: relative;
     }
     .bg {
-        height: 836px;
-        width: 408px;
+        height: 8.36rem;
+        width: 4.08rem;
     }
     .content {
         background: #808080;
         font-size: 0;
-        height: 640px;
+        height: 6.40rem;
         left: 50%;
-        margin-left: -178px;
+        margin-left: -1.78rem;
         overflow: hidden;
         position: absolute;
         text-align: left;
-        top: 98px;
-        width: 356px;
+        top: 0.98rem;
+        width: 3.56rem;
     }
 
     .tips {
@@ -46,7 +46,7 @@
     }
 
     .openning-container {
-        height: 540px;
+        height: 5.40rem;
         left: 0;
         position: absolute;
         top: 0;
@@ -179,7 +179,7 @@
     }
 
     .notice-bar{ 
-        height: 17px;
+        height: 0.17rem;
         line-height: 0.1rem;
         position: absolute;
         width: 100%;
@@ -208,7 +208,7 @@
         margin-left: -0.1rem;
         left: 50%;
         position: absolute;
-        top: 0px;
+        top: 0;
     }
     .right {
         right: 0.05rem;
