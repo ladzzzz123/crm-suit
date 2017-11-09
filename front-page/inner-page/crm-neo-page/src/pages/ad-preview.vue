@@ -153,10 +153,10 @@
         font-weight: bold;
         font-size: .1rem;
         color: #000;
-        transform: scale(0.8);
-        -ms-transform: scale(0.8);
-        -moz-transform: scale(0.8);
-        -webkit-transform: scale(0.8);
+        transform: scale(0.7);
+        -ms-transform: scale(0.7);
+        -moz-transform: scale(0.7);
+        -webkit-transform: scale(0.7);
     }
 
     .android-time {
@@ -165,10 +165,10 @@
         margin-left: 0.05rem;
         margin-right: 0.05rem;
         color: #5f5f5f;
-        transform: scale(0.8);
-        -ms-transform: scale(0.8);
-        -moz-transform: scale(0.8);
-        -webkit-transform: scale(0.8);
+        transform: scale(0.7);
+        -ms-transform: scale(0.7);
+        -moz-transform: scale(0.7);
+        -webkit-transform: scale(0.7);
     }
 
     .notice-item {
@@ -178,6 +178,7 @@
 
     .notice-bar{ 
         height: 17px;
+        line-height: 0.1rem;
         position: absolute;
         width: 100%;
         top: 0;
@@ -218,7 +219,7 @@
         <Row>
             <Col span="6" offset="2">
                 <Select v-model="bg" placeholder="请选择背景图">
-                    <Option v-for="bgItem in bgArr" :key="bgItem.name" :value="bgItem.bg" @click="updateBgType(bgItem.bgType)">
+                    <Option v-for="bgItem in bgArr" :key="bgItem.name" :value="bgItem">
                         <Icon v-if="bgItem.bgType === 'android'" type="social-android"></Icon>
                         <Icon v-else-if="bgItem.bgType === 'iOS'" type="social-apple"></Icon>
                         {{ bgItem.name }}
@@ -235,16 +236,16 @@
                     {{ adInfo.title }}
                 </p>
                 <Row>
-                    <img class="bg" :src="bg" />
+                    <img class="bg" :src="curBgItem.bg" />
                     <div class="content">
                         <template v-if="adInfo.displayStatus">
-                            <div class="notice-bar android layer-top" v-if="bgType === 'android'">
+                            <div class="notice-bar android layer-top" v-if="curBgItem.bgType === 'android'">
                                 <div class="notice-status">
                                     <img class="notice-item" src="img/android-notice-bar.png"/>
                                     <div class="android-time notice-item">{{ timeStr }}</div>
                                 </div>
                             </div>
-                            <div class="notice-bar ios layer-top" v-else-if="bgType === 'iOS'">
+                            <div class="notice-bar ios layer-top" v-else-if="curBgItem.bgType === 'iOS'">
                                 <img class="notice-item left" src="img/ios-signal.png"/>
                                 <div class="ios-time center">{{ timeStr }}</div>
                                 <img class="notice-item right" src="img/ios-power.png"/>
@@ -294,7 +295,7 @@ export default {
                { pos: "hangup", title: "挂机",img: "", mask:"img/preview-mask.png", displayStatus: false },
                { pos: "banner", title: "Banner",img: "", bg: "img/banner-bg-new.jpg", displayStatus: true }
             ],
-            bg: "img/preview-iphone-new.jpg",
+            curBgItem: { bg: "img/preview-iphone-new.jpg", bgType: "iOS"},
             bgType: "iOS",
             bgArr: [
                 { name: "iphone6", bg : "img/preview-iphone-new.jpg", bgType: "iOS"},
