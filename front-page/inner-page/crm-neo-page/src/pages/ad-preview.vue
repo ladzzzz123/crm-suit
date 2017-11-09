@@ -171,8 +171,8 @@
                 <TimePicker type="time" placeholder="选择时间" format="HH:mm" @on-change="changeTime"></TimePicker>
             </Col>
         </Row>
-        <Col span="12">
-            <Card v-for="adInfo in adImgs" v-bind:key="adInfo.pos" class="container">
+        <Col span="12" v-for="adInfo in adImgs" v-bind:key="adInfo.pos">
+            <Card class="container">
                 <p slot="title">
                     {{ adInfo.title }}
                 </p>
