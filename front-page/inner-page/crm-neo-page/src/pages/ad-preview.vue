@@ -1,4 +1,4 @@
-<style>
+<style scaffold>
     .container {
         position: relative;
     }
@@ -28,6 +28,9 @@
         padding: 0.02rem;
         position: absolute;
         width: 0.14rem;
+        transform: scale(0.5);
+        -ms-transform: scale(0.5);
+        -moz-transform: scale(0.5);
         -webkit-transform: scale(0.5);
     }
 
@@ -140,7 +143,10 @@
     .banner-tips {
         left: -2%;
         top: 50%;
-        -webkit-transform: scale(.4);
+        transform: scale(0.4);
+        -ms-transform: scale(0.4);
+        -moz-transform: scale(0.4);
+        -webkit-transform: scale(0.4);
     }
 
     .time {
@@ -151,6 +157,9 @@
         position: absolute;
         top: 0px;
         color: #000;
+        transform: scale(0.8);
+        -ms-transform: scale(0.8);
+        -moz-transform: scale(0.8);
         -webkit-transform: scale(0.8);
     }
 
