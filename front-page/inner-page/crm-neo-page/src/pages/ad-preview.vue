@@ -24,7 +24,7 @@
         border-radius: 2px;
         color: white;
         font-size: 0.10rem;
-        left: -1.5%;
+        left: -1.8%;
         padding: 0.01rem;
         position: absolute;
         width: 0.12rem;
