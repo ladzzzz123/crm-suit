@@ -164,7 +164,9 @@
         font-size: .1rem;
         margin-left: 0.05rem;
         margin-right: 0.05rem;
+        margin-top: 0.02rem;
         color: #5f5f5f;
+        vertical-align: top;
         transform: scale(0.7);
         -ms-transform: scale(0.7);
         -moz-transform: scale(0.7);
