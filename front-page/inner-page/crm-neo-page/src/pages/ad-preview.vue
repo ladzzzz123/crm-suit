@@ -141,6 +141,9 @@
         top: 50%;
         -webkit-transform: scale(.4);
     }
+    .white {
+        background: white;
+    }
 
     .time {
         font-weight: bold;
@@ -159,7 +162,11 @@
         <Row>
             <Col span="6" offset="2">
                 <Select v-model="bg" placeholder="请选择背景图">
-                    <Option v-for="bgItem in bgArr" :key="bgItem.name" :value="bgItem.bg">{{ bgItem.name }}</Option>
+                    <Option v-for="bgItem in bgArr" :key="bgItem.name" :value="bgItem.bg" @on-click="bgType = bgItem.bgType">
+                        <Icon v-if="bgItem.bgType === 'android'" type="social-android"></Icon>
+                        <Icon v-else-if="bgItem.bgType === 'iOS'" type="social-apple"></Icon>
+                        {{ bgItem.name }}
+                    </Option>
                 </Select>
             </Col>
             <Col span="6" offset="10">
@@ -172,7 +179,7 @@
             </p>
             <Row>
                 <img class="bg" :src="bg" />
-                <div class="content">
+                <div :class="'content ' + bgType === 'iOS' ? '' : 'white' ">
                     <div v-if="adInfo.displayTime" class="time layer-top">{{ timeStr }}</div>
                     <img v-if="adInfo.bg" :class="adInfo.pos + '-bg' + ' layer-bottom' " :src="adInfo.bg"/>
                     <div :class="adInfo.pos + '-container img-container layer-middle' ">
@@ -217,9 +224,10 @@ export default {
                { pos: "banner", title: "Banner",img: "", bg: "img/banner-bg-new.jpg", displayTime: true }
             ],
             bg: "img/preview-iphone-new.jpg",
+            bgType: "iOS",
             bgArr: [
-                { name: "iphone6", bg : "img/preview-iphone-new.jpg"},
-                { name: "pixel", bg : "img/preview-pixel-new.jpg"},
+                { name: "iphone6", bg : "img/preview-iphone-new.jpg", bgType: "iOS"},
+                { name: "pixel", bg : "img/preview-pixel-new.jpg", bgType: "android"},
             ],
             timeStr: "",
             uploadData:{},
