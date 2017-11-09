@@ -20,3 +20,7 @@ require("./img/banner-bg-new.jpg");
 
 require("./img/preview-iphone-new.jpg");
 require("./img/preview-pixel-new.jpg");
+
+require("./img/android-notice-bar.png");
+require("./img/ios-power.png");
+require("./img/ios-signal.png");

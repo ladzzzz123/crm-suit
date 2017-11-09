@@ -149,18 +149,67 @@
         -webkit-transform: scale(0.4);
     }
 
-    .time {
+    .ios-time {
         font-weight: bold;
         font-size: .1rem;
-        margin-left: -0.1rem;
-        left: 50%;
-        position: absolute;
-        top: 0px;
         color: #000;
         transform: scale(0.8);
         -ms-transform: scale(0.8);
         -moz-transform: scale(0.8);
         -webkit-transform: scale(0.8);
+    }
+
+    .android-time {
+        font-weight: bold;
+        font-size: .1rem;
+        margin-left: 0.05rem;
+        margin-right: 0.05rem;
+        color: #5f5f5f;
+        transform: scale(0.8);
+        -ms-transform: scale(0.8);
+        -moz-transform: scale(0.8);
+        -webkit-transform: scale(0.8);
+    }
+
+    .notice-item {
+        display: inline-block;
+        height: 100%;
+    }
+
+    .notice-bar{ 
+        height: 35px;
+        position: absolute;
+        width: 100%;
+        top: 0;
+    }
+
+    .android {
+        background: #e0e0e0;
+    }
+
+    .ios {
+        background: #808080;
+    }
+
+    .notice-status {
+        height: 100%;
+        position: absolute;
+        right: 0;
+    }
+
+    .left {
+        left: 0.05rem;
+        position: absolute;
+    }
+    .center {
+        margin-left: -0.1rem;
+        left: 50%;
+        position: absolute;
+        top: 0px;
+    }
+    .right {
+        right: 0.05rem;
+        position: absolute;
     }
 
 </style>
@@ -188,7 +237,18 @@
                 <Row>
                     <img class="bg" :src="bg" />
                     <div class="content">
-                        <div v-if="adInfo.displayTime" class="time layer-top">{{ timeStr }}</div>
+                        <div class="notice-bar android layer-top" v-if="bgType === 'android'">
+                            <div class="notice-status">
+                                <img class="notice-item" src="img/android-notice-bar.png"/>
+                                <div v-if="adInfo.displayTime" class="android-time notice-item">{{ timeStr }}</div>
+                            </div>
+                        </div>
+                        <div class="notice-bar ios layer-top" v-else-if="bgType === 'iOS'">
+                            <img class="notice-item left" src="img/ios-signal.png"/>
+                            <div v-if="adInfo.displayTime" class="ios-time center">{{ timeStr }}</div>
+                            <img class="notice-item right" src="img/ios-power.png"/>
+                        </div>
+
                         <img v-if="adInfo.bg" :class="adInfo.pos + '-bg' + ' layer-bottom' " :src="adInfo.bg"/>
                         <div :class="adInfo.pos + '-container img-container layer-middle' ">
                             <div :class="adInfo.pos + '-tips' + ' tips layer-top' ">广告</div>
