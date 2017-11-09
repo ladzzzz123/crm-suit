@@ -157,12 +157,12 @@
 <template>
     <Row v-if="logged">
         <Row>
-            <Col span="6" span="2">
+            <Col span="6" offset="2">
                 <Select v-model="bg" placeholder="请选择背景图">
                     <Option v-for="bgItem in bgArr" :key="bgItem.name" :value="bgItem.bg">{{ bgItem.name }}</Option>
                 </Select>
             </Col>
-            <Col span="6" span="10">
+            <Col span="6" offset="10">
                 <TimePicker type="time" placeholder="选择时间" format="HH:mm" @on-change="changeTime"></TimePicker>
             </Col>
         </Row>
