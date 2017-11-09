@@ -143,11 +143,12 @@
     }
 
     .time {
-        font-size: 0.1rem;
-        margin-left: 0.2rem;
+        font-size: .1rem;
+        margin-left: -0.1rem;
         left: 50%;
         position: absolute;
-        top: 100px;
+        top: 2px;
+        color: black;
     }
 
 </style>
@@ -160,7 +161,7 @@
                 </Select>
             </Col>
             <Col span="12">
-                <TimePicker type="time" placeholder="选择时间" style="width: 168px" @on-change="changeTime"></TimePicker>
+                <TimePicker type="time" placeholder="选择时间" format="HH:mm" style="width: 168px" @on-change="changeTime"></TimePicker>
             </Col>
         </Row>
         <Card v-for="adInfo in adImgs" v-bind:key="adInfo.pos" class="container">
@@ -169,8 +170,8 @@
             </p>
             <Row>
                 <img class="bg" :src="bg" />
-                <div class="time">{{ timeStr }}</div>
                 <div class="content">
+                    <div class="time layer-top">{{ timeStr }}</div>
                     <img v-if="adInfo.bg" :class="adInfo.pos + '-bg' + ' layer-bottom' " :src="adInfo.bg"/>
                     <div :class="adInfo.pos + '-container img-container layer-middle' ">
                         <div :class="adInfo.pos + '-tips' + ' tips layer-top' ">广告</div>
@@ -211,7 +212,7 @@ export default {
                { pos: "openning", title: "开屏",img: "", bg: "img/openning-bg.jpg" },
                { pos: "calling", title: "拨号前", img: "", bg: "img/calling-bg.jpg", close: "http://121.52.235.231:40718/upload_img/static/img/close.png" },
                { pos: "hangup", title: "挂机",img: "", mask:"img/preview-mask.png" },
-               { pos: "banner", title: "Banner",img: "", bg: "img/banner-bg.jpg" }
+               { pos: "banner", title: "Banner",img: "", bg: "img/banner-bg-new.jpg" }
             ],
             bg: "img/preview-iphone-new.jpg",
             bgArr: [
