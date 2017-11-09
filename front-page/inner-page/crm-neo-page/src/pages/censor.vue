@@ -289,9 +289,6 @@ export default {
         },
 
         processArr: function(orgArr) {
-            this.orgArr.length = 0;
-            this.localArr.length = 0;
-            this.list.length = 0;
             if (Array.isArray(orgArr)) {
                 this.orgArr = orgArr;
                 Object.assign(this.localArr, orgArr);
@@ -315,6 +312,9 @@ export default {
 
         fetchMate: function() {
             if (this.m_date) {
+                this.orgArr.length = 0;
+                this.localArr.length = 0;
+                this.list.length = 0;
                 requester.send("/crm-inner/censor/fetch", 
                     { 
                         token: this.token, 
@@ -326,7 +326,6 @@ export default {
                             this.processArr(result.content.ret);
                         }
                     }, (status, msg) => {
-                        this.processArr([]);
                         processFailed(status);
                     });
             }
