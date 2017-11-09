@@ -326,6 +326,7 @@ export default {
                             this.processArr(result.content.ret);
                         }
                     }, (status, msg) => {
+                        this.processArr([]);
                         processFailed(status);
                     });
             }
