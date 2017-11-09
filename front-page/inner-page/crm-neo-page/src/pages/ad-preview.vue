@@ -143,25 +143,27 @@
     }
 
     .time {
+        font-weight: bold;
         font-size: .1rem;
         margin-left: -0.1rem;
         left: 50%;
         position: absolute;
-        top: 2px;
-        color: black;
+        top: 0px;
+        color: #000;
+        -webkit-transform: scale(0.8);
     }
 
 </style>
 <template>
     <Row v-if="logged">
         <Row>
-            <Col span="12">
+            <Col span="6" span="2">
                 <Select v-model="bg" placeholder="请选择背景图">
                     <Option v-for="bgItem in bgArr" :key="bgItem.name" :value="bgItem.bg">{{ bgItem.name }}</Option>
                 </Select>
             </Col>
-            <Col span="12">
-                <TimePicker type="time" placeholder="选择时间" format="HH:mm" style="width: 168px" @on-change="changeTime"></TimePicker>
+            <Col span="6" span="10">
+                <TimePicker type="time" placeholder="选择时间" format="HH:mm" @on-change="changeTime"></TimePicker>
             </Col>
         </Row>
         <Card v-for="adInfo in adImgs" v-bind:key="adInfo.pos" class="container">
@@ -171,7 +173,7 @@
             <Row>
                 <img class="bg" :src="bg" />
                 <div class="content">
-                    <div class="time layer-top">{{ timeStr }}</div>
+                    <div v-if="adInfo.displayTime" class="time layer-top">{{ timeStr }}</div>
                     <img v-if="adInfo.bg" :class="adInfo.pos + '-bg' + ' layer-bottom' " :src="adInfo.bg"/>
                     <div :class="adInfo.pos + '-container img-container layer-middle' ">
                         <div :class="adInfo.pos + '-tips' + ' tips layer-top' ">广告</div>
@@ -209,15 +211,15 @@ export default {
     data: () => {
         return { 
             adImgs: [
-               { pos: "openning", title: "开屏",img: "", bg: "img/openning-bg.jpg" },
-               { pos: "calling", title: "拨号前", img: "", bg: "img/calling-bg.jpg", close: "http://121.52.235.231:40718/upload_img/static/img/close.png" },
-               { pos: "hangup", title: "挂机",img: "", mask:"img/preview-mask.png" },
-               { pos: "banner", title: "Banner",img: "", bg: "img/banner-bg-new.jpg" }
+               { pos: "openning", title: "开屏",img: "", bg: "img/openning-bg.jpg", displayTime: false },
+               { pos: "calling", title: "拨号前", img: "", bg: "img/calling-bg.jpg", close: "http://121.52.235.231:40718/upload_img/static/img/close.png", displayTime: true },
+               { pos: "hangup", title: "挂机",img: "", mask:"img/preview-mask.png", displayTime: false },
+               { pos: "banner", title: "Banner",img: "", bg: "img/banner-bg-new.jpg", displayTime: true }
             ],
             bg: "img/preview-iphone-new.jpg",
             bgArr: [
                 { name: "iphone6", bg : "img/preview-iphone-new.jpg"},
-                { name: "pixel", bg : "img/preview-pixel.webp"},
+                { name: "pixel", bg : "img/preview-pixel-new.jpg"},
             ],
             timeStr: "",
             uploadData:{},

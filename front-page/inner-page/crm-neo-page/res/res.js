@@ -19,4 +19,4 @@ require("./img/banner-bg.jpg");
 require("./img/banner-bg-new.jpg");
 
 require("./img/preview-iphone-new.jpg");
-require("./img/preview-pixel.webp");
+require("./img/preview-pixel-new.jpg");
