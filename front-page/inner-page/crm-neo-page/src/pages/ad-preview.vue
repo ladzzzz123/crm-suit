@@ -179,7 +179,7 @@
             </p>
             <Row>
                 <img class="bg" :src="bg" />
-                <div :class="'content ' + bgType === 'iOS' ? '' : 'white' ">
+                <div :class="'content ' + (bgType === 'iOS' ? '' : 'white') ">
                     <div v-if="adInfo.displayTime" class="time layer-top">{{ timeStr }}</div>
                     <img v-if="adInfo.bg" :class="adInfo.pos + '-bg' + ' layer-bottom' " :src="adInfo.bg"/>
                     <div :class="adInfo.pos + '-container img-container layer-middle' ">
