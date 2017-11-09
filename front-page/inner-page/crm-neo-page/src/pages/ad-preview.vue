@@ -27,7 +27,7 @@
         left: -1.5%;
         padding: 0.01rem;
         position: absolute;
-        width: 0.07rem;
+        width: 0.12rem;
         transform: scale(0.5);
         -ms-transform: scale(0.5);
         -moz-transform: scale(0.5);
@@ -74,7 +74,7 @@
         position: absolute;
         width: 100%;
         bottom: 0;
-        margin-bottom: 0.725rem;
+        margin-bottom: 1.2rem;
     }
     .calling-img {
         margin-top: 0.13rem;
@@ -153,10 +153,10 @@
         font-weight: bold;
         font-size: .1rem;
         color: #000;
-        transform: scale(0.6);
-        -ms-transform: scale(0.6);
-        -moz-transform: scale(0.6);
-        -webkit-transform: scale(0.6);
+        transform: scale(0.4);
+        -ms-transform: scale(0.4);
+        -moz-transform: scale(0.4);
+        -webkit-transform: scale(0.4);
     }
 
     .android-time {
@@ -167,10 +167,10 @@
         margin-top: 0.01rem;
         color: #5f5f5f;
         vertical-align: top;
-        transform: scale(0.7);
-        -ms-transform: scale(0.7);
-        -moz-transform: scale(0.7);
-        -webkit-transform: scale(0.7);
+        transform: scale(0.5);
+        -ms-transform: scale(0.5);
+        -moz-transform: scale(0.5);
+        -webkit-transform: scale(0.5);
     }
 
     .notice-item {
