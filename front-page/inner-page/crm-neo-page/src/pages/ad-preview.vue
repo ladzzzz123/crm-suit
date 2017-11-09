@@ -177,7 +177,7 @@
     }
 
     .notice-bar{ 
-        height: 35px;
+        height: 17px;
         position: absolute;
         width: 100%;
         top: 0;
@@ -218,7 +218,7 @@
         <Row>
             <Col span="6" offset="2">
                 <Select v-model="bg" placeholder="请选择背景图">
-                    <Option v-for="bgItem in bgArr" :key="bgItem.name" :value="bgItem.bg" @on-click="updateBgType(bgItem.bgType)">
+                    <Option v-for="bgItem in bgArr" :key="bgItem.name" :value="bgItem.bg" :on-click="updateBgType(bgItem.bgType)">
                         <Icon v-if="bgItem.bgType === 'android'" type="social-android"></Icon>
                         <Icon v-else-if="bgItem.bgType === 'iOS'" type="social-apple"></Icon>
                         {{ bgItem.name }}
@@ -237,17 +237,19 @@
                 <Row>
                     <img class="bg" :src="bg" />
                     <div class="content">
-                        <div class="notice-bar android layer-top" v-if="bgType === 'android'">
-                            <div class="notice-status">
-                                <img class="notice-item" src="img/android-notice-bar.png"/>
-                                <div v-if="adInfo.displayTime" class="android-time notice-item">{{ timeStr }}</div>
+                        <template v-if="adInfo.displayStatus">
+                            <div class="notice-bar android layer-top" v-if="bgType === 'android'">
+                                <div class="notice-status">
+                                    <img class="notice-item" src="img/android-notice-bar.png"/>
+                                    <div class="android-time notice-item">{{ timeStr }}</div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="notice-bar ios layer-top" v-else-if="bgType === 'iOS'">
-                            <img class="notice-item left" src="img/ios-signal.png"/>
-                            <div v-if="adInfo.displayTime" class="ios-time center">{{ timeStr }}</div>
-                            <img class="notice-item right" src="img/ios-power.png"/>
-                        </div>
+                            <div class="notice-bar ios layer-top" v-else-if="bgType === 'iOS'">
+                                <img class="notice-item left" src="img/ios-signal.png"/>
+                                <div class="ios-time center">{{ timeStr }}</div>
+                                <img class="notice-item right" src="img/ios-power.png"/>
+                            </div>
+                        </template>
 
                         <img v-if="adInfo.bg" :class="adInfo.pos + '-bg' + ' layer-bottom' " :src="adInfo.bg"/>
                         <div :class="adInfo.pos + '-container img-container layer-middle' ">
@@ -287,10 +289,10 @@ export default {
     data: () => {
         return { 
             adImgs: [
-               { pos: "openning", title: "开屏",img: "", bg: "img/openning-bg.jpg", displayTime: false },
-               { pos: "calling", title: "拨号前", img: "", bg: "img/calling-bg.jpg", close: "http://121.52.235.231:40718/upload_img/static/img/close.png", displayTime: true },
-               { pos: "hangup", title: "挂机",img: "", mask:"img/preview-mask.png", displayTime: false },
-               { pos: "banner", title: "Banner",img: "", bg: "img/banner-bg-new.jpg", displayTime: true }
+               { pos: "openning", title: "开屏",img: "", bg: "img/openning-bg.jpg", displayStatus: false },
+               { pos: "calling", title: "拨号前", img: "", bg: "img/calling-bg.jpg", close: "http://121.52.235.231:40718/upload_img/static/img/close.png", displayStatus: true },
+               { pos: "hangup", title: "挂机",img: "", mask:"img/preview-mask.png", displayStatus: false },
+               { pos: "banner", title: "Banner",img: "", bg: "img/banner-bg-new.jpg", displayStatus: true }
             ],
             bg: "img/preview-iphone-new.jpg",
             bgType: "iOS",
