@@ -292,7 +292,7 @@ export default {
             this.orgArr.length = 0;
             this.localArr.length = 0;
             this.list.length = 0;
-            if (Array.isArray(this.orgArr)) {
+            if (Array.isArray(orgArr)) {
                 this.orgArr = orgArr;
                 Object.assign(this.localArr, orgArr);
                 let tempObj = {};
@@ -322,6 +322,7 @@ export default {
                     },
                     result => {
                         if (result.status === RESULT_CODE.SUCCESS) {
+                            if (result.content.ret)
                             this.processArr(result.content.ret);
                         }
                     }, (status, msg) => {
