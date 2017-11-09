@@ -3,20 +3,20 @@
         position: relative;
     }
     .bg {
-        height: 8.36rem;
-        width: 4.08rem;
+        height: 4.18rem;
+        width: 2.04rem;
     }
     .content {
         background: #808080;
         font-size: 0;
-        height: 6.40rem;
+        height: 3.2rem;
         left: 50%;
-        margin-left: -1.78rem;
+        margin-left: -0.89rem;
         overflow: hidden;
         position: absolute;
         text-align: left;
-        top: 0.98rem;
-        width: 3.56rem;
+        top: 0.49rem;
+        width: 1.78rem;
     }
 
     .tips {
@@ -25,9 +25,9 @@
         color: white;
         font-size: 0.10rem;
         left: -1.5%;
-        padding: 0.02rem;
+        padding: 0.01rem;
         position: absolute;
-        width: 0.14rem;
+        width: 0.07rem;
         transform: scale(0.5);
         -ms-transform: scale(0.5);
         -moz-transform: scale(0.5);
@@ -46,7 +46,7 @@
     }
 
     .openning-container {
-        height: 5.40rem;
+        height: 2.7rem;
         left: 0;
         position: absolute;
         top: 0;
@@ -74,10 +74,10 @@
         position: absolute;
         width: 100%;
         bottom: 0;
-        margin-bottom: 1.43rem;
+        margin-bottom: 0.725rem;
     }
     .calling-img {
-        margin-top: 0.26rem;
+        margin-top: 0.13rem;
         position: relative;
         width: 100%;
     }
@@ -88,10 +88,10 @@
     }
     .calling-close {
         display: inline-block;
-        right: 0.05rem;
+        right: 0.025rem;
         position: absolute;
         top: 0;
-        width: 0.12rem;
+        width: 0.06rem;
     }
 
 
@@ -179,7 +179,7 @@
     }
 
     .notice-bar{ 
-        height: 0.17rem;
+        height: 0.085rem;
         line-height: 0.1rem;
         position: absolute;
         width: 100%;
