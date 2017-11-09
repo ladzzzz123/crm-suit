@@ -162,7 +162,7 @@
     .android-time {
         font-weight: bold;
         font-size: .1rem;
-        margin-left: 0.05rem;
+        margin-left: -0.05rem;
         margin-right: 0.05rem;
         margin-top: 0.01rem;
         color: #5f5f5f;
@@ -197,7 +197,7 @@
     .notice-status {
         height: 100%;
         position: absolute;
-        right: 0;
+        right: -0.05rem;
     }
 
     .left {
