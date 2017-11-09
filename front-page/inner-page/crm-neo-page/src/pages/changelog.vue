@@ -2,7 +2,7 @@
     <Row>
         <Col span="8" offset="2">
             <Timeline>
-                <TimelineItem v-for="log in changelog" :key="log">
+                <TimelineItem v-for="log in changelog" :key="log[2]">
                     <p class="time">{{ log[0] }}</p>
                     <p class="content">{{ log[2] }}</p>
                 </TimelineItem>
