@@ -171,35 +171,37 @@
                 <TimePicker type="time" placeholder="选择时间" format="HH:mm" @on-change="changeTime"></TimePicker>
             </Col>
         </Row>
-        <Card v-for="adInfo in adImgs" v-bind:key="adInfo.pos" class="container">
-            <p slot="title">
-                {{ adInfo.title }}
-            </p>
-            <Row>
-                <img class="bg" :src="bg" />
-                <div class="content">
-                    <div v-if="adInfo.displayTime" class="time layer-top">{{ timeStr }}</div>
-                    <img v-if="adInfo.bg" :class="adInfo.pos + '-bg' + ' layer-bottom' " :src="adInfo.bg"/>
-                    <div :class="adInfo.pos + '-container img-container layer-middle' ">
-                        <div :class="adInfo.pos + '-tips' + ' tips layer-top' ">广告</div>
-                        <img v-if="adInfo.close" :class="adInfo.pos + '-close' + ' layer-middle' " :src="adInfo.close"/>
-                        <img :class="adInfo.pos + '-img' + ' layer-middle' " :src="adInfo.img" />
-                        <img v-if="adInfo.mask" :class="adInfo.pos + '-mask' + ' layer-middle' " :src="adInfo.mask"/>
+        <Col span="12">
+            <Card v-for="adInfo in adImgs" v-bind:key="adInfo.pos" class="container">
+                <p slot="title">
+                    {{ adInfo.title }}
+                </p>
+                <Row>
+                    <img class="bg" :src="bg" />
+                    <div class="content">
+                        <div v-if="adInfo.displayTime" class="time layer-top">{{ timeStr }}</div>
+                        <img v-if="adInfo.bg" :class="adInfo.pos + '-bg' + ' layer-bottom' " :src="adInfo.bg"/>
+                        <div :class="adInfo.pos + '-container img-container layer-middle' ">
+                            <div :class="adInfo.pos + '-tips' + ' tips layer-top' ">广告</div>
+                            <img v-if="adInfo.close" :class="adInfo.pos + '-close' + ' layer-middle' " :src="adInfo.close"/>
+                            <img :class="adInfo.pos + '-img' + ' layer-middle' " :src="adInfo.img" />
+                            <img v-if="adInfo.mask" :class="adInfo.pos + '-mask' + ' layer-middle' " :src="adInfo.mask"/>
+                        </div>
                     </div>
-                </div>
-            </Row>
-            <Upload
-                :on-error="onUploadError"
-                :on-success="handleUploadSuccess"
-                :data="{ token: token, ad_pos: adInfo.pos }"
-                :action="UPLOAD_URL"
-                type="drag">
-                <div style="padding: 20px 0">
-                    <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
-                    <p>点击或将文件拖拽到这里上传</p>
-                </div>
-            </Upload>
-        </Card>
+                </Row>
+                <Upload
+                    :on-error="onUploadError"
+                    :on-success="handleUploadSuccess"
+                    :data="{ token: token, ad_pos: adInfo.pos }"
+                    :action="UPLOAD_URL"
+                    type="drag">
+                    <div style="padding: 20px 0">
+                        <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
+                        <p>点击或将文件拖拽到这里上传</p>
+                    </div>
+                </Upload>
+            </Card>
+        </Col>
     </Row>
     <div class="container" v-else>
         您尚未登录，请点击<a @click="gotoLogin">此处</a>登录
