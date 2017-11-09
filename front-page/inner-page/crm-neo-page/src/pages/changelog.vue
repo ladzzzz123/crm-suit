@@ -1,6 +1,6 @@
 <template>
     <Row>
-        <Col span="8">
+        <Col span="8" offset="2">
             <Timeline>
                 <TimelineItem v-for="log in changelog" :key="log">
                     <p class="time">{{ log[0] }}</p>
@@ -27,6 +27,7 @@ export default {
     .time{
         font-size: 14px;
         font-weight: bold;
+        text-align: left;
     }
     .content{
         padding-left: 5px;
