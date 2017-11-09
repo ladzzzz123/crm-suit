@@ -98,7 +98,7 @@ export default {
             }, 500);
         },
         gotoChangeLog: function() {
-            this.$router.push("/login");
+            this.$router.push("/changelog");
         },
         showChat: function() {
             this.$emit("showChat");
