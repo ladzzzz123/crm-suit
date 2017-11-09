@@ -218,7 +218,7 @@
         <Row>
             <Col span="6" offset="2">
                 <Select v-model="bg" placeholder="请选择背景图">
-                    <Option v-for="bgItem in bgArr" :key="bgItem.name" :value="bgItem.bg" :on-click="updateBgType(bgItem.bgType)">
+                    <Option v-for="bgItem in bgArr" :key="bgItem.name" :value="bgItem.bg" @click="updateBgType(bgItem.bgType)">
                         <Icon v-if="bgItem.bgType === 'android'" type="social-android"></Icon>
                         <Icon v-else-if="bgItem.bgType === 'iOS'" type="social-apple"></Icon>
                         {{ bgItem.name }}
