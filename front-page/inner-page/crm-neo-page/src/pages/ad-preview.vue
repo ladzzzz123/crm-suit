@@ -142,17 +142,34 @@
         -webkit-transform: scale(.4);
     }
 
-
+    .time {
+        font-size: 0.1rem;
+        margin-left: 0.2rem;
+        left: 50%;
+        position: absolute;
+        top: 100px;
+    }
 
 </style>
 <template>
     <Row v-if="logged">
+        <Row>
+            <Col span="12">
+                <Select v-model="bg" placeholder="请选择背景图">
+                    <Option v-for="bgItem in bgArr" :key="bgItem.name" :value="bgItem.bg">{{ bgItem.name }}</Option>
+                </Select>
+            </Col>
+            <Col span="12">
+                <TimePicker type="time" placeholder="选择时间" style="width: 168px" @on-change="changeTime"></TimePicker>
+            </Col>
+        </Row>
         <Card v-for="adInfo in adImgs" v-bind:key="adInfo.pos" class="container">
             <p slot="title">
                 {{ adInfo.title }}
             </p>
             <Row>
-                <img class="bg" src="img/preview-iphone.jpg" />
+                <img class="bg" :src="bg" />
+                <div class="time">{{ timeStr }}</div>
                 <div class="content">
                     <img v-if="adInfo.bg" :class="adInfo.pos + '-bg' + ' layer-bottom' " :src="adInfo.bg"/>
                     <div :class="adInfo.pos + '-container img-container layer-middle' ">
@@ -196,6 +213,12 @@ export default {
                { pos: "hangup", title: "挂机",img: "", mask:"img/preview-mask.png" },
                { pos: "banner", title: "Banner",img: "", bg: "img/banner-bg.jpg" }
             ],
+            bg: "img/preview-iphone-new.jpg",
+            bgArr: [
+                { name: "iphone6", bg : "img/preview-iphone-new.jpg"},
+                { name: "pixel", bg : "img/preview-pixel.webp"},
+            ],
+            timeStr: "",
             uploadData:{},
             UPLOAD_URL: "/crm-inner/ad-preview/upload",
         };
@@ -229,6 +252,9 @@ export default {
     methods: {
         gotoLogin: function() {
             this.$router.push("/login");
+        },
+        changeTime: function(timeStr) {
+            this.timeStr = timeStr;
         },
         onUploadError(error, file, fileList) {
             console.log(JSON.stringify(error));

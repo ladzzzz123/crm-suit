@@ -52,7 +52,7 @@ module.exports = {
             },
             /*process image file, save all image to ./img/ */
             {
-                test: /\.(png|jpg|gif)$/,
+                test: /\.(png|jpg|gif|webp)$/,
                 loader: "url-loader?limit=1&name=../img/[name].[ext]"
             },
             {
