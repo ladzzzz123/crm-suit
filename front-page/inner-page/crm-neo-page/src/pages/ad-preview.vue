@@ -153,10 +153,10 @@
         font-weight: bold;
         font-size: .1rem;
         color: #000;
-        transform: scale(0.7);
-        -ms-transform: scale(0.7);
-        -moz-transform: scale(0.7);
-        -webkit-transform: scale(0.7);
+        transform: scale(0.6);
+        -ms-transform: scale(0.6);
+        -moz-transform: scale(0.6);
+        -webkit-transform: scale(0.6);
     }
 
     .android-time {
@@ -164,7 +164,7 @@
         font-size: .1rem;
         margin-left: 0.05rem;
         margin-right: 0.05rem;
-        margin-top: 0.02rem;
+        margin-top: 0.01rem;
         color: #5f5f5f;
         vertical-align: top;
         transform: scale(0.7);
