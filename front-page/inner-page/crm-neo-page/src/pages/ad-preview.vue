@@ -141,7 +141,7 @@
     }
     .banner-tips {
         left: -2%;
-        top: 50%;
+        top: 0.03rem;
         transform: scale(0.4);
         -ms-transform: scale(0.4);
         -moz-transform: scale(0.4);
@@ -254,7 +254,7 @@
 
                         <img v-if="adInfo.bg" :class="adInfo.pos + '-bg' + ' layer-bottom' " :src="adInfo.bg"/>
                         <div :class="adInfo.pos + '-container img-container layer-middle' ">
-                            <div style="height: 0.19rem">
+                            <div :style="adInfo.tipsStyle">
                                 <div :class="adInfo.pos + '-tips' + ' tips layer-top' ">广告</div>
                                 <img v-if="adInfo.close" :class="adInfo.pos + '-close' + ' layer-middle' " :src="adInfo.close"/>
                             </div>
@@ -292,10 +292,10 @@ export default {
     data: () => {
         return { 
             adImgs: [
-               { pos: "openning", title: "开屏",img: "", bg: "img/openning-bg.jpg", displayStatus: false },
-               { pos: "calling", title: "拨号前", img: "", bg: "img/calling-bg.jpg", close: "http://121.52.235.231:40718/upload_img/static/img/close.png", displayStatus: true },
-               { pos: "hangup", title: "挂机",img: "", mask:"img/preview-mask.png", displayStatus: false },
-               { pos: "banner", title: "Banner",img: "", bg: "img/banner-bg-new.jpg", displayStatus: true }
+               { pos: "openning", title: "开屏",img: "", bg: "img/openning-bg.jpg", displayStatus: false, tipsStyle: "height: 0.19rem" },
+               { pos: "calling", title: "拨号前", img: "", bg: "img/calling-bg.jpg", close: "img/close.png", displayStatus: true, tipsStyle: "height: 0.19rem" },
+               { pos: "hangup", title: "挂机",img: "", mask:"img/preview-mask.png", displayStatus: false, tipsStyle: "height: 0.19rem" },
+               { pos: "banner", title: "Banner",img: "", bg: "img/banner-bg-new.jpg", displayStatus: true, tipsStyle: "height: auto" }
             ],
             curBg: "img/preview-iphone-new.jpg",
             curBgItem: { name: "iPhone6Plus", bg : "img/preview-iphone-new.jpg", bgType: "iOS" },

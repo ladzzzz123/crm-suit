@@ -10,6 +10,7 @@ require("./video/bg.ogg");
 // import "iview/dist/styles/fonts/ionicons.woff";
 
 require("./img/logo.png");
+require("./img/close.png");
 require("./img/bg.jpg");
 require("./img/preview-iphone.jpg");
 require("./img/preview-mask.png");
@@ -20,7 +21,6 @@ require("./img/banner-bg-new.jpg");
 
 require("./img/preview-iphone-new.jpg");
 require("./img/preview-pixel-new.jpg");
-
 require("./img/android-notice-bar.png");
 require("./img/ios-power.png");
 require("./img/ios-signal.png");
