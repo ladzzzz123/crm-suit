@@ -86,8 +86,9 @@
     }
     .calling-close {
         display: inline-block;
-        margin-left: 1.58rem;
-        width: 0.06rem;
+        margin-left: 1.5rem;
+        width: .12rem;
+        vertical-align: top;
     }
 
 
@@ -251,7 +252,7 @@
 
                         <img v-if="adInfo.bg" :class="adInfo.pos + '-bg' + ' layer-bottom' " :src="adInfo.bg"/>
                         <div :class="adInfo.pos + '-container img-container layer-middle' ">
-                            <div>
+                            <div style="height: 0.19rem">
                                 <div :class="adInfo.pos + '-tips' + ' tips layer-top' ">广告</div>
                                 <img v-if="adInfo.close" :class="adInfo.pos + '-close' + ' layer-middle' " :src="adInfo.close"/>
                             </div>
