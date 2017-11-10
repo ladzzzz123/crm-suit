@@ -82,6 +82,7 @@
     }
     .calling-tips {
         display: inline-block;
+        margin-top: -0.06rem;
         position: relative;
     }
     .calling-close {
