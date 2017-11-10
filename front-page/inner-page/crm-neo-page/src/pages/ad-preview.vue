@@ -83,14 +83,12 @@
     }
     .calling-tips {
         display: inline-block;
-        position: absolute;
-        top: 0;
+        position: relative;
     }
     .calling-close {
         display: inline-block;
-        right: 0.025rem;
+        margin-left: 1.7rem;
         position: absolute;
-        top: 0;
         width: 0.06rem;
     }
 
@@ -255,8 +253,10 @@
 
                         <img v-if="adInfo.bg" :class="adInfo.pos + '-bg' + ' layer-bottom' " :src="adInfo.bg"/>
                         <div :class="adInfo.pos + '-container img-container layer-middle' ">
-                            <div :class="adInfo.pos + '-tips' + ' tips layer-top' ">广告</div>
-                            <img v-if="adInfo.close" :class="adInfo.pos + '-close' + ' layer-middle' " :src="adInfo.close"/>
+                            <div>
+                                <div :class="adInfo.pos + '-tips' + ' tips layer-top' ">广告</div>
+                                <img v-if="adInfo.close" :class="adInfo.pos + '-close' + ' layer-middle' " :src="adInfo.close"/>
+                            </div>
                             <img :class="adInfo.pos + '-img' + ' layer-middle' " :src="adInfo.img" />
                             <img v-if="adInfo.mask" :class="adInfo.pos + '-mask' + ' layer-middle' " :src="adInfo.mask"/>
                         </div>

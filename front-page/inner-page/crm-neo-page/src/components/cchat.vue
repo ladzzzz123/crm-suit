@@ -8,6 +8,14 @@
             <div class="chat-list">
                 <Card style="max-width:3rem;background:none" v-for="msg in msgs" v-bind:key="msg.msg"
                     :bordered="false" dis-hover>
+                    <template>
+                        <Row v-if="msg.timestamp && (msg.timestamp - (new Date().getTime()) > 86400)">
+                            {{ new Date(msg.timestamp).toLocaleDateString() }}
+                        </Row>
+                        <Row v-else-if="msg.timestamp && (msg.timestamp - (new Date().getTime()) > 1800)">
+                            {{ new Date(msg.timestamp).toLocaleTimeString() }}
+                        </Row>
+                    </template>
                     <Row v-if="msg.u_name === userInfo.u_name">
                         <Col span="18">
                             <Card class="chat-msg" shadow>

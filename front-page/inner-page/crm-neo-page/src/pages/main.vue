@@ -37,12 +37,12 @@
             v-on:showChat="showChat"
             v-on:hideChat="hideChat" />
         <cchat v-if="flagChat"
-            cstyle="padding-top:0.46rem"
+            cstyle="padding-top:0.4rem"
             v-show="chatShowFlag"
             v-on:hideChat="hideChat"/>
         <!-- <tips /> -->
         <!-- <idialog /> -->
-        <Row type="flex" style="margin-top:0.46rem;">
+        <Row type="flex" style="margin-top:0.4rem;">
             <Col :span="spanLeft" class="layout-menu-left panel-left">
                 <crouter v-if="logged" />
             </Col>

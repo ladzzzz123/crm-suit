@@ -1,6 +1,6 @@
 <style>
     .menu-item{
-        font-size: 0.14rem;
+        font-size: 0.12rem;
     }
 </style>
 
