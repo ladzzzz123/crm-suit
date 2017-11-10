@@ -88,6 +88,7 @@
     .calling-close {
         display: inline-block;
         margin-left: 1.5rem;
+        margin-top: 0.05rem;
         width: .12rem;
         vertical-align: top;
     }
