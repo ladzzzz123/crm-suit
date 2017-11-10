@@ -77,7 +77,6 @@
         margin-bottom: 1.2rem;
     }
     .calling-img {
-        margin-top: 0.13rem;
         position: relative;
         width: 100%;
     }
@@ -87,8 +86,7 @@
     }
     .calling-close {
         display: inline-block;
-        margin-left: 1.7rem;
-        position: absolute;
+        margin-left: 1.58rem;
         width: 0.06rem;
     }
 
@@ -116,7 +114,7 @@
         width: 100%;
     }
     .hangup-tips {
-        top: 84%;
+        top: 83.5%;
     }
 
 
