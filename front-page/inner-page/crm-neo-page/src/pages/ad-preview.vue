@@ -298,10 +298,10 @@ export default {
                { pos: "banner", title: "Banner",img: "", bg: "img/banner-bg-new.jpg", displayStatus: true }
             ],
             curBg: "img/preview-iphone-new.jpg",
-            curBgItem: { name: "iphone6", bg : "img/preview-iphone-new.jpg", bgType: "iOS" },
+            curBgItem: { name: "iPhone6Plus", bg : "img/preview-iphone-new.jpg", bgType: "iOS" },
             bgArr: [
-                { name: "iphone6", bg : "img/preview-iphone-new.jpg", bgType: "iOS"},
-                { name: "pixel", bg : "img/preview-pixel-new.jpg", bgType: "android"},
+                { name: "iPhone6Plus", bg : "img/preview-iphone-new.jpg", bgType: "iOS"},
+                { name: "GooglePixel", bg : "img/preview-pixel-new.jpg", bgType: "android"},
             ],
             timeStr: "",
             uploadData:{},
