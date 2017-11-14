@@ -529,7 +529,7 @@ router
             return;
         } else if (verify.pass) {
             let postData = ctx.request.body;
-            if (!_util.verifyParams(postData, "tag", "action")) {
+            if (!_util.verifyParams(postData, ["tag", "action"])) {
                 ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
             }
             try {

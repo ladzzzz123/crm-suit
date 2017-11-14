@@ -78,8 +78,8 @@ let export_func = {
                 })
                 .then(role_val => {
                     if (role_val) {
-                        let c = parseInt(info.role_pos, 2),
-                            e = parseInt(role_val, 2);
+                        let c = parseInt(info.role_pos),
+                            e = parseInt(role_val);
                         let pass = ((c & e) === e);
                         logger.info("[login] asyncVerify role_pos:%s, role_val:%s,ret:%s", c, e, pass);
                         if (pass) dbOpter.renewToken(token);

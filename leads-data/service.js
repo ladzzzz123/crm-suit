@@ -17,18 +17,23 @@ let export_func = {
 };
 
 function queryData(tag) {
-    const SQL_QUERY = `SELECT phone, tag, occurrence, data FROM market_data WHERE tag = ? ORDER BY id`;
-    const SQL_QUERY_FORMAT = mysql.format(SQL_QUERY, tag);
-    courier.sendAsyncCall("dbopter", "asyncQuery", "", "market_data", SQL_QUERY_FORMAT)
-        .then(ret => {
-            let retArr = ret.ret;
-            if (Array.isArray(retArr)) {
-                resolve(retArr);
-            } else {
-                resolve([]);
-            }
-        })
-        .catch(e => {
-            reject(e);
-        });
+    return new Promise((resolve, reject) => {
+        const SQL_QUERY = `SELECT phone, tag, occurrence, data FROM market_data WHERE tag = ? ORDER BY id`;
+        const SQL_QUERY_FORMAT = mysql.format(SQL_QUERY, tag);
+        courier.sendAsyncCall("dbopter", "asyncQuery", "", "market_data", SQL_QUERY_FORMAT)
+            .then(ret => {
+                let retArr = ret.ret;
+                if (Array.isArray(retArr)) {
+                    resolve(retArr);
+                } else {
+                    resolve([]);
+                }
+            })
+            .catch(e => {
+                reject(e);
+            });
+    });
 }
+
+let courier = new Courier(export_func);
+courier.listening();

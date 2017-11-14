@@ -63,7 +63,7 @@ module.exports = {
                     }
                 })
                 .then(ret_info => {
-                    let SQL_QUERY_ROLE = " SELECT role_pos, module, role_name FROM role_map WHERE CONV(role_pos, 2, 10) & CONV(?, 2, 10) = CONV(role_pos, 2, 10) ";
+                    let SQL_QUERY_ROLE = " SELECT role_pos, module, role_name FROM role_map WHERE role_pos & ? = role_pos ";
                     if (db_self.isConnected) {
                         db_self.query(SQL_QUERY_ROLE, [ret_info.role_pos], (err, ret) => {
                             if (err) {
