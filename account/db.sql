@@ -45,14 +45,19 @@ INSERT INTO role_map (role_pos, role_name, module) VALUES
 ("10000000000000", "opter", "leads-data");
 
 
+-- 20171104
+UPDATE role_map SET role_pos = CONV(role_pos, 2, 10);
+UPDATE account SET role_pos = CONV(role_pos, 2, 10);
+
+
 -- 20171104 modify role
 ALTER TABLE role_map MODIFY COLUMN role_pos BIGINT;
 
 INSERT INTO role_map SET role_pos = (SELECT MAX(role_pos) FROM role_map temp_role) * 2, role_name = "admin", module = "leads-data"; 
 INSERT INTO role_map SET role_pos = (SELECT MAX(role_pos) FROM role_map temp_role) * 2, role_name = "opter", module = "leads-data"; 
 
- UPDATE account SET role_pos = (role_pos | (SELECT role_pos FROM role_map WHERE module = "leads-data" AND role_name = "admin")) WHERE u_name = "admin";
- UPDATE account SET role_pos = (role_pos | (SELECT role_pos FROM role_map WHERE module = "leads-data" AND role_name = "opter")) WHERE u_name = "admin";
+UPDATE account SET role_pos = (role_pos | (SELECT role_pos FROM role_map WHERE module = "leads-data" AND role_name = "admin")) WHERE u_name = "admin";
+UPDATE account SET role_pos = (role_pos | (SELECT role_pos FROM role_map WHERE module = "leads-data" AND role_name = "opter")) WHERE u_name = "admin";
 
 ALTER TABLE account ADD nick_name VARCHAR(128) COMMENT "昵称";
 ALTER TABLE account ADD sex VARCHAR(2) COMMENT "性别";

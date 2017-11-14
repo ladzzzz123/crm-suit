@@ -245,19 +245,20 @@ function insertEarningsDataIntoDB(dateS) {
                         logger.info("[earnings] neo_content: %s", neo_content);
 
                         let count = 0;
-                        const DATA_FORMAT = ["channel", "ad_place", "e_date", "e_exposure", "e_click"];
+                        const DATA_FORMAT = ["channel", "ad_place", "e_date", "e_platform", "e_exposure", "e_click"];
+                        const DATA_TITLE = ["第三方平台", "广告版位", "日期", "操作系统", "曝光量", "点击量"];
                         let temp_data = {};
                         neo_content.split("\n").forEach(sub => {
                             logger.info("[earnings] sub: %s, length: %s", sub, sub.length);
                             let neo_sub = sub.replace(/(\ |\ )/gi, "");
                             logger.info("[earnings] neo_sub: %s, length: %s", neo_sub, neo_sub.length);
-                            if (neo_sub.length > MIN_CONTENT_LENGTH) {
+                            if (neo_sub.length > MIN_CONTENT_LENGTH && !DATA_TITLE.includes(neo_sub)) {
                                 logger.info("[earnings] count: %s", count);
                                 temp_data[DATA_FORMAT[count++]] = neo_sub;
                                 // channel, ad_place, e_date, e_exposure, e_click
                                 if (count > 0 && (count % (DATA_FORMAT.length) === 0)) {
                                     logger.info("[earnings] temp_data: %s", JSON.stringify(temp_data));
-                                    insertArr.push(Object.values(temp_data));
+                                    insertArr.push(temp_data);
                                     count = 0;
                                     temp_data = {};
                                 }
@@ -266,10 +267,27 @@ function insertEarningsDataIntoDB(dateS) {
                         ids.push(item._id);
 
                         logger.info("[earnings] insertArr: %s", JSON.stringify(insertArr));
+                        let newObj = {};
+                        insertArr.forEach(data => {
+                            let temp = newObj[`${data.channel}${data.ad_place}${data.e_date}`] || "";
+                            if (temp) {
+                                temp.e_exposure = parseInt(temp.e_exposure) + parseInt(data.e_exposure);
+                                temp.e_click = parseInt(temp.e_click) + parseInt(data.e_click);
+                            } else {
+                                newObj[`${data.channel}${data.ad_place}${data.e_date}`] = {};
+                                Object.assign(newObj[`${data.channel}${data.ad_place}${data.e_date}`], data);
+                            }
+                        });
+                        let newArr = Object.keys(newObj).map(key => {
+                            let data = newObj[key];
+                            return [data.channel, data.ad_place, data.e_date, data.e_exposure, data.e_click];
+                        });
+                        logger.info("[earnings] newArr: %s", JSON.stringify(newArr));
+
                         const SQL_INSERT_DATA = `INSERT IGNORE earn_daily_journal 
                             (channel, ad_place, e_date, e_exposure, e_click) VALUES ?`;
                         const SQL_UPDATE_STATUS = `UPDATE mail_info SET m_status = "RESOLVED" WHERE _id IN (${ids.toString()})`;
-                        courier.sendAsyncCall("dbopter", "asyncQueryInsert", "", "earn_data", SQL_INSERT_DATA, [insertArr])
+                        courier.sendAsyncCall("dbopter", "asyncQueryInsert", "", "earn_data", SQL_INSERT_DATA, [newArr])
                             .then(ret => {
                                 logger.info("[earnings] insert succeed: %s", JSON.stringify(ret));
                                 return courier.sendAsyncCall("dbopter", "asyncQuery", "", "market_db", SQL_UPDATE_STATUS);
@@ -285,6 +303,7 @@ function insertEarningsDataIntoDB(dateS) {
                 }
             })
             .catch(e => {
+                logger.error("insertEarningsDataIntoDB error:" + JSON.stringify(e));
                 reject(e);
             });
     });

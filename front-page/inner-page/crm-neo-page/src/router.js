@@ -19,7 +19,7 @@ export default [
     { path: "/changelog", component: cmptChangeLog, content: "更新日志", icon: "", hide: true, based: true },
     { path: "/plan-order", component: cmptPlan, content: "策划任务工具", icon: "ios-paper" },
     { path: "/earnings", component: cmptEarnings, content: "PAD收入数据", icon: "cash" },
-    { path: "/leads-data", component: cmptLeadsdata, content: "leads收入数据", icon: "person-stalker" },
+    { path: "/leads-data", component: cmptLeadsdata, content: "leads数据", icon: "person-stalker" },
     { path: "/dist-analy", component: cmptDistAnaly, content: "用户分析工具", icon: "stats-bars", based: true },
     { path: "/censor", component: cmptCensor, content: "PAD素材管理", icon: "ios-checkmark" },
     { path: "/ad-preview", component: cmptAdPreview, content: "AD素材投放预览", icon: "eye" },
