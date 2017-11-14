@@ -32,12 +32,17 @@ INSERT INTO role_map (role_pos, role_name, module) VALUES
 ("10000000", "opter", "censor");
 
 INSERT INTO role_map (role_pos, role_name, module) VALUES 
-("010001000000", "admin", "ad-preview"),
-("100010000000", "opter", "ad-preview");
-
-INSERT INTO role_map (role_pos, role_name, module) VALUES 
 ("0100000000", "admin", "earnings"),
 ("1000000000", "opter", "earnings");
+
+INSERT INTO role_map (role_pos, role_name, module) VALUES 
+("010000000000", "admin", "ad-preview"),
+("100000000000", "opter", "ad-preview");
+
+-- 20171104 
+INSERT INTO role_map (role_pos, role_name, module) VALUES 
+("01000000000000", "admin", "leads-data"),
+("10000000000000", "opter", "leads-data");
 
 ALTER TABLE account ADD nick_name VARCHAR(128) COMMENT "昵称";
 ALTER TABLE account ADD sex VARCHAR(2) COMMENT "性别";

@@ -24,5 +24,8 @@
     },
     {
         "name": "earnings"
+    },
+    {
+        "name": "leads-data"
     }
 ]

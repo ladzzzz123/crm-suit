@@ -15,5 +15,14 @@
         "database": "earn_data",
         "port": 3306,
         "useConnectionPooling": true
+    },
+    {
+        "name": "market_data",
+        "host": "121.52.35.231",
+        "user": "cootek",
+        "password": "cootek",
+        "database": "market_data_record",
+        "port": 3306,
+        "useConnectionPooling": true
     }
 ]

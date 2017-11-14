@@ -511,5 +511,37 @@ router
     });
 // earnings module end
 
+// leads-data module start
+router
+    .post("/crm-inner/leads-data", async(ctx, next) => {
+        let verify = await verifyToken(ctx, "leads-data", "opter");
+        if (!verify) {
+            return;
+        } else if (verify.pass) {
+            ctx.body = { status: RESULT.SUCCESS, msg: "verify pass" };
+        } else {
+            ctx.body = _util.verifyTokenResult(verify);
+        }
+    })
+    .post("/crm-inner/leads-data/opt", async(ctx, next) => {
+        let verify = await verifyToken(ctx, "leads-data", "opter");
+        if (!verify) {
+            return;
+        } else if (verify.pass) {
+            let postData = ctx.request.body;
+            if (!_util.verifyParams(postData, "tag", "action")) {
+                ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
+            }
+            try {
+                let ret = await courier.sendAsyncCall("leads-data", "asyncOpt", "", postData.action, postData.tag);
+                ctx.body = { status: RESULT.SUCCESS, content: ret, msg: "opt end" };
+            } catch (e) {
+                ctx.body = { status: RESULT.FAILED, content: [], msg: JSON.stringify(e) };
+            }
+        } else {
+            ctx.body = _util.verifyTokenResult(verify);
+        }
+    });
+// leads-data module end
 
 http.createServer(app.callback()).listen(DEFAULT_PORT);
