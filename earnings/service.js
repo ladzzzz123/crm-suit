@@ -59,6 +59,7 @@ function queryChannelSum(...dates) {
             FROM earn_daily_journal d
             JOIN earn_channel_info i 
             ON d.channel = i.channel
+            AND d.ad_place = i.ad_place
             WHERE d.e_date >= ? AND d.e_date <= ? GROUP BY d.channel`;
         const SQL_QUERY_FORMAT = mysql.format(SQL_QUERY, dateArr);
         courier.sendAsyncCall("dbopter", "asyncQuery", "", "earn_data", SQL_QUERY_FORMAT)
