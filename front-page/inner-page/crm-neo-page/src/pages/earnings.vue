@@ -84,7 +84,7 @@
                             <div>
                                 截止{{ m_date.toLocaleDateString() }} <br/>
                                 当日收入总和:
-                                {{ 
+                                {{
                                     earnSumArr.reduce((sum, item) => {
                                         return sum + parseFloat(item.earns);
                                     }, 0).toFixed(2)
