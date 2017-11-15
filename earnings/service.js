@@ -314,6 +314,8 @@ function insertEarningsDataIntoDB(dateS) {
 
 let courier = new Courier(export_func);
 courier.listening(() => {
-    let today = new Date().toLocaleDateString();
-    insertEarningsDataIntoDB(today);
+    let today = new Date();
+    let yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+    insertEarningsDataIntoDB(yesterday);
 }, 300 * 1000);
