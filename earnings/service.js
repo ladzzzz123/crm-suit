@@ -55,8 +55,11 @@ function queryChannelSum(...dates) {
         });
         logger.info("[earnings] queryChannelSum dateArr: %s", JSON.stringify(dateArr));
 
-        const SQL_QUERY = `SELECT SUM(e_earn) as earns, channel FROM earn_daily_journal
-                            WHERE e_date >= ? AND e_date <= ? GROUP BY channel`;
+        const SQL_QUERY = `SELECT SUM(d.e_earn) as earns, d.channel as channel
+            FROM earn_daily_journal d
+            JOIN earn_channel_info i 
+            ON d.channel = i.channel
+            WHERE d.e_date >= ? AND d.e_date <= ? GROUP BY d.channel`;
         const SQL_QUERY_FORMAT = mysql.format(SQL_QUERY, dateArr);
         courier.sendAsyncCall("dbopter", "asyncQuery", "", "earn_data", SQL_QUERY_FORMAT)
             .then(ret => {

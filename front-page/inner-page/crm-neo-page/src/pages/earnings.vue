@@ -84,7 +84,11 @@
                             <div>
                                 截止{{ m_date.toLocaleDateString() }} <br/>
                                 当日收入总和:
-                                {{ earnSumArr.reduce((sum, item) => { return (isNaN(sum) ? 0 : sum) + parseFloat(item.earns) }).toFixed(2) }}
+                                {{ 
+                                    earnSumArr.reduce((sum, item) => {
+                                        return sum + parseFloat(item.earns);
+                                    }, 0).toFixed(2)
+                                }}
                             </div>
                         </CarouselItem>
                         <CarouselItem v-if="earnSumMonthlyArr.length > 0" class="demo-carousel">

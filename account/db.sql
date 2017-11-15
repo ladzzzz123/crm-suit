@@ -59,6 +59,11 @@ INSERT INTO role_map SET role_pos = (SELECT MAX(role_pos) FROM role_map temp_rol
 UPDATE account SET role_pos = (role_pos | (SELECT role_pos FROM role_map WHERE module = "leads-data" AND role_name = "admin")) WHERE u_name = "admin";
 UPDATE account SET role_pos = (role_pos | (SELECT role_pos FROM role_map WHERE module = "leads-data" AND role_name = "opter")) WHERE u_name = "admin";
 
+
+UPDATE account SET role_pos = (role_pos | (SELECT role_pos FROM role_map WHERE module = "leads-data" AND role_name = "admin")) WHERE u_name = "simon.song@cootek.cn";
+UPDATE account SET role_pos = (role_pos | (SELECT role_pos FROM role_map WHERE module = "leads-data" AND role_name = "opter")) WHERE u_name = "simon.song@cootek.cn";
+
+
 ALTER TABLE account ADD nick_name VARCHAR(128) COMMENT "昵称";
 ALTER TABLE account ADD sex VARCHAR(2) COMMENT "性别";
 ALTER TABLE account ADD phone VARCHAR(16) COMMENT "联系电话";
