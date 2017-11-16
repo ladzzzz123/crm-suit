@@ -73,10 +73,10 @@
             <br/>
             <br/>
             <Row>
-                <Col span="6">
+                <Col span="4" offset="1">
                     <Card v-if="Array.isArray(earnSumArr) && earnSumArr.length > 0">
-                        <p slot="title">截止{{ m_date.toLocaleDateString() }}</p>
-                        <p>当日收入总和:</p>
+                        <p slot="title">截止{{ m_date.toLocaleDateString() }}当日</p>
+                        <p>收入总和:</p>
                         <p>
                             ￥{{
                                 earnSumArr.reduce((sum, item) => {
@@ -86,17 +86,17 @@
                         </p>
                     </Card>
                 </Col>
-                <Col span="6" offset="2">
+                <Col span="4" offset="1">
                     <Card v-if="earnSumMonthlyArr.length > 0">
-                        <p slot="title">截止{{ m_date.toLocaleDateString() }}</p>
-                        <p>当月收入总和：</p>
+                        <p slot="title">截止{{ m_date.toLocaleDateString() }}当月</p>
+                        <p>收入总和：</p>
                         <p>￥{{ earnSumMonthlyArr[0].earns.toFixed(2) }}</p>
                     </Card>
                 </Col>
-                <Col span="6" offset="2">
+                <Col span="4" offset="1">
                     <Card v-if="earnSumYearlyArr.length > 0">
-                        <p slot="title">截止{{ m_date.toLocaleDateString() }}</p>
-                        <p>年收入总和：</p>
+                        <p slot="title">截止{{ m_date.toLocaleDateString() }}止，该年</p>
+                        <p>收入总和：</p>
                         <p>￥{{ earnSumYearlyArr[0].earns.toFixed(2) }}</p>
                     </Card>
                 </Col>
