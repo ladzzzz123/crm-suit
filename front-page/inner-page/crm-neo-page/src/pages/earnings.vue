@@ -73,33 +73,32 @@
             <br/>
             <br/>
             <Row>
-                <Col span="8">
-                    <Carousel v-if="Array.isArray(earnSumArr) && earnSumArr.length > 0" 
-                        style="height: 0.6rem;margin: 0 auto;
-                                text-align: center;width: 1rem;
-                                background: rgba(6,6,6,0.1);
-                                border-radius: 6px;" 
-                        :arrow="'never'">
-                        <CarouselItem>
-                            <div>
-                                截止{{ m_date.toLocaleDateString() }} <br/>
-                                当日收入总和:
-                                {{
-                                    earnSumArr.reduce((sum, item) => {
-                                        return sum + parseFloat(item.earns);
-                                    }, 0).toFixed(2)
-                                }}
-                            </div>
-                        </CarouselItem>
-                        <CarouselItem v-if="earnSumMonthlyArr.length > 0" class="demo-carousel">
-                            <div>截止{{ m_date.toLocaleDateString() }}<br/>
-                                当月收入总和：{{ earnSumMonthlyArr[0].earns.toFixed(2) }}</div>
-                        </CarouselItem>
-                        <CarouselItem v-if="earnSumYearlyArr.length > 0" class="demo-carousel">
-                            <div>截止{{ m_date.toLocaleDateString() }} <br/>
-                                年收入总和：{{ earnSumYearlyArr[0].earns.toFixed(2) }}</div>
-                        </CarouselItem>
-                    </Carousel>
+                <Col span="6">
+                    <Card v-if="Array.isArray(earnSumArr) && earnSumArr.length > 0">
+                        <p slot="title">截止{{ m_date.toLocaleDateString() }}</p>
+                        <p>当日收入总和:</p>
+                        <p>
+                            ￥{{
+                                earnSumArr.reduce((sum, item) => {
+                                    return sum + parseFloat(item.earns);
+                                }, 0).toFixed(2)
+                            }}
+                        </p>
+                    </Card>
+                </Col>
+                <Col span="6" offset="2">
+                    <Card v-if="earnSumMonthlyArr.length > 0">
+                        <p slot="title">截止{{ m_date.toLocaleDateString() }}</p>
+                        <p>当月收入总和：</p>
+                        <p>￥{{ earnSumMonthlyArr[0].earns.toFixed(2) }}</p>
+                    </Card>
+                </Col>
+                <Col span="6" offset="2">
+                    <Card v-if="earnSumYearlyArr.length > 0">
+                        <p slot="title">截止{{ m_date.toLocaleDateString() }}</p>
+                        <p>年收入总和：</p>
+                        <p>￥{{ earnSumYearlyArr[0].earns.toFixed(2) }}</p>
+                    </Card>
                 </Col>
             </Row>
 
