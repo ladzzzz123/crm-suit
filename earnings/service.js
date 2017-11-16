@@ -33,6 +33,8 @@ let export_func = {
                 return insertChannelData(params);
             case "update-journal":
                 return updateJournalData(params);
+            case "update-journal-group":
+                return updateJournalGroupData(params);
             case "update-channel":
                 return updateChannelData(params);
             case "delete-channel":
@@ -137,6 +139,7 @@ function queryJournalData(...dates) {
 function updateJournalData(params) {
     return new Promise((resolve, reject) => {
         let dy_ecpm = parseFloat(params.e_earn * 1000 / params.e_count);
+        dy_ecpm = isNaN(dy_ecpm) ? 0 : dy_ecpm;
         const SQL_UPDATE = `UPDATE earn_daily_journal d, earn_channel_info i 
             SET d.e_count = ?, d.ecpm = IF(i.ecpm > 0, i.ecpm, ?),
             d.e_earn = ? 
@@ -156,6 +159,23 @@ function updateJournalData(params) {
                 resolve(orgArr);
             })
             .catch(e => {
+                reject(e);
+            });
+    });
+}
+
+function updateJournalGroupData(params) {
+    return new Promise((resolve, reject) => {
+        let promiseArr = [];
+        if (Array.isArray(params)) {
+            for (let data of params) {
+                promiseArr.push(updateJournalData(data));
+            }
+        }
+        Promise.all(promiseArr)
+            .then(ret => {
+                resolve({ result: "success" });
+            }).catch(e => {
                 reject(e);
             });
     });

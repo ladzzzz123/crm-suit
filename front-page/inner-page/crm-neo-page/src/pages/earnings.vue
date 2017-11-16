@@ -131,7 +131,7 @@
                                             dailyData.e_exposure : parseInt(dailyData.settlement) === 2 ?
                                             dailyData.e_click : dailyData.e_exposure }}</td><!-- 触宝曝光/点击量 -->
                                         <td><!-- 客户曝光/点击量 -->
-                                            <span v-if="dailyData.editting">
+                                            <span v-if="sumInfo.editting">
                                                 <input v-model="dailyData.e_count" type="number" style="width:0.5rem;"/>
                                             </span>
                                             <span v-else>{{ dailyData.e_count }}</span>
@@ -147,7 +147,7 @@
                                             <span v-else>0</span>
                                         </td>
                                         <td><!-- 收入 -->
-                                            <template v-if="dailyData.editting && dailyData.ecpm < 0">
+                                            <template v-if="sumInfo.editting && dailyData.ecpm < 0">
                                                 <span>
                                                     <input v-model="dailyData.e_earn" type="number" step="0.01" style="width:0.5rem;"/>
                                                 </span>
@@ -181,12 +181,19 @@
                                             <span v-else>dailyData.ecpm</span>
                                         </td>
                                         <td v-if="isAdmin" style="text-align: center">
+                                            <ButtonGroup v-if="sumInfo.editting">
+                                                <Button type="success" @click="submitDailyGroup(sumInfo)">提交</Button>
+                                                <Button @click="cancelEdit(sumInfo, 'daily')">取消</Button>
+                                            </ButtonGroup>
+                                            <Button v-else type="primary" @click="switchEdit(sumInfo, 'daily')">编辑</Button>
+                                        </td>
+                                        <!-- <td v-if="isAdmin" style="text-align: center">
                                             <ButtonGroup v-if="dailyData.editting">
                                                 <Button type="success" @click="submitDaily(dailyData)">提交</Button>
                                                 <Button @click="cancelEdit(dailyData)">取消</Button>
                                             </ButtonGroup>
                                             <Button v-else type="primary" @click="switchEdit(dailyData, 'daily')">编辑</Button>
-                                        </td>
+                                        </td> -->
                                     </tr>
                                 </tbody>
                             </table>
@@ -294,7 +301,6 @@
                 <Button type="success" @click="showDialog('insertChannel')"><Icon type="android-add"></Icon>  新增客户设定</Button>
                 <Button type="primary" @click="showDialog('channel')"><Icon type="ios-list-outline"></Icon>  查看客户设定</Button>
                 <Button type="info" @click="exportReport()" v-if="dailyDataArr.length > 0"><Icon type="ios-download-outline"></Icon>  导出当日结果</Button>
-    
             </ButtonGroup>
         </div>
         <div class="data-list" v-else>
@@ -497,7 +503,11 @@ export default {
                     },
                     "query-channel-sum")
                     .then(ret => {
-                        this.earnSumArr = ret;
+                        this.earnSumArr = ret.map(item =>  {
+                                item.editting = false;
+                                item.e_date = new Date(this.m_date).toLocaleDateString();
+                                return item;
+                            });
                         this.earnSumArr.sort((a, b) => {
                             return a.e_earn - b.e_earn;
                         });
@@ -509,10 +519,11 @@ export default {
                             "query-journal");
                     })
                     .then(ret => {
-                        console.log(JSON.stringify(ret));
+                        console.log("fetchEarns: %s", JSON.stringify(ret));
                         setTimeout(() => {
                             this.dailyDataArr = ret.map(item =>  {
                                 item.editting = false;
+                                item.e_date = new Date(this.m_date).toLocaleDateString();
                                 return item;
                             });
                         }, 1000);
@@ -556,7 +567,7 @@ export default {
                     queryDataByDate(PATH_ADMIN, 
                         { token: this.token }, "query-channel")
                         .then(ret => {
-                            console.log(JSON.stringify(ret));
+                            console.log("query-channel: %s", JSON.stringify(ret));
                             ret.map(item => item.editting = false);
                             this.channelDataArr = Object.assign(ret);
                         })
@@ -673,7 +684,6 @@ export default {
                 dailyData.e_earn : 
                 dailyData.settlement === 1 ? 
                     (dailyData.e_count * dailyData.ecpm) / 1000 : dailyData.e_count * dailyData.ecpm;
-            console.log(JSON.stringify(dailyData));
             let params = {
                 token: this.token,
                 action: "update-journal",
@@ -687,32 +697,67 @@ export default {
                     }
                     dailyData.e_version++;
                     setTimeout(this.fetchEarns, 500);
-                    // this.fetchEarns();
                     this.switchEdit(dailyData);
+                }, (status, msg) => {
+                    func.showTips("alert-error", "修改失败！");
+                });
+        },
+
+        submitDailyGroup: function(sumData) {
+            let tempArr = this.dailyDataArr.filter(item => {
+                return (item.channel === sumData.channel 
+                    && item.e_date === sumData.e_date);
+            });
+            tempArr.forEach(item => {
+                item.e_date = new Date(item.e_date).toLocaleDateString();
+                item.e_earn = item.ecpm < 0 ?
+                    item.e_earn : 
+                    item.settlement === 1 ? 
+                        (item.e_count * item.ecpm) / 1000 : item.e_count * item.ecpm;
+            });
+            
+            let params = {
+                token: this.token,
+                action: "update-journal-group",
+                params: tempArr
+            };
+            requester.send(PATH_ADMIN, 
+                params,
+                result => {
+                    if (result.status === RESULT_CODE.SUCCESS) {
+                        func.showTips("alert-success", "修改成功！");
+                    }
+                    tempArr.forEach(item => item.e_version++);
+                    setTimeout(this.fetchEarns, 500);
+                    // this.fetchEarns();
+                    this.switchEdit(sumData, "daily");
                 }, (status, msg) => {
                     func.showTips("alert-error", "修改失败！");
                     // this.cancelEdit(dailyData);
                 });
         },
-        reportRet: function() {
-
-        },
-        switchEdit: function(editData) {
-            console.log("editData:%s", JSON.stringify(editData));
+        switchEdit: function(editData, type) {
             if (editData) {
                 if (!editData.editting) {
                     this.backupDataBeforeEdit(editData);
                 }
                 editData.editting = !editData.editting;
             }
+            if (type === "daily") {
+                let tempArr = this.dailyDataArr.filter(item => {
+                    return (item.channel === editData.channel 
+                        && item.e_date === editData.e_date);
+                });
+                tempArr.forEach(item => this.switchEdit(item));
+            }
         },
         backupDataBeforeEdit: function(data) {
-            if (data.e_count && data.e_earn) {
+            if (data.hasOwnProperty("e_count") && data.hasOwnProperty("e_earn")) {
                 data.backup =  {
                     e_count: data.e_count,
                     e_earn: data.e_earn
                 };
-            } else if (data.settlement && data.ecpm != 0 && data.rebate != 0) {
+            } else if (data.hasOwnProperty("settlement") && data.ecpm != 0 && data.rebate != 0) {
                 data.backup = {
                     settlement: data.settlement,
                     ecpm: data.ecpm,
@@ -720,12 +765,18 @@ export default {
                 };
             }
         },
-        cancelEdit: function(editData, targetDataArr) {
-            console.log("cancel edit editData:%s", JSON.stringify(editData));
+        cancelEdit: function(editData, type) {
             if (editData.backup) {
                 Object.assign(editData, editData.backup);
             }
             editData.editting = false;
+            if (type === "daily") {
+                let tempArr = this.dailyDataArr.filter(item => {
+                    return (item.channel === editData.channel 
+                        && item.e_date === editData.e_date);
+                });
+                tempArr.forEach(item => this.cancelEdit(item));
+            }
         }
     }
 }
