@@ -106,7 +106,7 @@
                 <Collapse class="collapse-title" v-if="earnSumArr.length > 0" v-model="c_index">
                     <Panel v-for="(sumInfo, index) in earnSumArr" 
                         v-bind:key="sumInfo.channel"
-                        @on-change="pannelOpen(sumInfo.channel)"
+                        @on-change="pannelOpen(index)"
                         :name="index">
                         {{ sumInfo.channel }}: &nbsp;&nbsp; {{ m_date.toLocaleDateString() }} &nbsp;&nbsp;收入：￥{{ sumInfo.earns }}
                         <p slot="content" style="overflow: auto;"
@@ -471,18 +471,12 @@ export default {
                 document.querySelector(".panel-right").scrollTo(0, 0);
             }
         },
-
+        pannelOpen: function(index) {
+            this.c_index = index;
+        },
         hideDialog: function() {
             Object.keys(this.dlgShowFlags).forEach(key => this.dlgShowFlags[key] = false);
             this.formChannelLoading = true;
-        },
-
-        processArr: function(orgArr) {
-
-        },
-
-        setCurPage: function(index) {
-            this.curIndex = index;
         },
 
         exportReport: function() {
