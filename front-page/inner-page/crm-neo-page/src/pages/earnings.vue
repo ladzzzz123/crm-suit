@@ -117,8 +117,8 @@
                                     <th>日期</th>
                                     <th>触宝曝光量</th>
                                     <th>触宝点击量</th>
-                                    <th>触宝CTR</th>
-                                    <th>客户曝光/点击量</th>
+                                    <th v-if="isAdmin">触宝CTR</th>
+                                    <th>客户统计量</th>
                                     <th>Gap</th>
                                     <th>收入</th>
                                     <th>收入(返点后)</th>
@@ -128,16 +128,20 @@
                                 <tbody>
                                     <tr v-for="dailyData in dailyDataArr.filter(data => data.channel === sumInfo.channel)"
                                         v-bind:key="dailyData.ad_place">
-                                        <td>{{ dailyData.ad_place }}</td><!-- 位置 -->
+                                        <td :title="parseInt(dailyData.settlement) === 1 ?
+                                             '该客户位置设定按曝光结算' : '该客户位置设定按点击结算' ">
+                                             {{ dailyData.ad_place }}
+                                        </td><!-- 位置 -->
                                         <td>{{ m_date.toLocaleDateString() }}</td><!-- 日期 -->
-                                        <td :title="parseInt(dailyData.settlement) === 1 ? '该客户位置设定按曝光结算' : '' ">
+                                        <td>
                                             {{ dailyData.e_exposure }}
                                         </td><!-- 触宝曝光 -->
-                                        <td :title="parseInt(dailyData.settlement) === 2 ? '该客户位置设定按点击结算' : '' ">
+                                        <td>
                                             {{ dailyData.e_click }} 
                                         </td><!-- 触宝点击 -->
-                                        <td>
-                                            {{ (parseFloat(dailyData.e_click) / parseFloat(dailyData.e_exposure) * 100).toFixed(2) }}%
+                                        <td v-if="isAdmin">
+                                            {{ (parseFloat(dailyData.e_click) / 
+                                                    (parseFloat(dailyData.e_exposure) || 1 ) * 100).toFixed(2) }}%
                                         </td> <!-- CTR -->
                                             <!-- <td>
                                                 {{ parseInt(dailyData.settlement) === 1 ?
