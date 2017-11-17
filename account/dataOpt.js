@@ -166,6 +166,28 @@ module.exports = {
         });
     },
 
+    updateUserRole: (values) => {
+        const SQL_UPDATE_USER_ROLE = `UPDATE account SET
+            role_pos = (role_pos | 
+                (SELECT role_pos FROM role_map WHERE module = ? AND role_name = ?)) 
+            WHERE u_name = ? `;
+        return new Promise((resolve, reject) => {
+            if (Array.isArray(values)) {
+                db_self.query(SQL_UPDATE_USER_ROLE, values, (err, ret) => {
+                    if (err) {
+                        reject(err);
+                    } else if (ret.affectedRows) {
+                        resolve(ret);
+                    } else {
+                        reject(null);
+                    }
+                });
+            } else {
+                reject(null);
+            }
+        });
+    },
+
     fetchModuleRoleMap: (m_name, except_role) => {
         let SQL_FETCH_MODULE_ROLEMAP = " SELECT role_pos FROM role_map WHERE module = ? AND role_name = ?";
         return new Promise((resolve, reject) => {

@@ -1,3 +1,5 @@
+import { JSON } from "mysql/lib/protocol/constants/types";
+
 /* eslint-env node, mocha */
 const http = require("http");
 const https = require("https");
@@ -386,9 +388,39 @@ router
     });
 // censor module end
 
-
+// account admin start
 router
-    .post("/crm-inner/manager/add-user", async(ctx, next) => {
+    .post("/crm-inner/admin", async(ctx, next) => {
+        let verify = await verifyToken(ctx, "account", "admin");
+        if (!verify) {
+            return;
+        } else if (verify.pass) {
+            ctx.body = { status: RESULT.SUCCESS, msg: "verify pass" };
+        } else {
+            ctx.body = _util.verifyTokenResult(verify);
+        }
+    })
+    .post("/crm-inner/admin/update-role", async(ctx, next) => {
+        let verify = await verifyToken(ctx, "account", "admin");
+        if (!verify) {
+            return;
+        } else if (verify.pass) {
+            if (!_util.verifyParams(postData, ["u_name", "module", "role_name"])) {
+                ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
+                return;
+            }
+            let update_ret = await courier.sendAsyncCall("account", "asyncUpdateRole",
+                "", postData.u_name, postData.module, postData.role_name);
+            if (update_ret.status === "success") {
+                ctx.body = { status: RESULT.SUCCESS, msg: "update success" };
+            } else {
+                ctx.body = { status: RESULT.FAILED, msg: JSON.stringify(update_ret) };
+            }
+        } else {
+            ctx.body = _util.verifyTokenResult(verify);
+        }
+    })
+    .post("/crm-inner/admin/add-user", async(ctx, next) => {
         let _ret = "",
             verify = {};
         logger.info("[router] ctx.request: %s", JSON.stringify(ctx.request.body));
@@ -415,10 +447,13 @@ router
         }
         ctx.body = _ret;
     })
-    .get("/crm-inner/fetch-mail", async(ctx, next) => {
+    .get("/crm-inner/admin/fetch-mail", async(ctx, next) => {
         let _ret = await courier.sendAsyncCall("mail", "asyncGetNewMail");
         ctx.body = _ret;
     });
+// account admin end
+
+
 
 // ad-preview module start
 router

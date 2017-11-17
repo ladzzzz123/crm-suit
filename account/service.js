@@ -112,6 +112,21 @@ let export_func = {
                     resolve({ status: "error", err: err });
                 });
         });
+    },
+    asyncUpdateRole: (u_name, mod_name, role_name) => {
+        return new Promise((resolve, reject) => {
+            dbOpter.updateUserRole([u_name, mod_name, role_name])
+                .then(ret => {
+                    if (ret) {
+                        resolve({ status: "success", ret: ret });
+                    } else {
+                        resolve({ status: "failed", ret: ret });
+                    }
+                })
+                .catch(err => {
+                    resolve({ status: "error", err: err });
+                });
+        });
     }
 };
 
