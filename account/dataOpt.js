@@ -166,25 +166,21 @@ module.exports = {
         });
     },
 
-    updateUserRole: (values) => {
+    updateUserRole: (u_name, mod_name, role_name) => {
         const SQL_UPDATE_USER_ROLE = `UPDATE account SET
             role_pos = (role_pos | 
                 (SELECT role_pos FROM role_map WHERE module = ? AND role_name = ?)) 
             WHERE u_name = ? `;
         return new Promise((resolve, reject) => {
-            if (Array.isArray(values)) {
-                db_self.query(SQL_UPDATE_USER_ROLE, values, (err, ret) => {
-                    if (err) {
-                        reject(err);
-                    } else if (ret.affectedRows) {
-                        resolve(ret);
-                    } else {
-                        reject(null);
-                    }
-                });
-            } else {
-                reject(null);
-            }
+            db_self.query(SQL_UPDATE_USER_ROLE, [mod_name, role_name, u_name], (err, ret) => {
+                if (err) {
+                    reject(err);
+                } else if (ret.affectedRows) {
+                    resolve(ret);
+                } else {
+                    reject(null);
+                }
+            });
         });
     },
 

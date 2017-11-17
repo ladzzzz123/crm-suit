@@ -116,7 +116,7 @@ let export_func = {
     asyncUpdateRole: (u_name, mod_name, role_name) => {
         logger.info("[account] asyncUpdateRole: %s, %s, %s", u_name, mod_name, role_name);
         return new Promise((resolve, reject) => {
-            dbOpter.updateUserRole([u_name, mod_name, role_name])
+            dbOpter.updateUserRole(u_name, mod_name, role_name)
                 .then(ret => {
                     if (ret) {
                         resolve({ status: "success", ret: ret });
