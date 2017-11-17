@@ -403,6 +403,7 @@ router
         if (!verify) {
             return;
         } else if (verify.pass) {
+            let postData = ctx.request.body;
             if (!_util.verifyParams(postData, ["u_name", "module", "role_name"])) {
                 ctx.body = { status: RESULT.PARAMS_MISSING, msg: "missing params" };
                 return;
