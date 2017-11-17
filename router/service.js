@@ -1,5 +1,3 @@
-import { JSON } from "mysql/lib/protocol/constants/types";
-
 /* eslint-env node, mocha */
 const http = require("http");
 const https = require("https");
