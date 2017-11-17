@@ -297,9 +297,9 @@
 
             <Table :columns="columns" :data="dailyDataArr" size="small" ref="table" style="display:none"></Table>
 
-            <ButtonGroup v-if="isAdmin" style="position: fixed; bottom:0.2rem;left:50%;">
-                <Button type="success" @click="showDialog('insertChannel')"><Icon type="android-add"></Icon>  新增客户设定</Button>
-                <Button type="primary" @click="showDialog('channel')"><Icon type="ios-list-outline"></Icon>  查看客户设定</Button>
+            <ButtonGroup style="position: fixed; bottom:0.2rem;left:50%;">
+                <Button v-if="isAdmin" type="success" @click="showDialog('insertChannel')"><Icon type="android-add"></Icon>  新增客户设定</Button>
+                <Button v-if="isAdmin" type="primary" @click="showDialog('channel')"><Icon type="ios-list-outline"></Icon>  查看客户设定</Button>
                 <Button type="info" @click="exportReport()" v-if="dailyDataArr.length > 0"><Icon type="ios-download-outline"></Icon>  导出当日结果</Button>
             </ButtonGroup>
         </div>
@@ -729,11 +729,9 @@ export default {
                     }
                     tempArr.forEach(item => item.e_version++);
                     setTimeout(this.fetchEarns, 500);
-                    // this.fetchEarns();
                     this.switchEdit(sumData, "daily");
                 }, (status, msg) => {
                     func.showTips("alert-error", "修改失败！");
-                    // this.cancelEdit(dailyData);
                 });
         },
         switchEdit: function(editData, type) {
