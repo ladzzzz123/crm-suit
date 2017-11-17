@@ -106,8 +106,7 @@
                 <Collapse class="collapse-title" v-if="earnSumArr.length > 0">
                     <Panel v-for="(sumInfo, index) in earnSumArr" 
                         v-bind:key="sumInfo.channel"
-                        @on-change="pannelOpen(sumInfo.channel)"
-                        :name="index">
+                        @on-change="pannelOpen(sumInfo.channel)">
                         {{ sumInfo.channel }}: &nbsp;&nbsp; {{ m_date.toLocaleDateString() }} &nbsp;&nbsp;收入：￥{{ sumInfo.earns }}
                         <p slot="content" style="overflow: auto;"
                             v-if="dailyDataArr.filter(data => data.channel === sumInfo.channel).length > 0">
