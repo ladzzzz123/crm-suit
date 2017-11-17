@@ -103,10 +103,11 @@
             </Row>
 
             <Col span="20" offset="2" style="margin-bottom: 0.6rem;margin-top: 0.2rem;">
-                <Collapse class="collapse-title" v-if="earnSumArr.length > 0">
+                <Collapse class="collapse-title" v-if="earnSumArr.length > 0" v-model="c_index">
                     <Panel v-for="(sumInfo, index) in earnSumArr" 
                         v-bind:key="sumInfo.channel"
-                        @on-change="pannelOpen(sumInfo.channel)">
+                        @on-change="pannelOpen(sumInfo.channel)"
+                        :name="index">
                         {{ sumInfo.channel }}: &nbsp;&nbsp; {{ m_date.toLocaleDateString() }} &nbsp;&nbsp;收入：￥{{ sumInfo.earns }}
                         <p slot="content" style="overflow: auto;"
                             v-if="dailyDataArr.filter(data => data.channel === sumInfo.channel).length > 0">
@@ -338,6 +339,7 @@ export default {
         return {
             verified: false,
             m_date: "",
+            c_index: 0,
             earnSumArr: [],
             earnSumMonthlyArr: [],
             earnSumYearlyArr: [],
