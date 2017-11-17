@@ -339,7 +339,7 @@ export default {
         return {
             verified: false,
             m_date: "",
-            c_index: 0,
+            c_index: "0",
             earnSumArr: [],
             earnSumMonthlyArr: [],
             earnSumYearlyArr: [],
