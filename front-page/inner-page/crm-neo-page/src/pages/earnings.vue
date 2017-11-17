@@ -103,7 +103,7 @@
             </Row>
 
             <Col span="20" offset="2" style="margin-bottom: 0.6rem;margin-top: 0.2rem;">
-                <Collapse class="collapse-title" v-if="earnSumArr.length > 0" :v-model="'0'">
+                <Collapse class="collapse-title" v-if="earnSumArr.length > 0" :value="'0'">
                     <Panel v-for="(sumInfo, index) in earnSumArr" 
                         v-bind:key="sumInfo.channel"
                         @on-change="pannelOpen(sumInfo.channel)"
